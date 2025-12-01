@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyName: "\uC6D0\uAC70\uB9AC\uC720\uB2DB"
   enemyType: 1
-  enemyPrefab: {fileID: 0}
-  moveSpeed: 3
-  attackRange: 4
-  attackDamage: 5
-  maxHealth: 10
+  enemyPrefab: {fileID: 5095804444251440335, guid: a326b9232c67fec4ba47bd6f7d233078, type: 3}
+  moveSpeed: 2
+  attackRange: 5
+  attackDamage: 20
+  maxHealth: 70

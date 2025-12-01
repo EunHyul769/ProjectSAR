@@ -15,7 +15,7 @@ MonoBehaviour:
   enemyName: "\uBCF4\uC2A4\uC720\uB2DB"
   enemyType: 2
   enemyPrefab: {fileID: 0}
-  moveSpeed: 5
+  moveSpeed: 4
   attackRange: 20
-  attackDamage: 10
-  maxHealth: 10
+  attackDamage: 50
+  maxHealth: 1200

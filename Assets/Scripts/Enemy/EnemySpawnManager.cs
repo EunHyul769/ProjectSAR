@@ -4,26 +4,37 @@ using UnityEngine;
 
 public class EnemySpawnManager : MonoBehaviour
 {
-    [Header("웨이브 설정")]
-    public List<WaveData> waves;
+    [Header("페이즈 설정")]
+    public List<PhaseData> spawnPhases;
 
     [Header("플레이어 기반 스폰 설정")]
     [SerializeField] private Transform playerTransform; // 플레이어의 transform
     [SerializeField] private float minSpawnDistance;
     [SerializeField] private float maxSpawnDistance;
 
-
-    private int currentWaveIndex = 0;
     private EnemyObjectPoolManager enemyObjectPoolManager;
+    
+    private int currentPhaseIndex = 0;
+    private float gameTimer = 0f;
+    private float nextSpawnTime;
+
+    private List<EnemyData> activeSpawnableEnemy = new List<EnemyData>();
+    private float currentSpawnInterval = 1.0f;
+    private int currentTotalEnemiesToSpawnPerCycle = 1;
+    private float currentHealthMultiplier = 1.0f;
+    private float currentDamageMultiplier = 1.0f;
+
 
 
     private void Start()
     {
-        if (waves == null || waves.Count == 0)
+        if (spawnPhases == null || spawnPhases.Count == 0)
         {
-            Debug.LogError("WaveData가 없음. WaveData 할당 필요");
+            Debug.LogError("SpawnPhase 없음. WaveData 할당 필요");
             return;
         }
+
+        spawnPhases.Sort((a, b) => a.activeAtGameTime.CompareTo(b.activeAtGameTime));
 
         if (playerTransform == null)
         {
@@ -43,6 +54,7 @@ public class EnemySpawnManager : MonoBehaviour
         }
 
         enemyObjectPoolManager = EnemyObjectPoolManager.Instance;
+
         if(enemyObjectPoolManager == null)
         {
             Debug.LogError("씬에 EnemyObjectPoolManager가 없음");
@@ -50,71 +62,82 @@ public class EnemySpawnManager : MonoBehaviour
             return;
         }
 
-        StartCoroutine(WaveProgressionRoutine());
+        ApplyPhaseSettings(spawnPhases[0]);
+        nextSpawnTime = gameTimer + currentSpawnInterval;
+
+        StartCoroutine(ContinuousSpawnRoutine());
     }
 
-    IEnumerator WaveProgressionRoutine()
+    private void Update()
     {
-        if (waves.Count > 0)
+        gameTimer += Time.deltaTime;
+
+        if (currentPhaseIndex + 1 < spawnPhases.Count && gameTimer >= spawnPhases[currentPhaseIndex + 1].activeAtGameTime)
         {
-            yield return new WaitForSeconds(waves[0].initialDelay);
+            currentPhaseIndex++;
+            ApplyPhaseSettings(spawnPhases[currentPhaseIndex]);
+            Debug.Log($"게임 시간 {gameTimer:F1}초, 스폰 페이즈 '{spawnPhases[currentPhaseIndex].name}' 시작");
         }
-
-        while (currentWaveIndex < waves.Count)
-        {
-            WaveData currentWave = waves[currentWaveIndex];
-            Debug.Log($"Wave {currentWaveIndex + 1}: {currentWave.waveName} 시작 ({currentWave.waveDuration}초 동안 진행)");
-
-            Coroutine spawnCoroutine = StartCoroutine(SpawnEnemiesForWave(currentWave));
-
-            yield return new WaitForSeconds(currentWave.waveDuration);
-
-            if(spawnCoroutine != null)
-            {
-                StopCoroutine(spawnCoroutine);
-            }
-            Debug.Log($"Wave {currentWaveIndex + 1} 종료");
-
-            currentWaveIndex++;
-        }
-
-        Debug.Log("모든 웨이브 완료");
     }
 
-    IEnumerator SpawnEnemiesForWave(WaveData wave)
+    void ApplyPhaseSettings(PhaseData phaseData)
     {
-        foreach (var enemyEntry in wave.enemiesToSpawn)
-        {
-            if(enemyEntry.enemyData == null || enemyEntry.enemyData.enemyPrefab == null)
-            {
-                Debug.Log($"Wave{wave.waveName}에 enemyData 또는 enemyPrefab이 할당되지않음. 건너뜀.");
-                continue;
-            }
+        activeSpawnableEnemy = phaseData.spawnableEnemies;
+        currentSpawnInterval = phaseData.spawnInterval;
+        currentTotalEnemiesToSpawnPerCycle = phaseData.totalEnemiesToSpawnPerCycle;
+        currentHealthMultiplier = phaseData.healthMultiplier;
+        currentDamageMultiplier = phaseData.damageMultiplier;
+    }
 
-            for(int i = 0; i < enemyEntry.spawnCount; i++)
+    IEnumerator ContinuousSpawnRoutine()
+    {
+        while (true) // 게임 끝까지 지속적으로 스폰
+        {
+            if (gameTimer >= nextSpawnTime)
             {
-                SpawnSingleEnemy(enemyEntry.enemyData);
-                yield return new WaitForSeconds(wave.spawnInterval);
+                // 현재 페이즈에 스폰 가능한 몬스터 종류가 없다면 스폰하지 않음
+                if (activeSpawnableEnemy.Count == 0)
+                {
+                    Debug.LogWarning("현재 페이즈에 스폰할 몬스터가 설정되어 있지 않습니다.");
+                }
+                else
+                {
+                    // 설정된 갯수만큼 몬스터 스폰
+                    for (int i = 0; i < currentTotalEnemiesToSpawnPerCycle; i++)
+                    {
+                        EnemyData EnemyToSpawn = activeSpawnableEnemy[Random.Range(0, activeSpawnableEnemy.Count)];
+                        SpawnSingleEnemy(EnemyToSpawn);
+                    }
+                }
+
+                nextSpawnTime = gameTimer + currentSpawnInterval; // 다음 스폰 시간 갱신
             }
+            yield return null; // 매 프레임 체크
         }
     }
 
     void SpawnSingleEnemy(EnemyData enemyData)
     {
-        if (playerTransform == null) { Debug.LogError("플레이어 Transform이 없어 몬스터를 스폰할 수 없습니다."); return; }
+        if (playerTransform == null)
+        {
+            Debug.LogError("플레이어 Transform이 없어 몬스터를 스폰할 수 없음.");
+            return;
+        }
 
         Vector2 spawnPosition = GetRandomSpawnPositionAroundPlayer();
 
         GameObject spawnedEnemyObject = enemyObjectPoolManager.SpawnFromPool(enemyData.enemyPrefab);
+
         if (spawnedEnemyObject == null) return; // 풀에서 가져오지 못했다면 중단
 
         spawnedEnemyObject.transform.position = spawnPosition;
         spawnedEnemyObject.transform.rotation = Quaternion.identity;
 
         Enemy enemyComponent = spawnedEnemyObject.GetComponent<Enemy>();
+
         if (enemyComponent != null)
         {
-            enemyComponent.Initialize(enemyData, playerTransform, enemyData.enemyPrefab); // 원본 프리팹 전달
+            enemyComponent.Initialize(enemyData, playerTransform, enemyData.enemyPrefab, currentHealthMultiplier, currentDamageMultiplier); // 원본 프리팹 전달
             enemyComponent.OnDeathEvent += OnEnemyKilled; // 몬스터 사망 시 호출될 이벤트 연결
         }
         Debug.Log($"{enemyData.enemyName}이(가) 스폰되었습니다. 위치: {spawnPosition}");
@@ -123,7 +146,6 @@ public class EnemySpawnManager : MonoBehaviour
     // 플레이어 주변에 랜덤 스폰 위치를 계산하는 함수
     Vector2 GetRandomSpawnPositionAroundPlayer()
     {
-        // (이전 코드와 동일)
         Vector2 playerPos = playerTransform.position;
         Vector2 spawnPos = Vector2.zero;
 
@@ -136,13 +158,12 @@ public class EnemySpawnManager : MonoBehaviour
         return spawnPos;
     }
 
-    // 이 메서드는 몬스터 사망 시 Enemy 스크립트에서 호출됩니다.
     public void OnEnemyKilled(GameObject deadEnemyObject, GameObject originalPrefab)
     {
         // 몬스터 사망 이벤트 발생 시 해당 몬스터 오브젝트를 풀로 반환
         enemyObjectPoolManager.ReturnToPool(deadEnemyObject, originalPrefab);
 
-        // 중요: 이벤트 구독 해제 (오브젝트가 재활용될 때 중복 구독 방지)
+        // 이벤트 구독 해제
         Enemy enemyComponent = deadEnemyObject.GetComponent<Enemy>();
         if (enemyComponent != null)
         {

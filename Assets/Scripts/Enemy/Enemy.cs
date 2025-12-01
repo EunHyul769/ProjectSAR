@@ -13,15 +13,13 @@ public class Enemy : MonoBehaviour
     private Transform playerTransform;
 
     private float currentHealth;
+    private float enemyDamage;
     private bool isActive = false;
 
     public event Action<GameObject, GameObject> OnDeathEvent;
 
     [Header("장애물 설정")]
-    public float obstacleCheckDistance;
-
     public LayerMask obstacleLayer;
-    [Range(0.1f, 1.0f)] public float avoidanceStrength;
 
     private void Awake()
     {
@@ -31,12 +29,14 @@ public class Enemy : MonoBehaviour
         rb.freezeRotation = true;
     }
 
-    public void Initialize(EnemyData data, Transform targetPlayer, GameObject prefabOrigin)
+    public void Initialize(EnemyData data, Transform targetPlayer, GameObject prefabOrigin, float healthMult, float damageMult)
     {
         enemyData = data; // 전달받은 MonsterData로 설정
         originalPrefab = prefabOrigin; // 원본 프리팹 저장 (풀 반환용)
         playerTransform = targetPlayer;
-        currentHealth = enemyData.maxHealth; // 체력 초기화
+
+        currentHealth = Mathf.RoundToInt(enemyData.maxHealth * healthMult);
+        enemyDamage = Mathf.RoundToInt(enemyData.attackDamage * damageMult);
 
         isActive = true; // 활성화 상태로 전환
         gameObject.SetActive(true);
@@ -53,28 +53,6 @@ public class Enemy : MonoBehaviour
 
         Vector2 directionToPlayer = (playerTransform.position - transform.position).normalized;
         float distanceToPlayer = Vector2.Distance(transform.position, playerTransform.position);
-        Vector2 currentMovementDirection = directionToPlayer;
-
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, currentMovementDirection, obstacleCheckDistance, obstacleLayer);
-
-        Debug.DrawRay(transform.position, currentMovementDirection * obstacleCheckDistance, hit.collider != null ? Color.red : Color.green);
-
-        if (hit.collider != null)
-        {
-            Vector2 avoidanceDirection = currentMovementDirection + hit.normal * avoidanceStrength;
-            currentMovementDirection = avoidanceDirection.normalized;
-
-            if (Vector2.Dot(directionToPlayer, hit.normal) < -0.9f)
-            {
-                Vector2 wallTangent = new Vector2(-hit.normal.y, hit.normal.x);
-
-                if(Vector2.Dot(directionToPlayer, wallTangent) < 0)
-                {
-                    wallTangent *= -1;
-                }
-                currentMovementDirection = wallTangent.normalized;
-            }
-        }
 
         if (distanceToPlayer > enemyData.attackRange)
         {
@@ -92,13 +70,9 @@ public class Enemy : MonoBehaviour
         switch (enemyData.enemyType)
         {
             case EnemyType.Melee:
-
-                // 플레이어의 체력 감소 로직에 enemyData.attackDamage 대입
-
                 break;
             case EnemyType.Range:
-
-                // 플레이어의 체력 감소 로직에 enemyData.attackDamage 대입
+                // 플레이어의 체력 감소 로직에 enemyDamage 대입
                 break;
             case EnemyType.Boss:
                 break;
@@ -125,11 +99,17 @@ public class Enemy : MonoBehaviour
         isActive = false; // 비활성화 상태
     }
 
-    /*private void OnTriggerEnter2D(Collider2D other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("PlayerAttack"))
         {
             //TakeDamage();
         }
-    }*/
+
+        if (other.CompareTag("Player"))
+        {
+            //player.ChangeHealth(enemyData.enemyDamage);
+        }
+    }
+
 }
