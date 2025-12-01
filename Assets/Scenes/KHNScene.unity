@@ -135,6 +135,14 @@ PrefabInstance:
       value: EnemySpawnManager
       objectReference: {fileID: 0}
     - target: {fileID: 5552628464084232380, guid: 7254ea405662b4f48b033805b82c84ed, type: 3}
+      propertyPath: maxSpawnDistance
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 5552628464084232380, guid: 7254ea405662b4f48b033805b82c84ed, type: 3}
+      propertyPath: minSpawnDistance
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 5552628464084232380, guid: 7254ea405662b4f48b033805b82c84ed, type: 3}
       propertyPath: waves.Array.size
       value: 4
       objectReference: {fileID: 0}
@@ -525,14 +533,18 @@ PrefabInstance:
     - target: {fileID: 4836624302165260096, guid: 8369a12149ae14b2aa637cb772c99b60, type: 3}
       propertyPath: m_TileSpriteArray.Array.data[60].m_Data
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 634940448, guid: 5c2f3f4e793c64216a5ac8e3aad684e0, type: 3}
     - target: {fileID: 4836624302165260096, guid: 8369a12149ae14b2aa637cb772c99b60, type: 3}
       propertyPath: m_TileSpriteArray.Array.data[63].m_Data
       value: 
       objectReference: {fileID: 1318418448, guid: db219a80c8c2d4b4687a88f22628a648, type: 3}
     - target: {fileID: 4836624302165260096, guid: 8369a12149ae14b2aa637cb772c99b60, type: 3}
+      propertyPath: m_TileSpriteArray.Array.data[3].m_RefCount
+      value: 23
+      objectReference: {fileID: 0}
+    - target: {fileID: 4836624302165260096, guid: 8369a12149ae14b2aa637cb772c99b60, type: 3}
       propertyPath: m_TileSpriteArray.Array.data[60].m_RefCount
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4836624302165260096, guid: 8369a12149ae14b2aa637cb772c99b60, type: 3}
       propertyPath: m_TileSpriteArray.Array.data[63].m_RefCount
@@ -540,7 +552,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4836624302165260096, guid: 8369a12149ae14b2aa637cb772c99b60, type: 3}
       propertyPath: m_Tiles.Array.data[489].second.m_TileSpriteIndex
-      value: 63
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5493264699467664890, guid: 8369a12149ae14b2aa637cb772c99b60, type: 3}
       propertyPath: m_Name
