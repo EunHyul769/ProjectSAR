@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Wave", menuName = "WaveData")]
+[CreateAssetMenu(fileName = "Phase", menuName = "PhaseData")]
 public class PhaseData : ScriptableObject
 {
     [Header("페이즈 기본 정보")]
@@ -15,7 +15,7 @@ public class PhaseData : ScriptableObject
     public float spawnInterval; // 적 개체 간 스폰 딜레이
     public int totalEnemiesToSpawnPerCycle;    // 한 번의 스폰 주기마다 스폰 될 적의 갯수
 
-    [Header("웨이브 난이도 스탯 계수")]
+    [Header("페이즈 난이도 스탯 계수")]
     public float healthMultiplier = 1.0f; // 체력 계수
     public float damageMultiplier = 1.0f; // 공격력 계수
 }

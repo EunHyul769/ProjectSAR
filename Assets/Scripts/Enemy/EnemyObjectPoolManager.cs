@@ -52,9 +52,9 @@ public class EnemyObjectPoolManager : MonoBehaviour
     {
         if (!poolDictionary.ContainsKey(prefab))
         {
-            Debug.LogWarning($"Pool with prefab {prefab.name} doesn't exist. Creating new object.");
+            Debug.LogWarning($"풀에 {prefab.name} 이 없음. 새로 생성.");
             // 풀에 없는 프리팹 요청 시, 새롭게 생성하여 반환
-            GameObject newObj = Instantiate(prefab);
+            GameObject newObj = Instantiate(prefab, transform);
             newObj.SetActive(true); // 활성화하여 반환
             return newObj;
         }
@@ -62,7 +62,7 @@ public class EnemyObjectPoolManager : MonoBehaviour
         // 풀이 비었을 경우 (재활용할 오브젝트가 없는 경우) 새로 생성
         if (poolDictionary[prefab].Count == 0)
         {
-            GameObject newObj = Instantiate(prefab);
+            GameObject newObj = Instantiate(prefab, transform);
             newObj.SetActive(true); // 활성화하여 반환
             return newObj;
         }
@@ -77,7 +77,6 @@ public class EnemyObjectPoolManager : MonoBehaviour
     {
         if (!poolDictionary.ContainsKey(originalPrefab))
         {
-            Debug.LogWarning($"Attempted to return object {obj.name} but its original prefab {originalPrefab.name} is not in any pool. Destroying it.");
             Destroy(obj); // 풀에 없는 프리팹이라면 파괴
             return;
         }

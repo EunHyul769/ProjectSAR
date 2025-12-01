@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour
@@ -21,12 +19,27 @@ public class Enemy : MonoBehaviour
     [Header("장애물 설정")]
     public LayerMask obstacleLayer;
 
+    private EnemyObjectPoolManager objectPoolManager;
+    private DifficultyScaler difficultyScaler;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         rb.isKinematic = false;
         rb.gravityScale = 0;
         rb.freezeRotation = true;
+
+        objectPoolManager = EnemyObjectPoolManager.Instance;
+        if(objectPoolManager == null)
+        {
+            Debug.LogError("EnemyObjectPoolManager이 없음. 드랍 기능 사용 불가");
+        }
+
+        difficultyScaler = DifficultyScaler.Instance;
+        if(difficultyScaler == null)
+        {
+            Debug.LogError("DifficultyScaler가 씬에 없음.");
+        }
     }
 
     public void Initialize(EnemyData data, Transform targetPlayer, GameObject prefabOrigin, float healthMult, float damageMult)
@@ -35,11 +48,19 @@ public class Enemy : MonoBehaviour
         originalPrefab = prefabOrigin; // 원본 프리팹 저장 (풀 반환용)
         playerTransform = targetPlayer;
 
-        currentHealth = Mathf.RoundToInt(enemyData.maxHealth * healthMult);
-        enemyDamage = Mathf.RoundToInt(enemyData.attackDamage * damageMult);
+        // 두 가지 계수 (PhaseData 계수 * DifficultyScaler 계수)를 모두 적용
+        float finalHealthMultiplier = healthMult * (difficultyScaler != null ? difficultyScaler.CurrentHealthMultiplier : 1.0f);
+        float finalDamageMultiplier = damageMult * (difficultyScaler != null ? difficultyScaler.CurrentDamageMultiplier : 1.0f);
+
+        currentHealth = Mathf.RoundToInt(enemyData.maxHealth * finalHealthMultiplier);
+        enemyDamage = Mathf.RoundToInt(enemyData.attackDamage * finalDamageMultiplier);
 
         isActive = true; // 활성화 상태로 전환
         gameObject.SetActive(true);
+
+        Debug.Log($"--- {enemyData.enemyName} 스탯 초기화 ---");
+        Debug.Log($"- 초기 Max 체력: {enemyData.maxHealth} * Phase계수: {healthMult:F2} * 시간계수: {finalHealthMultiplier / healthMult:F2} = 최종 체력: {currentHealth}");
+        Debug.Log($"- 초기 공격력: {enemyData.attackDamage} * Phase계수: {damageMult:F2} * 시간계수: {finalDamageMultiplier / damageMult:F2} = 최종 공격력: {enemyDamage}");
 
     }
 
@@ -81,6 +102,8 @@ public class Enemy : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
+        if (!isActive) return;
+
         currentHealth -= damage;
         Debug.Log($"{enemyData.enemyName}이 {damage} 데미지 입음. 남은 체력: {currentHealth}");
         if (currentHealth <= 0)
@@ -93,22 +116,43 @@ public class Enemy : MonoBehaviour
     private void Die()
     {
         Debug.Log($"{enemyData.enemyName} 사망.");
-        // 사망 애니메이션, 경험치 드랍 처리
+        
+        if(enemyData.expOrbPrefab != null && objectPoolManager != null)
+        {
+            GameObject expOrb = objectPoolManager.SpawnFromPool(enemyData.expOrbPrefab);
+            if (expOrb != null)
+            {
+                expOrb.transform.position = transform.position;
+                Debug.Log("경험치 오브젝트 드랍");
+            }
+        }
+        else if (enemyData.expOrbPrefab == null)
+        {
+            Debug.LogWarning("EnemyData에 경험치 오브젝트 프리팹이 할당되지 않음");
+        }
 
+        if (enemyData.dropItemPrefab != null && objectPoolManager != null)
+        {
+            if (UnityEngine.Random.value <= enemyData.dropChance)
+            {
+                GameObject droppedItem = objectPoolManager.SpawnFromPool(enemyData.dropItemPrefab);
+
+                if(droppedItem != null)
+                {
+                    droppedItem.transform.position = transform.position;
+                }
+            }
+        }
         OnDeathEvent?.Invoke(this.gameObject, originalPrefab); // 사망 이벤트 발생 시 자신과 원본 프리팹 전달
         isActive = false; // 비활성화 상태
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("PlayerAttack"))
-        {
-            //TakeDamage();
-        }
-
         if (other.CompareTag("Player"))
         {
             //player.ChangeHealth(enemyData.enemyDamage);
+            Debug.Log("플레이어와 접촉");
         }
     }
 

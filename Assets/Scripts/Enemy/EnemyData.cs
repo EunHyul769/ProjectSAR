@@ -20,5 +20,10 @@ public class EnemyData : ScriptableObject
     public float attackRange;
     public float attackDamage;
     public float maxHealth;
-    //public GameObject dropExpPrefab;
+
+    [Header("드랍 설정")]
+    public int expAmount;   // 경험치 양
+    public GameObject expOrbPrefab; // 경험치 오브젝트 프리팹
+    public GameObject dropItemPrefab;
+    [Range(0f, 1f)] public float dropChance;    // 아이템 드랍 확률
 }

@@ -15,7 +15,6 @@ public class EnemySpawnManager : MonoBehaviour
     private EnemyObjectPoolManager enemyObjectPoolManager;
     
     private int currentPhaseIndex = 0;
-    private float gameTimer = 0f;
     private float nextSpawnTime;
 
     private List<EnemyData> activeSpawnableEnemy = new List<EnemyData>();
@@ -24,7 +23,16 @@ public class EnemySpawnManager : MonoBehaviour
     private float currentHealthMultiplier = 1.0f;
     private float currentDamageMultiplier = 1.0f;
 
+    private GameManager gameManager;
 
+    private void Awake()
+    {
+        gameManager = GameManager.Instance;
+        if(gameManager == null)
+        {
+            Debug.LogError("GameManager가 할당되지않음");
+        }
+    }
 
     private void Start()
     {
@@ -63,20 +71,18 @@ public class EnemySpawnManager : MonoBehaviour
         }
 
         ApplyPhaseSettings(spawnPhases[0]);
-        nextSpawnTime = gameTimer + currentSpawnInterval;
+        nextSpawnTime = gameManager.playTime + currentSpawnInterval;
 
         StartCoroutine(ContinuousSpawnRoutine());
     }
 
     private void Update()
     {
-        gameTimer += Time.deltaTime;
-
-        if (currentPhaseIndex + 1 < spawnPhases.Count && gameTimer >= spawnPhases[currentPhaseIndex + 1].activeAtGameTime)
+        if (currentPhaseIndex + 1 < spawnPhases.Count && gameManager.playTime >= spawnPhases[currentPhaseIndex + 1].activeAtGameTime)
         {
             currentPhaseIndex++;
             ApplyPhaseSettings(spawnPhases[currentPhaseIndex]);
-            Debug.Log($"게임 시간 {gameTimer:F1}초, 스폰 페이즈 '{spawnPhases[currentPhaseIndex].name}' 시작");
+            Debug.Log($"게임 시간 {gameManager.playTime:F1}초, 스폰 페이즈 '{spawnPhases[currentPhaseIndex].name}' 시작");
         }
     }
 
@@ -93,7 +99,7 @@ public class EnemySpawnManager : MonoBehaviour
     {
         while (true) // 게임 끝까지 지속적으로 스폰
         {
-            if (gameTimer >= nextSpawnTime)
+            if (gameManager.playTime >= nextSpawnTime)
             {
                 // 현재 페이즈에 스폰 가능한 몬스터 종류가 없다면 스폰하지 않음
                 if (activeSpawnableEnemy.Count == 0)
@@ -110,7 +116,7 @@ public class EnemySpawnManager : MonoBehaviour
                     }
                 }
 
-                nextSpawnTime = gameTimer + currentSpawnInterval; // 다음 스폰 시간 갱신
+                nextSpawnTime = gameManager.playTime + currentSpawnInterval; // 다음 스폰 시간 갱신
             }
             yield return null; // 매 프레임 체크
         }
