@@ -463,22 +463,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: ExpOrb
       objectReference: {fileID: 0}
-    - target: {fileID: 6247084054272691373, guid: 58b2cbd02c7394d3f8b0e8be7659d447, type: 3}
-      propertyPath: m_Color.a
-      value: 0.6666667
-      objectReference: {fileID: 0}
-    - target: {fileID: 6247084054272691373, guid: 58b2cbd02c7394d3f8b0e8be7659d447, type: 3}
-      propertyPath: m_Color.b
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6247084054272691373, guid: 58b2cbd02c7394d3f8b0e8be7659d447, type: 3}
-      propertyPath: m_Color.g
-      value: 0.9960785
-      objectReference: {fileID: 0}
-    - target: {fileID: 6247084054272691373, guid: 58b2cbd02c7394d3f8b0e8be7659d447, type: 3}
-      propertyPath: m_Color.r
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
