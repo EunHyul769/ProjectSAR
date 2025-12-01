@@ -19,3 +19,7 @@ MonoBehaviour:
   attackRange: 1
   attackDamage: 10
   maxHealth: 50
+  expAmount: 0
+  expOrbPrefab: {fileID: 0}
+  dropItemPrefab: {fileID: 0}
+  dropChance: 0

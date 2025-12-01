@@ -1066,14 +1066,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5486627829000873755, guid: 636e92fd4d304a24988e58b225f1f0a5, type: 3}
-      propertyPath: damageMultiplierIncreasePerMinute
-      value: 0.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 5486627829000873755, guid: 636e92fd4d304a24988e58b225f1f0a5, type: 3}
-      propertyPath: healthMultiplierIncreasePerMinute
-      value: 0.2
-      objectReference: {fileID: 0}
     - target: {fileID: 8900105044009660647, guid: 636e92fd4d304a24988e58b225f1f0a5, type: 3}
       propertyPath: m_Name
       value: DifficultyScaler
