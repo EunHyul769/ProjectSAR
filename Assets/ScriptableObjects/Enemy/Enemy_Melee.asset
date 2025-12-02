@@ -17,9 +17,10 @@ MonoBehaviour:
   enemyPrefab: {fileID: 438623498700306704, guid: bb9b9929e34317a4e89035367157f26b, type: 3}
   moveSpeed: 1
   attackRange: 1
+  attackRate: 0
   attackDamage: 10
   maxHealth: 50
   expAmount: 0
-  expOrbPrefab: {fileID: 0}
-  dropItemPrefab: {fileID: 0}
-  dropChance: 0
+  expOrbPrefab: {fileID: 5499391159527633536, guid: 58b2cbd02c7394d3f8b0e8be7659d447, type: 3}
+  dropItemPrefab: {fileID: 623183117809672311, guid: b65f7eeccd833473386eaead6bec16f1, type: 3}
+  dropChance: 0.49

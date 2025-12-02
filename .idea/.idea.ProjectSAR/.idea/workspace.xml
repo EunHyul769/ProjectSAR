@@ -6,17 +6,12 @@
   <component name="ChangeListManager">
     <list default="true" id="e88a339b-ddf8-41ba-9e08-ff5b81a4e014" name="변경" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ProjectSAR/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ProjectSAR/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Manager/AudioManager.prefab" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Manager/AudioManager.prefab.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Player/Player.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Player/Player.prefab" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scenes/KDKScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/KDKScene.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/ScriptableObject.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/ScriptableObject/FoodItem.asset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/ScriptableObject/FoodItem.asset.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Audio/AudioManager.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Audio/AudioManager.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Interface.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Interface/IExpReceiver.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Interface/IExpReceiver.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ScriptableObjects/Enemy/Enemy_Boss.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/ScriptableObjects/Enemy/Enemy_Boss.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ScriptableObjects/Enemy/Enemy_Melee.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/ScriptableObjects/Enemy/Enemy_Melee.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ScriptableObjects/Enemy/Enemy_Range.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/ScriptableObjects/Enemy/Enemy_Range.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Enemy/Enemy.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Enemy/Enemy.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/ItemData/ExpOrb.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ItemData/ExpOrb.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -34,6 +29,7 @@
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/ItemData/FoodItem.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Player/Entity/PlayerExp.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
+  <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 7
 }</component>
@@ -122,12 +118,14 @@
       <updated>1764579513920</updated>
       <workItem from="1764579514766" duration="4856000" />
       <workItem from="1764637087838" duration="5442000" />
+      <workItem from="1764659683432" duration="3001000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="UnityCheckinConfiguration" checkUnsavedScenes="true" />
   <component name="UnityProjectConfiguration" hasMinimizedUI="true" />
   <component name="UnityProjectDiscoverer">
     <option name="hasUnityReference" value="true" />
