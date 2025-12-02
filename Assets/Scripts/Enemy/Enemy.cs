@@ -1,0 +1,217 @@
+using System;
+using UnityEngine;
+
+public class Enemy : MonoBehaviour, IDamagable
+{
+    [Header("적 유닛 설정")]
+    [SerializeField] private EnemyData enemyData;
+    private GameObject originalPrefab;
+
+    private Rigidbody2D rb;
+    private Transform playerTransform;
+
+    private float currentHealth;
+    private float enemyDamage;
+    private bool isActive = false;
+
+    public event Action<GameObject, GameObject> OnDeathEvent;
+
+    [Header("장애물 설정")]
+    public LayerMask obstacleLayer;
+
+    private EnemyObjectPoolManager objectPoolManager;
+    private DifficultyScaler difficultyScaler;
+
+    [Header("투사체 설정(Range타입)")]
+    [SerializeField] private GameObject projectilePrefab;
+    [SerializeField] private Transform shootPoint;
+
+    private float attackCooldown;
+
+    private void Awake()
+    {
+        rb = GetComponent<Rigidbody2D>();
+        rb.isKinematic = false;
+        rb.gravityScale = 0;
+        rb.freezeRotation = true;
+    }
+    private void Start()
+    {
+        objectPoolManager = EnemyObjectPoolManager.Instance;
+        if (objectPoolManager == null)
+        {
+            Debug.LogError("EnemyObjectPoolManager이 없음. 드랍 기능 사용 불가");
+        }
+
+        difficultyScaler = DifficultyScaler.Instance;
+        if (difficultyScaler == null)
+        {
+            Debug.LogError("DifficultyScaler가 씬에 없음.");
+        }
+    }
+
+    public void Initialize(EnemyData data, Transform targetPlayer, GameObject prefabOrigin, float healthMult, float damageMult)
+    {
+        enemyData = data; // 전달받은 MonsterData로 설정
+        originalPrefab = prefabOrigin; // 원본 프리팹 저장 (풀 반환용)
+        playerTransform = targetPlayer;
+
+        // 두 가지 계수 (PhaseData 계수 * DifficultyScaler 계수)를 모두 적용
+        float finalHealthMultiplier = healthMult * (difficultyScaler != null ? difficultyScaler.CurrentHealthMultiplier : 1.0f);
+        float finalDamageMultiplier = damageMult * (difficultyScaler != null ? difficultyScaler.CurrentDamageMultiplier : 1.0f);
+
+        currentHealth = Mathf.RoundToInt(enemyData.maxHealth * finalHealthMultiplier);
+        enemyDamage = Mathf.RoundToInt(enemyData.attackDamage * finalDamageMultiplier);
+
+        isActive = true; // 활성화 상태로 전환
+        gameObject.SetActive(true);
+
+        /*Debug.Log($"- 초기 Max 체력: {enemyData.maxHealth} * Phase계수: {healthMult:F2} * 시간계수: {finalHealthMultiplier / healthMult:F2} = 최종 체력: {currentHealth}");
+        Debug.Log($"- 초기 공격력: {enemyData.attackDamage} * Phase계수: {damageMult:F2} * 시간계수: {finalDamageMultiplier / damageMult:F2} = 최종 공격력: {enemyDamage}");*/
+
+    }
+
+    private void FixedUpdate()
+    {
+        if (!isActive || playerTransform == null || enemyData == null)
+        {
+            rb.velocity = Vector2.zero;
+            return;
+        }
+
+        Vector2 directionToPlayer = (playerTransform.position - transform.position).normalized;
+        float distanceToPlayer = Vector2.Distance(transform.position, playerTransform.position);
+
+        if (distanceToPlayer > enemyData.attackRange)
+        {
+            rb.velocity = directionToPlayer * enemyData.moveSpeed;
+        }
+        else
+        {
+            rb.velocity = Vector2.zero;
+            Attack();
+        }
+    }
+
+    private void Attack()
+    {
+        switch (enemyData.enemyType)
+        {
+            case EnemyType.Melee:
+                break;
+            case EnemyType.Range:
+                if (attackCooldown <= 0f && projectilePrefab != null && shootPoint != null)
+                {
+                    ShootProjectile();
+                    attackCooldown = enemyData.attackRate;
+                }
+                break;
+            case EnemyType.Boss:
+                break;
+        }
+    }
+
+    private void ShootProjectile()
+    {
+        if(objectPoolManager == null)
+        {
+            Debug.LogError("Enemy: ObjectPoolManager를 찾을 수 없음");
+            return;
+        }
+        if(projectilePrefab == null)
+        {
+            Debug.LogError("Enemy: 투사체 프리팹이 없음");
+            return;
+        }
+        if(shootPoint == null)
+        {
+            Debug.LogError("Enemy: 발사 지점이 할당되지않음");
+            return;
+        }
+
+        GameObject projectileObj = objectPoolManager.SpawnFromPool(projectilePrefab);
+        if (projectileObj == null)
+        {
+            Debug.LogError("투사체 프리팹을 가져오지 못했음.");
+            return;
+        }
+
+        projectileObj.transform.position = shootPoint.position;
+        projectileObj.transform.rotation = Quaternion.identity;
+
+        IProjectilable projectileScript = projectileObj.GetComponent<IProjectilable>();
+        if(projectileScript != null)
+        {
+            projectileScript.Initialize(playerTransform, enemyDamage, projectilePrefab);
+            projectileScript.SetObjectPoolManager(objectPoolManager);
+        }
+        else
+        {
+            Debug.LogError("투사체 프리팹에 IProjectiable을 구현한 스크립트가 없음");
+        }
+
+    }
+    public void TakeDamage(int damage)
+    {
+        if (!isActive) return;
+
+        currentHealth -= damage;
+        Debug.Log($"{enemyData.enemyName}이 {damage} 데미지 입음. 남은 체력: {currentHealth}");
+        if (currentHealth <= 0)
+        {
+            Die();
+        }
+    }
+
+    // 사망 처리 메서드
+    private void Die()
+    {
+        Debug.Log($"{enemyData.enemyName} 사망.");
+        
+        if(enemyData.expOrbPrefab != null && objectPoolManager != null)
+        {
+            GameObject expOrb = objectPoolManager.SpawnFromPool(enemyData.expOrbPrefab);
+            if (expOrb != null)
+            {
+                expOrb.transform.position = transform.position;
+                Debug.Log("경험치 오브젝트 드랍");
+            }
+        }
+        else if (enemyData.expOrbPrefab == null)
+        {
+            Debug.LogWarning("EnemyData에 경험치 오브젝트 프리팹이 할당되지 않음");
+        }
+
+        if (enemyData.dropItemPrefab != null && objectPoolManager != null)
+        {
+            if (UnityEngine.Random.value <= enemyData.dropChance)
+            {
+                GameObject droppedItem = objectPoolManager.SpawnFromPool(enemyData.dropItemPrefab);
+
+                if(droppedItem != null)
+                {
+                    droppedItem.transform.position = transform.position;
+                }
+            }
+        }
+        OnDeathEvent?.Invoke(this.gameObject, originalPrefab); // 사망 이벤트 발생 시 자신과 원본 프리팹 전달
+        isActive = false; // 비활성화 상태
+    }
+
+    private void OnTriggerStay2D(Collider2D other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            Debug.Log("플레이어와 접촉");
+
+            if(other.TryGetComponent(out ResouceController resouceController))
+            {
+                if (attackCooldown <= 0f)
+                {
+                    resouceController.ChangeHealth(enemyData.attackDamage);
+                    attackCooldown = enemyData.attackRate;
+                }
+            }
+        }
+    }
+}
