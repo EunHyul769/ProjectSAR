@@ -14,8 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyName: "\uBCF4\uC2A4\uC720\uB2DB"
   enemyType: 2
-  enemyPrefab: {fileID: 0}
+  enemyPrefab: {fileID: 9076800433690292658, guid: 6456509748f346247b92a56afdf5b852, type: 3}
   moveSpeed: 4
   attackRange: 20
+  attackRate: 5
   attackDamage: 50
   maxHealth: 1200
+  expAmount: 0
+  expOrbPrefab: {fileID: 5499391159527633536, guid: 58b2cbd02c7394d3f8b0e8be7659d447, type: 3}
+  dropItemPrefab: {fileID: 623183117809672311, guid: b65f7eeccd833473386eaead6bec16f1, type: 3}
+  dropChance: 0.5

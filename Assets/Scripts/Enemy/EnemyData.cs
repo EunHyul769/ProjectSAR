@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public enum EnemyType
@@ -25,6 +26,6 @@ public class EnemyData : ScriptableObject
     [Header("드랍 설정")]
     public int expAmount;   // 경험치 양
     public GameObject expOrbPrefab; // 경험치 오브젝트 프리팹
-    public GameObject dropItemPrefab;
+    public List<GameObject> dropItemPrefabs;    // 드랍될 아이템의 리스트
     [Range(0f, 1f)] public float dropChance;    // 아이템 드랍 확률
 }

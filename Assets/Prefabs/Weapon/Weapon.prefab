@@ -190,7 +190,7 @@ MonoBehaviour:
   attackRange: 10
   target:
     serializedVersion: 2
-    m_Bits: 1024
+    m_Bits: 3072
   isOnKnockback: 1
   knockbackPower: 0.1
   knockbackTime: 0.5
@@ -205,4 +205,4 @@ MonoBehaviour:
   isAutoTargeting: 1
   enemyLayer:
     serializedVersion: 2
-    m_Bits: 1024
+    m_Bits: 3072

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class ResouceController : MonoBehaviour
 {
+    [SerializeField] private LayerMask collisionLayer;
     [SerializeField] private float healthChangeDelay = .5f;
     private BaseController baseController;
     private StatHandler statHandler;
@@ -40,6 +41,15 @@ public class ResouceController : MonoBehaviour
         }
     }
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collisionLayer.value == (collisionLayer.value | (1 << collision.gameObject.layer))) //충돌체랑 같은 레이어인지 확인
+        {
+            ChangeHealth(-1);
+            Debug.Log("체력 감소");
+        }
+    }
+
     public bool ChangeHealth(float change)
     {
         if (baseController != null && baseController.IsInvincible)
@@ -57,7 +67,7 @@ public class ResouceController : MonoBehaviour
         CurrentHealth += change;
         CurrentHealth = CurrentHealth > MaxHealth ? MaxHealth : CurrentHealth;
         CurrentHealth = CurrentHealth < 0 ? 0 : CurrentHealth;
-
+        Debug.Log("체력 " + CurrentHealth);
         if (change < 0)
         {
             animationHandler.Damage();
@@ -65,7 +75,7 @@ public class ResouceController : MonoBehaviour
 
         if (CurrentHealth <= 0f)
         {
-            Death();
+            Death(); //플레이어 사망
         }
 
         return true;
@@ -73,11 +83,7 @@ public class ResouceController : MonoBehaviour
 
     private void Death()
     {
-        if (expOrbPrefab != null)
-        {
-            Instantiate(expOrbPrefab, transform.position, Quaternion.identity);
-        }
-
-        Destroy(gameObject); // 몬스터 제거
+        Debug.Log("사망");
     }
+
 }
