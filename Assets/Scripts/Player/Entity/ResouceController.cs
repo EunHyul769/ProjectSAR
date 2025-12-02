@@ -13,6 +13,8 @@ public class ResouceController : MonoBehaviour
 
     public float CurrentHealth {  get; private set; }
     public float MaxHealth => statHandler.Health;
+    
+    [SerializeField] private GameObject expOrbPrefab;
 
     private void Awake()
     {
@@ -65,6 +67,11 @@ public class ResouceController : MonoBehaviour
 
     private void Death()
     {
+        if (expOrbPrefab != null)
+        {
+            Instantiate(expOrbPrefab, transform.position, Quaternion.identity);
+        }
 
+        Destroy(gameObject); // 몬스터 제거
     }
 }
