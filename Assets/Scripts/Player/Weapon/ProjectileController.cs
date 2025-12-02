@@ -57,6 +57,12 @@ public class ProjectileController : MonoBehaviour
         } //collision.ClosestPoint(transform.position) 충돌체랑 가장 가까운 부분
         else if (rangeWeaponHandler.target.value == (rangeWeaponHandler.target.value | (1 << collision.gameObject.layer))) //타겟 충돌체
         {
+            IDamagable damagableObject = collision.gameObject.GetComponent<IDamagable>();
+
+            if (damagableObject != null)
+            {
+                damagableObject.TakeDamage(rangeWeaponHandler.power);
+            }
             DestroyProjectile(collision.ClosestPoint(transform.position), fxOnDestroy);
         }
     }

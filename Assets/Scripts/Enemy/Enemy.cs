@@ -158,7 +158,7 @@ public class Enemy : MonoBehaviour, IDamagable
         }
 
     }
-    public void TakeDamage(int damage)
+    public void TakeDamage(float damage)
     {
         if (!isActive) return;
 

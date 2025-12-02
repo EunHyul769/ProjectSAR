@@ -79,7 +79,6 @@ GameObject:
   - component: {fileID: 1747453912005981064}
   - component: {fileID: 4458927490505526201}
   - component: {fileID: 555936030446518354}
-  - component: {fileID: 8870557507721200215}
   - component: {fileID: 2939581208017133907}
   m_Layer: 11
   m_Name: Enemy_Boss
@@ -201,33 +200,6 @@ MonoBehaviour:
     m_Bits: 4096
   projectilePrefab: {fileID: 0}
   shootPoint: {fileID: 0}
-  repulsionForce: 2
-  repulsionRadius: 5
-  allEnemyLayers:
-    serializedVersion: 2
-    m_Bits: 3072
---- !u!195 &8870557507721200215
-NavMeshAgent:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9076800433690292658}
-  m_Enabled: 0
-  m_AgentTypeID: -1372625422
-  m_Radius: 0.07
-  m_Speed: 3.5
-  m_Acceleration: 8
-  avoidancePriority: 50
-  m_AngularSpeed: 0
-  m_StoppingDistance: 1
-  m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
-  m_AutoRepath: 1
-  m_Height: 0.14
-  m_BaseOffset: 0.07
-  m_WalkableMask: 3
-  m_ObstacleAvoidanceType: 4
 --- !u!58 &2939581208017133907
 CircleCollider2D:
   m_ObjectHideFlags: 0
