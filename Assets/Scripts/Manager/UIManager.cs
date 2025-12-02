@@ -25,7 +25,17 @@ public class UIManager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject);
     }
+    public void UpdateHP(float current, float max)
+    {
+        if (hpBar == null) return;
+        hpBar.value = current / max;
+    }
 
+    public void UpdateEXP(float current, float max)
+    {
+        if (expBar == null) return;
+        expBar.value = current / max;
+    }
     public void UpdateTimer(float time)
     {
         int min = (int)(time / 60);
