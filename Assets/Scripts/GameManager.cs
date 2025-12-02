@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour
 
     public GameState State { get; private set; }
 
-    private float playTime = 0f;
+    public float playTime = 0f;
 
     private void Awake()
     {
@@ -31,7 +31,7 @@ public class GameManager : MonoBehaviour
         if (State != GameState.Playing)
             return;
 
-        // Å¸ÀÌ¸Ó Áõ°¡
+        // Å¸ï¿½Ì¸ï¿½ ï¿½ï¿½ï¿½ï¿½
         playTime += Time.deltaTime;
         UIManager.Instance.UpdateTimer(playTime);
     }
@@ -44,6 +44,6 @@ public class GameManager : MonoBehaviour
     public void GameOver()
     {
         State = GameState.GameOver;
-        // ³ªÁß¿¡ °á°úÃ¢ ¶ç¿ì±â
+        // ï¿½ï¿½ï¿½ß¿ï¿½ ï¿½ï¿½ï¿½Ã¢ ï¿½ï¿½ï¿½ï¿½
     }
 }
