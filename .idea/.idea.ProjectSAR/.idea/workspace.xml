@@ -5,8 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e88a339b-ddf8-41ba-9e08-ff5b81a4e014" name="변경" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.ProjectSAR/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ProjectSAR/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scenes/KDKScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/KDKScene.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Player/Entity/ResouceController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Player/Entity/ResouceController.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -18,6 +18,8 @@
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/ItemData/ExpOrb.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/ItemData/FoodDrop.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/ItemData/FoodItem.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Player/Entity/PlayerExp.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="ProjectColorInfo">{
@@ -107,6 +109,7 @@
       <option name="presentableId" value="Default" />
       <updated>1764579513920</updated>
       <workItem from="1764579514766" duration="4856000" />
+      <workItem from="1764637087838" duration="5442000" />
     </task>
     <servers />
   </component>
