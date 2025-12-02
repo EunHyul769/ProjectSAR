@@ -15,12 +15,12 @@ MonoBehaviour:
   enemyName: "\uC6D0\uAC70\uB9AC\uC720\uB2DB"
   enemyType: 1
   enemyPrefab: {fileID: 5095804444251440335, guid: a326b9232c67fec4ba47bd6f7d233078, type: 3}
-  moveSpeed: 2
+  moveSpeed: 1.5
   attackRange: 10
-  attackRate: 3
+  attackRate: 2
   attackDamage: 20
   maxHealth: 70
   expAmount: 0
-  expOrbPrefab: {fileID: 0}
-  dropItemPrefab: {fileID: 0}
+  expOrbPrefab: {fileID: 5499391159527633536, guid: 58b2cbd02c7394d3f8b0e8be7659d447, type: 3}
+  dropItemPrefabs: []
   dropChance: 0

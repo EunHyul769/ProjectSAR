@@ -134,6 +134,11 @@ MonoBehaviour:
     m_Bits: 4096
   projectilePrefab: {fileID: 0}
   shootPoint: {fileID: 0}
+  repulsionForce: 2
+  repulsionRadius: 0.9
+  allEnemyLayers:
+    serializedVersion: 2
+    m_Bits: 3072
 --- !u!195 &-1972381483868553780
 NavMeshAgent:
   m_ObjectHideFlags: 0

@@ -19,6 +19,6 @@ MonoBehaviour:
   spawnableEnemies:
   - {fileID: 11400000, guid: 78cd501b75e5cf34294e2e3ad22c46c6, type: 2}
   spawnInterval: 2
-  totalEnemiesToSpawnPerCycle: 5
+  totalEnemiesToSpawnPerCycle: 3
   healthMultiplier: 1
   damageMultiplier: 1

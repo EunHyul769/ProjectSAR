@@ -16,6 +16,7 @@ public class Enemy : MonoBehaviour, IDamagable
 
     public event Action<GameObject, GameObject> OnDeathEvent;
 
+    // 아직 사용되지 않음
     [Header("장애물 설정")]
     public LayerMask obstacleLayer;
 
@@ -27,6 +28,7 @@ public class Enemy : MonoBehaviour, IDamagable
     [SerializeField] private Transform shootPoint;
 
     private float attackCooldown;
+
 
     private void Awake()
     {
@@ -71,6 +73,11 @@ public class Enemy : MonoBehaviour, IDamagable
 
     }
 
+    private void Update()
+    {
+        attackCooldown -= Time.deltaTime;
+    }
+
     private void FixedUpdate()
     {
         if (!isActive || playerTransform == null || enemyData == null)
@@ -113,17 +120,17 @@ public class Enemy : MonoBehaviour, IDamagable
 
     private void ShootProjectile()
     {
-        if(objectPoolManager == null)
+        if (objectPoolManager == null)
         {
             Debug.LogError("Enemy: ObjectPoolManager를 찾을 수 없음");
             return;
         }
-        if(projectilePrefab == null)
+        if (projectilePrefab == null)
         {
             Debug.LogError("Enemy: 투사체 프리팹이 없음");
             return;
         }
-        if(shootPoint == null)
+        if (shootPoint == null)
         {
             Debug.LogError("Enemy: 발사 지점이 할당되지않음");
             return;
@@ -140,7 +147,7 @@ public class Enemy : MonoBehaviour, IDamagable
         projectileObj.transform.rotation = Quaternion.identity;
 
         IProjectilable projectileScript = projectileObj.GetComponent<IProjectilable>();
-        if(projectileScript != null)
+        if (projectileScript != null)
         {
             projectileScript.Initialize(playerTransform, enemyDamage, projectilePrefab);
             projectileScript.SetObjectPoolManager(objectPoolManager);
@@ -167,8 +174,8 @@ public class Enemy : MonoBehaviour, IDamagable
     private void Die()
     {
         Debug.Log($"{enemyData.enemyName} 사망.");
-        
-        if(enemyData.expOrbPrefab != null && objectPoolManager != null)
+
+        if (enemyData.expOrbPrefab != null && objectPoolManager != null)
         {
             GameObject expOrb = objectPoolManager.SpawnFromPool(enemyData.expOrbPrefab);
             if (expOrb != null)
@@ -182,18 +189,30 @@ public class Enemy : MonoBehaviour, IDamagable
             Debug.LogWarning("EnemyData에 경험치 오브젝트 프리팹이 할당되지 않음");
         }
 
-        if (enemyData.dropItemPrefab != null && objectPoolManager != null)
+        if (enemyData.dropItemPrefabs != null && enemyData.dropItemPrefabs.Count > 0 && objectPoolManager != null)
         {
             if (UnityEngine.Random.value <= enemyData.dropChance)
             {
-                GameObject droppedItem = objectPoolManager.SpawnFromPool(enemyData.dropItemPrefab);
+                int randomIndex = UnityEngine.Random.Range(0, enemyData.dropItemPrefabs.Count);
+                GameObject selectedItem = enemyData.dropItemPrefabs[randomIndex];
 
-                if(droppedItem != null)
+                if (selectedItem != null)
                 {
+                    GameObject droppedItem = objectPoolManager.SpawnFromPool(selectedItem);
                     droppedItem.transform.position = transform.position;
+                    Debug.Log($"아이템 {droppedItem.name}드랍");
+                }
+                else
+                {
+                    Debug.LogWarning("dropItemPrefabs에 null 아이템이 포함됨");
                 }
             }
         }
+        else
+        {
+            Debug.LogWarning("드랍 아이템 리스트가 비어있거나 오브젝트 풀 매니저가 할당되지 않음");
+        }
+
         OnDeathEvent?.Invoke(this.gameObject, originalPrefab); // 사망 이벤트 발생 시 자신과 원본 프리팹 전달
         isActive = false; // 비활성화 상태
     }
@@ -202,16 +221,24 @@ public class Enemy : MonoBehaviour, IDamagable
     {
         if (other.CompareTag("Player"))
         {
-            Debug.Log("플레이어와 접촉");
-
-            if(other.TryGetComponent(out ResouceController resouceController))
+            if (other.TryGetComponent(out ResouceController resouceController))
             {
                 if (attackCooldown <= 0f)
                 {
+                    Debug.Log("플레이어와 접촉");
+                    // IDamagable을 상속받으면 해당 스크립트로 변경
                     resouceController.ChangeHealth(enemyData.attackDamage);
                     attackCooldown = enemyData.attackRate;
                 }
             }
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            attackCooldown = enemyData.attackRate;
         }
     }
 }
