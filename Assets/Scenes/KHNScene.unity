@@ -230,6 +230,7 @@ GameObject:
   - component: {fileID: 363912044}
   - component: {fileID: 363912043}
   - component: {fileID: 363912042}
+  - component: {fileID: 363912045}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -311,6 +312,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &363912045
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 363912041}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2da13a306159f450d8299cadba159cb6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 2017905388}
+  smoothSpeed: 5
+  offset: {x: 0, y: 0, z: 0}
 --- !u!1 &506599782
 GameObject:
   m_ObjectHideFlags: 0
@@ -7202,7 +7218,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5447831444037847431, guid: af5184e296f8dc5448f83c5a58379e5c, type: 3}
       propertyPath: pools.Array.size
-      value: 5
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 5447831444037847431, guid: af5184e296f8dc5448f83c5a58379e5c, type: 3}
       propertyPath: pools.Array.data[2].size
@@ -7217,6 +7233,10 @@ PrefabInstance:
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5447831444037847431, guid: af5184e296f8dc5448f83c5a58379e5c, type: 3}
+      propertyPath: pools.Array.data[5].size
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 5447831444037847431, guid: af5184e296f8dc5448f83c5a58379e5c, type: 3}
       propertyPath: pools.Array.data[2].prefab
       value: 
       objectReference: {fileID: 7765504013226401558, guid: 3c40e05b4ee8f26438778f32f9466e58, type: 3}
@@ -7228,6 +7248,10 @@ PrefabInstance:
       propertyPath: pools.Array.data[4].prefab
       value: 
       objectReference: {fileID: 9076800433690292658, guid: 6456509748f346247b92a56afdf5b852, type: 3}
+    - target: {fileID: 5447831444037847431, guid: af5184e296f8dc5448f83c5a58379e5c, type: 3}
+      propertyPath: pools.Array.data[5].prefab
+      value: 
+      objectReference: {fileID: 623183117809672311, guid: b65f7eeccd833473386eaead6bec16f1, type: 3}
     - target: {fileID: 6708620553495071759, guid: af5184e296f8dc5448f83c5a58379e5c, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -7330,6 +7354,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2dace58ad5f5a6140b5e2ccaf549d24a, type: 3}
+--- !u!4 &2017905388 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2327783507664223362, guid: 2dace58ad5f5a6140b5e2ccaf549d24a, type: 3}
+  m_PrefabInstance: {fileID: 2017905387}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2032615357 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6708620553495071759, guid: af5184e296f8dc5448f83c5a58379e5c, type: 3}
