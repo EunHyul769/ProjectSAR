@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyName: "\uBCF4\uC2A4\uC720\uB2DB"
   enemyType: 2
-  enemyPrefab: {fileID: 0}
+  enemyPrefab: {fileID: 9076800433690292658, guid: 6456509748f346247b92a56afdf5b852, type: 3}
   moveSpeed: 4
   attackRange: 20
-  attackRate: 0
+  attackRate: 5
   attackDamage: 50
   maxHealth: 1200
   expAmount: 0
