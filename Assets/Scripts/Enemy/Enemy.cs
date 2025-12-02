@@ -54,6 +54,7 @@ public class Enemy : MonoBehaviour, IDamagable
         {
             Debug.LogError("DifficultyScaler가 씬에 없음.");
         }
+
     }
 
     public void Initialize(EnemyData data, Transform targetPlayer, GameObject prefabOrigin, float healthMult, float damageMult)
@@ -189,9 +190,11 @@ public class Enemy : MonoBehaviour, IDamagable
         if (enemyData.expOrbPrefab != null && objectPoolManager != null)
         {
             GameObject expOrb = objectPoolManager.SpawnFromPool(enemyData.expOrbPrefab);
+            var orb = expOrb.GetComponent<ExpOrb>();
             if (expOrb != null)
             {
                 expOrb.transform.position = transform.position;
+                orb.OnSpawned(objectPoolManager, enemyData.expOrbPrefab);  
                 Debug.Log("경험치 오브젝트 드랍");
             }
         }

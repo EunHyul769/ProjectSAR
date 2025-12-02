@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 8105734981260745894}
   - component: {fileID: 7160257969130030979}
   - component: {fileID: 3789792522248475169}
+  - component: {fileID: 3654926770403678071}
   m_Layer: 9
   m_Name: Player
   m_TagString: Player
@@ -126,6 +127,9 @@ MonoBehaviour:
   characterRenderer: {fileID: 8419153692804091075}
   weaponPivot: {fileID: 8880431785759292641}
   WeaponPrefab: {fileID: 8875164933983385359, guid: 6de9967e48642114fa154b15b12a2f3e, type: 3}
+  dashDistance: 3
+  dashDuration: 0.2
+  dashCooldown: 1
 --- !u!114 &8105734981260745894
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -164,8 +168,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03e6be34fc8f49d468aa19d27591c7e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  collisionLayer:
+    serializedVersion: 2
+    m_Bits: 2048
   healthChangeDelay: 0.5
   expOrbPrefab: {fileID: 5499391159527633536, guid: 58b2cbd02c7394d3f8b0e8be7659d447, type: 3}
+--- !u!114 &3654926770403678071
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1862219804075385791}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c2c6a840a27ed43a1ad320b29f1558ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentExp: 0
 --- !u!1 &2497786025377729573
 GameObject:
   m_ObjectHideFlags: 0
