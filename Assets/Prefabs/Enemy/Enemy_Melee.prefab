@@ -132,6 +132,8 @@ MonoBehaviour:
   obstacleLayer:
     serializedVersion: 2
     m_Bits: 4096
+  projectilePrefab: {fileID: 0}
+  shootPoint: {fileID: 0}
 --- !u!195 &-1972381483868553780
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -139,7 +141,7 @@ NavMeshAgent:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 438623498700306704}
-  m_Enabled: 1
+  m_Enabled: 0
   m_AgentTypeID: -1372625422
   m_Radius: 0.07
   m_Speed: 3.5

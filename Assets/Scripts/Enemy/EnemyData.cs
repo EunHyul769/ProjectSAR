@@ -18,6 +18,7 @@ public class EnemyData : ScriptableObject
     [Header("적 유닛 스탯")]
     public float moveSpeed;
     public float attackRange;
+    public float attackRate;
     public float attackDamage;
     public float maxHealth;
 

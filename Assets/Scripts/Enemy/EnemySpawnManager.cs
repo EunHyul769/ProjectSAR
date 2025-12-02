@@ -25,17 +25,14 @@ public class EnemySpawnManager : MonoBehaviour
 
     private GameManager gameManager;
 
-    private void Awake()
+    private void Start()
     {
         gameManager = GameManager.Instance;
-        if(gameManager == null)
+        if (gameManager == null)
         {
             Debug.LogError("GameManager가 할당되지않음");
         }
-    }
 
-    private void Start()
-    {
         if (spawnPhases == null || spawnPhases.Count == 0)
         {
             Debug.LogError("SpawnPhase 없음. WaveData 할당 필요");
@@ -104,7 +101,7 @@ public class EnemySpawnManager : MonoBehaviour
                 // 현재 페이즈에 스폰 가능한 몬스터 종류가 없다면 스폰하지 않음
                 if (activeSpawnableEnemy.Count == 0)
                 {
-                    Debug.LogWarning("현재 페이즈에 스폰할 몬스터가 설정되어 있지 않습니다.");
+                    Debug.LogWarning("현재 페이즈에 스폰할 몬스터가 설정되어 있지 않음.");
                 }
                 else
                 {
@@ -146,7 +143,7 @@ public class EnemySpawnManager : MonoBehaviour
             enemyComponent.Initialize(enemyData, playerTransform, enemyData.enemyPrefab, currentHealthMultiplier, currentDamageMultiplier); // 원본 프리팹 전달
             enemyComponent.OnDeathEvent += OnEnemyKilled; // 몬스터 사망 시 호출될 이벤트 연결
         }
-        Debug.Log($"{enemyData.enemyName}이(가) 스폰되었습니다. 위치: {spawnPosition}");
+        /*Debug.Log($"{enemyData.enemyName}이(가) 스폰 위치: {spawnPosition}");*/
     }
 
     // 플레이어 주변에 랜덤 스폰 위치를 계산하는 함수

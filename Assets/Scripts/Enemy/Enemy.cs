@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class Enemy : MonoBehaviour
+public class Enemy : MonoBehaviour, IDamagable
 {
     [Header("적 유닛 설정")]
     [SerializeField] private EnemyData enemyData;
@@ -22,21 +22,29 @@ public class Enemy : MonoBehaviour
     private EnemyObjectPoolManager objectPoolManager;
     private DifficultyScaler difficultyScaler;
 
+    [Header("투사체 설정(Range타입)")]
+    [SerializeField] private GameObject projectilePrefab;
+    [SerializeField] private Transform shootPoint;
+
+    private float attackCooldown;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         rb.isKinematic = false;
         rb.gravityScale = 0;
         rb.freezeRotation = true;
-
+    }
+    private void Start()
+    {
         objectPoolManager = EnemyObjectPoolManager.Instance;
-        if(objectPoolManager == null)
+        if (objectPoolManager == null)
         {
             Debug.LogError("EnemyObjectPoolManager이 없음. 드랍 기능 사용 불가");
         }
 
         difficultyScaler = DifficultyScaler.Instance;
-        if(difficultyScaler == null)
+        if (difficultyScaler == null)
         {
             Debug.LogError("DifficultyScaler가 씬에 없음.");
         }
@@ -58,9 +66,8 @@ public class Enemy : MonoBehaviour
         isActive = true; // 활성화 상태로 전환
         gameObject.SetActive(true);
 
-        Debug.Log($"--- {enemyData.enemyName} 스탯 초기화 ---");
-        Debug.Log($"- 초기 Max 체력: {enemyData.maxHealth} * Phase계수: {healthMult:F2} * 시간계수: {finalHealthMultiplier / healthMult:F2} = 최종 체력: {currentHealth}");
-        Debug.Log($"- 초기 공격력: {enemyData.attackDamage} * Phase계수: {damageMult:F2} * 시간계수: {finalDamageMultiplier / damageMult:F2} = 최종 공격력: {enemyDamage}");
+        /*Debug.Log($"- 초기 Max 체력: {enemyData.maxHealth} * Phase계수: {healthMult:F2} * 시간계수: {finalHealthMultiplier / healthMult:F2} = 최종 체력: {currentHealth}");
+        Debug.Log($"- 초기 공격력: {enemyData.attackDamage} * Phase계수: {damageMult:F2} * 시간계수: {finalDamageMultiplier / damageMult:F2} = 최종 공격력: {enemyDamage}");*/
 
     }
 
@@ -93,13 +100,57 @@ public class Enemy : MonoBehaviour
             case EnemyType.Melee:
                 break;
             case EnemyType.Range:
-                // 플레이어의 체력 감소 로직에 enemyDamage 대입
+                if (attackCooldown <= 0f && projectilePrefab != null && shootPoint != null)
+                {
+                    ShootProjectile();
+                    attackCooldown = enemyData.attackRate;
+                }
                 break;
             case EnemyType.Boss:
                 break;
         }
     }
 
+    private void ShootProjectile()
+    {
+        if(objectPoolManager == null)
+        {
+            Debug.LogError("Enemy: ObjectPoolManager를 찾을 수 없음");
+            return;
+        }
+        if(projectilePrefab == null)
+        {
+            Debug.LogError("Enemy: 투사체 프리팹이 없음");
+            return;
+        }
+        if(shootPoint == null)
+        {
+            Debug.LogError("Enemy: 발사 지점이 할당되지않음");
+            return;
+        }
+
+        GameObject projectileObj = objectPoolManager.SpawnFromPool(projectilePrefab);
+        if (projectileObj == null)
+        {
+            Debug.LogError("투사체 프리팹을 가져오지 못했음.");
+            return;
+        }
+
+        projectileObj.transform.position = shootPoint.position;
+        projectileObj.transform.rotation = Quaternion.identity;
+
+        IProjectilable projectileScript = projectileObj.GetComponent<IProjectilable>();
+        if(projectileScript != null)
+        {
+            projectileScript.Initialize(playerTransform, enemyDamage, projectilePrefab);
+            projectileScript.SetObjectPoolManager(objectPoolManager);
+        }
+        else
+        {
+            Debug.LogError("투사체 프리팹에 IProjectiable을 구현한 스크립트가 없음");
+        }
+
+    }
     public void TakeDamage(int damage)
     {
         if (!isActive) return;
@@ -153,6 +204,11 @@ public class Enemy : MonoBehaviour
         {
             //player.ChangeHealth(enemyData.enemyDamage);
             Debug.Log("플레이어와 접촉");
+
+            if(other.TryGetComponent(out ResouceController resouceController))
+            {
+                resouceController.ChangeHealth(enemyData.attackDamage);
+            }
         }
     }
 
