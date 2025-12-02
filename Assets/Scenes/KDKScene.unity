@@ -122,6 +122,44 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &1126129582 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7978162958706366987, guid: 30b186f319f17454eac19852b0f04ee0, type: 3}
+  m_PrefabInstance: {fileID: 6689663196711775465}
+  m_PrefabAsset: {fileID: 0}
+--- !u!82 &1126129583 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 2881691368231516917, guid: 30b186f319f17454eac19852b0f04ee0, type: 3}
+  m_PrefabInstance: {fileID: 6689663196711775465}
+  m_PrefabAsset: {fileID: 0}
+--- !u!82 &1126129584 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 609721259572926633, guid: 30b186f319f17454eac19852b0f04ee0, type: 3}
+  m_PrefabInstance: {fileID: 6689663196711775465}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1126129587
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1126129582}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7855a78c3cfee4a4bad15116af74ca6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eatFood: {fileID: 8300000, guid: 25089275bddd84583b686581f802be2c, type: 3}
+  levelUp: {fileID: 8300000, guid: 44dc8c630943042528a0f579c5e5a80d, type: 3}
+  meleeSwing: {fileID: 8300000, guid: ceec17b8c55774d3ba66599406c16351, type: 3}
+  magicShot: {fileID: 8300000, guid: fae547a35aa9a46038ffcc5f80533ca4, type: 3}
+  fireMagic: {fileID: 8300000, guid: 7c7ad8a545a744b36a2d67ce0beba587, type: 3}
+  expGain: {fileID: 8300000, guid: c3c7ad0c0639f4b1ba77b923197c3305, type: 3}
+  enemyLongAttack: {fileID: 8300000, guid: 08d82b6d288f141b2992e6bb472a6112, type: 3}
+  expDrop: {fileID: 8300000, guid: c3c7ad0c0639f4b1ba77b923197c3305, type: 3}
+  moonlightForest: {fileID: 8300000, guid: 8ce77779847824784bc5d655e4e0beb1, type: 3}
+  sfxSource: {fileID: 1126129583}
+  bgmSource: {fileID: 1126129584}
 --- !u!1 &1248336441
 GameObject:
   m_ObjectHideFlags: 0
@@ -214,7 +252,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 10
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -239,7 +277,7 @@ Transform:
   m_GameObject: {fileID: 1589465391}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -590,12 +628,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7978162958706366987, guid: 30b186f319f17454eac19852b0f04ee0, type: 3}
       propertyPath: m_Name
-      value: AudioManager
+      value: SoundManager
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 7044423837524349721, guid: 30b186f319f17454eac19852b0f04ee0, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7978162958706366987, guid: 30b186f319f17454eac19852b0f04ee0, type: 3}
+      insertIndex: 1
+      addedObject: {fileID: 1126129587}
   m_SourcePrefab: {fileID: 100100000, guid: 30b186f319f17454eac19852b0f04ee0, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

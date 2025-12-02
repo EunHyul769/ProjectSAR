@@ -16,13 +16,31 @@ public class ExpOrb : MonoBehaviour
     private float pulseAmount = 0.2f; // 반짝임 크기
 
     private Vector3 originalScale;
+    
+    private EnemyObjectPoolManager poolManager;
+    private GameObject originalPrefab;
 
-    //플레이어 태그를 찾기
-    private void Start()
+    
+    // 풀에서 꺼낼 때 초기화 
+    public void OnSpawned(EnemyObjectPoolManager pm, GameObject prefab)
     {
-        player = GameObject.FindWithTag("Player").transform;
-        sr = GetComponent<SpriteRenderer>();
-        originalScale = transform.localScale;
+        poolManager = pm;
+        originalPrefab = prefab;
+
+        if (player == null)
+            player = GameObject.FindWithTag("Player").transform;
+
+        if (sr == null)
+        {
+            sr = GetComponent<SpriteRenderer>();
+            originalScale = transform.localScale;
+        }
+        transform.localScale = originalScale;
+
+        // 투명도 리셋
+        Color c = sr.color;
+        c.a = 1f;
+        sr.color = c;
     }
     
     private void Update()
@@ -43,10 +61,10 @@ public class ExpOrb : MonoBehaviour
             {
                 var receiver = player.GetComponent<IExpReceiver>();
                 if (receiver != null)
-                {
                     receiver.OnExpPickup(amount);
-                }
-                Destroy(gameObject); // 경험치 오브젝트 제거
+
+                ReturnToPool();
+                return;
             }
             // 반짝임(Pulse) ---
             float scale = 1 + Mathf.Sin(Time.time * pulseSpeed) * pulseAmount;
@@ -56,6 +74,17 @@ public class ExpOrb : MonoBehaviour
             Color c = sr.color;
             c.a = 0.5f + Mathf.Sin(Time.time * pulseSpeed) * 0.5f; // 0~1 범위로 투명도 변화
             sr.color = c;
+        }
+    }
+    private void ReturnToPool()
+    {
+        if (poolManager != null && originalPrefab != null)
+        {
+            poolManager.ReturnToPool(gameObject, originalPrefab);
+        }
+        else
+        {
+            Destroy(gameObject); // 안전장치
         }
     }
 }
