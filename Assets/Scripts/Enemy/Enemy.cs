@@ -198,18 +198,20 @@ public class Enemy : MonoBehaviour, IDamagable
         isActive = false; // 비활성화 상태
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
+    private void OnTriggerStay2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
         {
-            //player.ChangeHealth(enemyData.enemyDamage);
             Debug.Log("플레이어와 접촉");
 
             if(other.TryGetComponent(out ResouceController resouceController))
             {
-                resouceController.ChangeHealth(enemyData.attackDamage);
+                if (attackCooldown <= 0f)
+                {
+                    resouceController.ChangeHealth(enemyData.attackDamage);
+                    attackCooldown = enemyData.attackRate;
+                }
             }
         }
     }
-
 }
