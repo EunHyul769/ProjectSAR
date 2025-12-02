@@ -33,7 +33,7 @@ public class GameManager : MonoBehaviour
 
         // Ÿ�̸� ����
         playTime += Time.deltaTime;
-        UIManager.Instance.UpdateTimer(playTime);
+        //UIManager.Instance.UpdateTimer(playTime);
     }
 
     public void StartGame()

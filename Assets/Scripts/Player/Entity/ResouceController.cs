@@ -63,21 +63,7 @@ public class ResouceController : MonoBehaviour
             animationHandler.Damage();
         }
 
-        if (CurrentHealth <= 0f)
-        {
-            Death();
-        }
-
         return true;
     }
-
-    private void Death()
-    {
-        if (expOrbPrefab != null)
-        {
-            Instantiate(expOrbPrefab, transform.position, Quaternion.identity);
-        }
-
-        Destroy(gameObject); // 몬스터 제거
-    }
+    
 }
