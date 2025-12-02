@@ -42,6 +42,12 @@ public class ResouceController : MonoBehaviour
 
     public bool ChangeHealth(float change)
     {
+        if (baseController != null && baseController.IsInvincible)
+        {
+            // 무적이면 데미지 무시하고 리턴
+            return false;
+        }
+
         if (change == 0 || timeSinceLastChange < healthChangeDelay)
         {
             return false; //데미지를 받지 않음
