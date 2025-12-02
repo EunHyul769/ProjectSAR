@@ -15,9 +15,9 @@ GameObject:
   - component: {fileID: 8105734981260745894}
   - component: {fileID: 7160257969130030979}
   - component: {fileID: 3789792522248475169}
-  m_Layer: 6
+  m_Layer: 9
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -176,7 +176,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8880431785759292641}
   - component: {fileID: 8599637082317378743}
-  m_Layer: 6
+  m_Layer: 9
   m_Name: WeaponPivot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -261,7 +261,7 @@ GameObject:
   - component: {fileID: 3495077769194427101}
   - component: {fileID: 8419153692804091075}
   - component: {fileID: 7578890665698796325}
-  m_Layer: 6
+  m_Layer: 9
   m_Name: MainSprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}

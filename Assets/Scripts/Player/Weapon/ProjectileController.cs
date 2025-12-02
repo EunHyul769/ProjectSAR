@@ -4,13 +4,14 @@ using UnityEngine;
 
 public class ProjectileController : MonoBehaviour
 {
-    [SerializeField] private LayerMask levelCollisionLayer;
+    [SerializeField] private LayerMask collisionLayer;
     private RangeWeaponHandler rangeWeaponHandler;
 
     private float currentDuration;
     private Vector2 direction;
     private bool isReady;
     private Transform pivot;
+    private Vector2 startPosition;
 
     private Rigidbody2D _rigidbody;
     private SpriteRenderer spriteRenderer;
@@ -33,6 +34,16 @@ public class ProjectileController : MonoBehaviour
         if (currentDuration > rangeWeaponHandler.Duration)
         {
             DestroyProjectile(transform.position, false);
+            return;
+        }
+
+        float distanceTravelledSqr = (startPosition - (Vector2)transform.position).sqrMagnitude;
+        float maxRangeSqr = rangeWeaponHandler.AttackRange * rangeWeaponHandler.AttackRange;
+
+        if (distanceTravelledSqr > maxRangeSqr)
+        {
+            DestroyProjectile(transform.position, false); // 거리 초과 시 파괴 (이펙트 없음)
+            return;
         }
 
         _rigidbody.velocity = direction * rangeWeaponHandler.Speed;
@@ -40,7 +51,7 @@ public class ProjectileController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (levelCollisionLayer.value == (levelCollisionLayer.value | (1 << collision.gameObject.layer))) //벽면 충돌체랑 같은 레이어인지 or 연산으로 확인
+        if (collisionLayer.value == (collisionLayer.value | (1 << collision.gameObject.layer))) //벽면 충돌체랑 같은 레이어인지 or 연산으로 확인
         {
             DestroyProjectile(collision.ClosestPoint(transform.position) - direction * .2f, fxOnDestroy);
         } //collision.ClosestPoint(transform.position) 충돌체랑 가장 가까운 부분
@@ -71,6 +82,7 @@ public class ProjectileController : MonoBehaviour
 
     private void DestroyProjectile(Vector3 position, bool createFx)
     {
+        // TODO: createFx가 true일 때 파괴 이펙트(Particle)를 생성하는 코드를 여기에 추가할 수 있습니다.
         Destroy(this.gameObject);
     }
 }
