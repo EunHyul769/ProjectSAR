@@ -16,10 +16,6 @@ public class Enemy : MonoBehaviour, IDamagable
 
     public event Action<GameObject, GameObject> OnDeathEvent;
 
-    // 아직 사용되지 않음
-    [Header("장애물 설정")]
-    public LayerMask obstacleLayer;
-
     private EnemyObjectPoolManager objectPoolManager;
     private DifficultyScaler difficultyScaler;
 
@@ -29,6 +25,7 @@ public class Enemy : MonoBehaviour, IDamagable
 
     private float attackCooldown;
 
+    private SpriteRenderer spriteRenderer;
 
     private void Awake()
     {
@@ -36,7 +33,14 @@ public class Enemy : MonoBehaviour, IDamagable
         rb.isKinematic = false;
         rb.gravityScale = 0;
         rb.freezeRotation = true;
+
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        if(spriteRenderer == null)
+        {
+            Debug.LogError("Enemy: SpriteRenderer가 없음");
+        }
     }
+
     private void Start()
     {
         objectPoolManager = EnemyObjectPoolManager.Instance;
@@ -68,6 +72,11 @@ public class Enemy : MonoBehaviour, IDamagable
         isActive = true; // 활성화 상태로 전환
         gameObject.SetActive(true);
 
+        if (playerTransform != null)
+        {
+            UpdateSpriteDirectionBasedOnTarget();
+        }
+
         /*Debug.Log($"- 초기 Max 체력: {enemyData.maxHealth} * Phase계수: {healthMult:F2} * 시간계수: {finalHealthMultiplier / healthMult:F2} = 최종 체력: {currentHealth}");
         Debug.Log($"- 초기 공격력: {enemyData.attackDamage} * Phase계수: {damageMult:F2} * 시간계수: {finalDamageMultiplier / damageMult:F2} = 최종 공격력: {enemyDamage}");*/
 
@@ -98,6 +107,8 @@ public class Enemy : MonoBehaviour, IDamagable
             rb.velocity = Vector2.zero;
             Attack();
         }
+
+        UpdateSpriteDirectionBasedOnTarget();
     }
 
     private void Attack()
@@ -233,12 +244,25 @@ public class Enemy : MonoBehaviour, IDamagable
             }
         }
     }
-
     private void OnTriggerExit2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
         {
             attackCooldown = enemyData.attackRate;
+        }
+    }
+
+    private void UpdateSpriteDirectionBasedOnTarget()
+    {
+        if (spriteRenderer == null || playerTransform == null) return;
+
+        if (transform.position.x < playerTransform.position.x)
+        {
+            spriteRenderer.flipX = true;
+        }
+        else if (transform.position.x > playerTransform.position.x)
+        {
+            spriteRenderer.flipX = false; 
         }
     }
 }
