@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public enum GameState
@@ -23,6 +24,8 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        Time.timeScale = 1f;
+
         StartGame();
     }
 
@@ -31,19 +34,44 @@ public class GameManager : MonoBehaviour
         if (State != GameState.Playing)
             return;
 
-        // Ÿ�̸� ����
         playTime += Time.deltaTime;
-        //UIManager.Instance.UpdateTimer(playTime);
+        if (UIManager.Instance != null)
+        {
+            UIManager.Instance.UpdateTimer(playTime);
+        }
     }
 
     public void StartGame()
     {
         State = GameState.Playing;
+
+        // 더미데이터
+        SkillOptionData[] startingOptions = new SkillOptionData[2];
+
+        startingOptions[0] = new SkillOptionData()
+        {
+            name = "스타팅 스킬 1",
+            description = "시작 스킬 설명 1",
+            skillType = SkillType.Normal
+        };
+
+        startingOptions[1] = new SkillOptionData()
+        {
+            name = "스타팅 스킬 2",
+            description = "시작 스킬 설명 2",
+            skillType = SkillType.Normal
+        };
+
+        UIManager.Instance.OpenSkillChoice(startingOptions);
     }
 
     public void GameOver()
     {
         State = GameState.GameOver;
-        // ���߿� ���â ����
+    }
+    private void OnDestroy()
+    {
+        if (Instance == this)
+            Instance = null;
     }
 }
