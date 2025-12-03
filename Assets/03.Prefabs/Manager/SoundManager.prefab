@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3949537740715115698}
-  - component: {fileID: 7044423837524349721}
+  - component: {fileID: 1297890309283496129}
   - component: {fileID: 609721259572926633}
   - component: {fileID: 2881691368231516917}
   m_Layer: 0
@@ -34,7 +34,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7044423837524349721
+--- !u!114 &1297890309283496129
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -46,17 +46,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7855a78c3cfee4a4bad15116af74ca6d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  eatFood: {fileID: 0}
-  levelUp: {fileID: 0}
-  meleeSwing: {fileID: 0}
-  magicShot: {fileID: 0}
-  fireMagic: {fileID: 0}
-  expGain: {fileID: 0}
+  eatFood: {fileID: 8300000, guid: 25089275bddd84583b686581f802be2c, type: 3}
+  levelUp: {fileID: 8300000, guid: 44dc8c630943042528a0f579c5e5a80d, type: 3}
+  meleeSwing: {fileID: 8300000, guid: ceec17b8c55774d3ba66599406c16351, type: 3}
+  magicShot: {fileID: 8300000, guid: fae547a35aa9a46038ffcc5f80533ca4, type: 3}
+  fireMagic: {fileID: 8300000, guid: 7c7ad8a545a744b36a2d67ce0beba587, type: 3}
+  expGain: {fileID: 8300000, guid: c3c7ad0c0639f4b1ba77b923197c3305, type: 3}
   enemyLongAttack: {fileID: 8300000, guid: 08d82b6d288f141b2992e6bb472a6112, type: 3}
-  expDrop: {fileID: 0}
-  moonlightForest: {fileID: 0}
-  sfxSource: {fileID: 0}
-  bgmSource: {fileID: 0}
+  expDrop: {fileID: 8300000, guid: c3c7ad0c0639f4b1ba77b923197c3305, type: 3}
+  moonlightForest: {fileID: 8300000, guid: 8ce77779847824784bc5d655e4e0beb1, type: 3}
+  sfxSource: {fileID: 2881691368231516917}
+  bgmSource: {fileID: 609721259572926633}
   defaultSfxInterval: 0.2
 --- !u!82 &609721259572926633
 AudioSource:
@@ -165,8 +165,8 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
-  m_Volume: 1
+  m_PlayOnAwake: 0
+  m_Volume: 0.1
   m_Pitch: 1
   Loop: 0
   Mute: 0
