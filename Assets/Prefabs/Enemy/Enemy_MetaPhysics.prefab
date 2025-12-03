@@ -66,7 +66,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.07
+  m_Radius: 0.05
 --- !u!1 &9076800433690292658
 GameObject:
   m_ObjectHideFlags: 0
@@ -81,7 +81,7 @@ GameObject:
   - component: {fileID: 555936030446518354}
   - component: {fileID: 2939581208017133907}
   m_Layer: 11
-  m_Name: Enemy_Boss
+  m_Name: Enemy_MetaPhysics
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -144,8 +144,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 250
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.9607843}
+  m_Sprite: {fileID: 21300000, guid: 63ef47eedf82c4823b92b474de047d1a, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.9607843}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -195,11 +195,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyData: {fileID: 11400000, guid: 8315661662309ac4d93e152d3450444d, type: 2}
-  obstacleLayer:
-    serializedVersion: 2
-    m_Bits: 4096
   projectilePrefab: {fileID: 0}
   shootPoint: {fileID: 0}
+  physicalCollisionCollider: {fileID: 1791982240850085361}
 --- !u!58 &2939581208017133907
 CircleCollider2D:
   m_ObjectHideFlags: 0
