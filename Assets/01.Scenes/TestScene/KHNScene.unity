@@ -7208,6 +7208,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playTime: 0
+  testItemIcon: {fileID: 21300000, guid: 3029599d6f8af4fe9b0dc6c71b87213d, type: 3}
 --- !u!1001 &2009498210
 PrefabInstance:
   m_ObjectHideFlags: 0
