@@ -13,12 +13,11 @@ public class FoodDrop : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other)
     {
         SoundManager.Instance.PlaySFX(SoundManager.Instance.eatFood);
-        var stat = other.GetComponent<StatHandler>();
-        if (stat != null)
+        var resource = other.GetComponent<ResouceController>();
+        if (resource != null)
         {
-            stat.Health += data.healAmount;  // HP 회복
-            Debug.Log($"[FoodDrop] {data.itemName} 먹음 → HP: {stat.Health} (+{data.healAmount})");
-            Destroy(gameObject);             // 먹으면 제거
+            resource.ChangeHealth(data.healAmount);   // HP 회복 (정석)
+            Destroy(gameObject);
         }
     }
 }
