@@ -18,6 +18,7 @@ MonoBehaviour:
   moveSpeed: 1
   attackRange: 0.5
   attackRate: 1
+  shootingAttackRate: 999
   attackDamage: 10
   maxHealth: 50
   expAmount: 0
