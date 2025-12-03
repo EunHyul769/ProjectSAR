@@ -4,8 +4,9 @@ using UnityEngine.EventSystems;
 
 public class SkillChoiceSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
-    public Image icon;                        // 프리팹의 아이콘
-    public SkillOptionData currentSkill;      // 슬롯에 들어간 스킬
+    public Image icon;      
+    // 프리팹의 아이콘
+    public SkillData currentSkill;      // 슬롯에 들어간 스킬
 
     public SkillType slotType;                // Normal = Z/X, Ultimate = C
 
@@ -14,7 +15,7 @@ public class SkillChoiceSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerEx
         return currentSkill == null;
     }
 
-    public void SetSkill(SkillOptionData data)
+    public void SetSkill(SkillData data)
     {
         currentSkill = data;
 

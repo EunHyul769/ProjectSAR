@@ -13,6 +13,15 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
+    [Header("Skill Data (ScriptableObjects)")]
+    public SkillData startingSkill1;
+    public SkillData startingSkill2;
+
+    public SkillData ultimateSkillSO;
+
+    public SkillData normalSkillA;
+    public SkillData normalSkillB;
+
     public GameState State { get; private set; }
     public float playTime = 0f;
 
@@ -47,81 +56,50 @@ public class GameManager : MonoBehaviour
     {
         State = GameState.Playing;
 
-        SkillOptionData[] startingOptions = new SkillOptionData[2];
+        SkillData[] startingSkills = new SkillData[2];
 
-        startingOptions[0] = new SkillOptionData()
-        {
-            name = "스타팅 스킬 1",
-            description = "시작 스킬 설명 1",
-            skillType = SkillType.Normal
-        };
+        // ★ 여기는 네가 만든 SkillData SO를 넣어야 함
+        startingSkills[0] = startingSkill1;  // ScriptableObject 참조
+        startingSkills[1] = startingSkill2;
 
-        startingOptions[1] = new SkillOptionData()
-        {
-            name = "스타팅 스킬 2",
-            description = "시작 스킬 설명 2",
-            skillType = SkillType.Normal
-        };
-
-        // 게임 시작 → 스킬 선택창
-        UIManager.Instance.OpenSkillChoice(startingOptions);
+        UIManager.Instance.OpenSkillChoice(startingSkills);
     }
 
     //레벨업 발생 시 호출됨 (PlayerExp에서 level 넘김)
     public void OnPlayerLevelUp(int level)
     {
-        // 20레벨 → 궁극기 스킬 선택
         if (level == 20)
         {
-            var ultimate = CreateUltimateSkillOption();
-            UIManager.Instance.OpenSkillChoice(ultimate);
+            var ult = CreateUltimateSkill();
+            UIManager.Instance.OpenSkillChoice(ult);
             return;
         }
 
-        // 40레벨 → 일반 스킬 2번째 선택
         if (level == 40)
         {
-            var normals = CreateNormalSkillOptions();
+            var normals = CreateNormalSkills();
             UIManager.Instance.OpenSkillChoice(normals);
             return;
         }
 
-        // 그 외 → 아이템 / 무기 / 장비 카드
         var items = CreateItemOptions();
         UIManager.Instance.OpenLevelUp(items);
     }
 
     // 궁극기 스킬 1개 (20레벨)
-    private SkillOptionData[] CreateUltimateSkillOption()
+    private SkillData[] CreateUltimateSkill()
     {
-        return new SkillOptionData[]
+        return new SkillData[]
         {
-            new SkillOptionData()
-            {
-                name = "궁극기 스킬",
-                description = "강력한 충격파를 발사합니다.",
-                skillType = SkillType.Ultimate
-            }
+            ultimateSkillSO
         };
     }
-
-    // 일반 스킬 2개 (40레벨)
-    private SkillOptionData[] CreateNormalSkillOptions()
+    private SkillData[] CreateNormalSkills()
     {
-        return new SkillOptionData[]
+        return new SkillData[]
         {
-            new SkillOptionData()
-            {
-                name = "스킬 A",
-                description = "일반 스킬 설명 A",
-                skillType = SkillType.Normal
-            },
-            new SkillOptionData()
-            {
-                name = "스킬 B",
-                description = "일반 스킬 설명 B",
-                skillType = SkillType.Normal
-            }
+        normalSkillA,
+        normalSkillB
         };
     }
 

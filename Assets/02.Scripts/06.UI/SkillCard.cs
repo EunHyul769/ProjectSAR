@@ -15,7 +15,7 @@ public class SkillCardUI : MonoBehaviour,
     [Header("Scale Root")]
     public Transform scaleRoot;
 
-    private SkillOptionData optionData;
+    private SkillData skillData;
     private Vector3 originalScale;
 
     private void Start()
@@ -24,9 +24,10 @@ public class SkillCardUI : MonoBehaviour,
             originalScale = scaleRoot.localScale;
     }
 
-    public void SetCard(SkillOptionData data)
+    // SkillData 직접 적용
+    public void SetCard(SkillData data)
     {
-        optionData = data;
+        skillData = data;
 
         if (data == null)
         {
@@ -38,11 +39,10 @@ public class SkillCardUI : MonoBehaviour,
         }
 
         skillImage.sprite = data.icon;
-        nameText.text = data.name;
-
-        // 임시데이터
+        nameText.text = data.skillName;
         optionText.text = data.description;
 
+        // rarityFrame.color는 SkillData에 레어도 정보가 없으므로 보류
     }
 
     // 마우스 올리면 확대
@@ -59,9 +59,9 @@ public class SkillCardUI : MonoBehaviour,
             scaleRoot.localScale = originalScale;
     }
 
-    // 클릭 시 선택 처리
+    // 클릭 시 SkillData를 패널로 전달
     public void OnPointerClick(PointerEventData eventData)
     {
-        SkillChoicePanel.Instance.SelectCard(optionData);
+        SkillChoicePanel.Instance.SelectCard(skillData);
     }
 }

@@ -87,9 +87,9 @@ public class UIManager : MonoBehaviour
         LevelUpPanel.Instance.Open(options);
     }
     // 스킬 선택 패널 열기
-    public void OpenSkillChoice(SkillOptionData[] options)
+    public void OpenSkillChoice(SkillData[] datas)
     {
-        skillChoicePanel.Open(options);
+        skillChoicePanel.Open(datas);
     }
     // 일시정지 패널 열기
     public void TogglePause()
