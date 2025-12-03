@@ -24,6 +24,10 @@ public class SoundManager : MonoBehaviour
 
     public AudioSource sfxSource;
     public AudioSource bgmSource;
+    
+    private Dictionary<AudioClip, float> sfxCooldown = new Dictionary<AudioClip, float>();
+
+    [SerializeField] private float defaultSfxInterval = 0.2f;
 
     private void Awake()
     {
@@ -34,10 +38,25 @@ public class SoundManager : MonoBehaviour
         else Destroy(gameObject);
     }
 
-    public void PlaySFX(AudioClip clip)
+    public void PlaySFX(AudioClip clip, float interval = -1f)
     {
-        if (clip != null)
-            sfxSource.PlayOneShot(clip);
+        if (clip == null) return;
+
+        // interval을 지정 안 하면 기본값 사용
+        if (interval <= 0) interval = defaultSfxInterval;
+
+        // 이미 사운드가 등록되어 있고, 아직 재생 쿨타임이 안 지났으면 스킵
+        if (sfxCooldown.ContainsKey(clip))
+        {
+            if (Time.time < sfxCooldown[clip])
+                return;
+        }
+
+        // 플레이
+        sfxSource.PlayOneShot(clip);
+
+        // 다음 재생 시간 갱신
+        sfxCooldown[clip] = Time.time + interval;
     }
 
     public void PlayBGM(AudioClip clip)

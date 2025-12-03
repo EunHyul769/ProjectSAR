@@ -12,6 +12,7 @@ public class FoodDrop : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        SoundManager.Instance.PlaySFX(SoundManager.Instance.eatFood);
         var stat = other.GetComponent<StatHandler>();
         if (stat != null)
         {

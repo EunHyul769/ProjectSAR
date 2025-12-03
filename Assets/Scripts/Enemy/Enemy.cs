@@ -27,6 +27,11 @@ public class Enemy : MonoBehaviour, IDamagable
 
     private SpriteRenderer spriteRenderer;
 
+    private IBossAttackable currentBossPattern;
+
+    [Header("물리 충돌용 collider")]
+    [SerializeField] private Collider2D physicalCollisionCollider;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -78,9 +83,43 @@ public class Enemy : MonoBehaviour, IDamagable
             UpdateSpriteDirectionBasedOnTarget();
         }
 
+        if (enemyData.enemyType ==EnemyType.Boss)
+        {
+            if(enemyData.enemyName == "Metaphysics")
+            {
+                currentBossPattern = new MetaphysicsPatern(5f, physicalCollisionCollider);
+
+                if (physicalCollisionCollider != null)
+                {
+                    physicalCollisionCollider.enabled = true;
+                }
+            }
+            else
+            {
+                Debug.LogWarning($"Enemy: Boss 타입이지만 패턴 정의가 되어있지않음");
+                currentBossPattern = null;
+            }
+        }
+        else
+        {
+            currentBossPattern = null;
+        }
+
         /*Debug.Log($"- 초기 Max 체력: {enemyData.maxHealth} * Phase계수: {healthMult:F2} * 시간계수: {finalHealthMultiplier / healthMult:F2} = 최종 체력: {currentHealth}");
         Debug.Log($"- 초기 공격력: {enemyData.attackDamage} * Phase계수: {damageMult:F2} * 시간계수: {finalDamageMultiplier / damageMult:F2} = 최종 공격력: {enemyDamage}");*/
 
+    }
+
+    private void OnDisable()
+    {
+        currentBossPattern?.CancelPattern();
+        rb.velocity = Vector2.zero;
+        isActive = false;
+
+        if (physicalCollisionCollider != null)
+        {
+            physicalCollisionCollider.enabled = true;
+        }
     }
 
     private void Update()
@@ -96,6 +135,25 @@ public class Enemy : MonoBehaviour, IDamagable
             return;
         }
 
+        if ( enemyData.enemyType == EnemyType.Boss && currentBossPattern != null)
+        {
+            currentBossPattern.BossAttack(this, playerTransform);
+
+            if (!currentBossPattern.IsActive)
+            {
+                UpdateMovement();
+            }
+        }
+        else
+        {
+            UpdateMovement();
+        }
+
+        UpdateSpriteDirectionBasedOnTarget();
+    }
+
+    private void UpdateMovement()
+    {
         Vector2 directionToPlayer = (playerTransform.position - transform.position).normalized;
         float distanceToPlayer = Vector2.Distance(transform.position, playerTransform.position);
 
@@ -108,10 +166,7 @@ public class Enemy : MonoBehaviour, IDamagable
             rb.velocity = Vector2.zero;
             Attack();
         }
-
-        UpdateSpriteDirectionBasedOnTarget();
     }
-
     private void Attack()
     {
         switch (enemyData.enemyType)
@@ -132,6 +187,9 @@ public class Enemy : MonoBehaviour, IDamagable
 
     private void ShootProjectile()
     {
+        // 원거리 몬스터 공격 사운드 추가
+        SoundManager.Instance.PlaySFX(SoundManager.Instance.enemyLongAttack, 1f);
+        
         if (objectPoolManager == null)
         {
             Debug.LogError("Enemy: ObjectPoolManager를 찾을 수 없음");

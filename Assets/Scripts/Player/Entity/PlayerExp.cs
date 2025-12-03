@@ -28,6 +28,9 @@ public class PlayerExp : MonoBehaviour, IExpReceiver
     {
         currentExp += amount;
         Debug.Log($"경험치 획득: {amount} | 현재 경험치: {currentExp} / {maxExp}");
+        
+        // 경험치 먹는 효과음
+        SoundManager.Instance.PlaySFX(SoundManager.Instance.expGain);
 
         if (currentExp >= maxExp)
         {
@@ -41,6 +44,8 @@ public class PlayerExp : MonoBehaviour, IExpReceiver
         {
             currentExp -= maxExp;
             level++;
+            
+            SoundManager.Instance.PlaySFX(SoundManager.Instance.levelUp);
 
             // 다음 레벨 필요 경험치 증가
             maxExp = Mathf.RoundToInt(maxExp * expGrowthFactor);

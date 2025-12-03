@@ -12,6 +12,10 @@ public class ProjectileController : MonoBehaviour
 
     private Rigidbody2D _rigidbody;
     private SpriteRenderer spriteRenderer;
+    private StatHandler stats;
+
+    private float damage;
+    private bool isExplosive;
 
     public bool fxOnDestroy = true; //삭제시의 이펙트 출력 여부
 
@@ -19,6 +23,7 @@ public class ProjectileController : MonoBehaviour
     {
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         _rigidbody = GetComponent<Rigidbody2D>();
+        stats = FindAnyObjectByType<StatHandler>();
         pivot = transform.GetChild(0);
     }
 
@@ -46,8 +51,28 @@ public class ProjectileController : MonoBehaviour
         DestroyProjectile(transform.position, false);
     }
 
+    public void Setup(float dmg, bool explosive)
+    {
+        this.damage = dmg;
+        this.isExplosive = explosive;
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        // 폭발 확률 계산
+        bool isExplosiveShot = false;
+        if (stats.HasExplosiveProjectile)
+        {
+            float randomVal = Random.Range(0f, 1f); // 0.0 ~ 1.0
+            if (randomVal <= stats.ExplosiveChance) // 확률 성공
+            {
+                isExplosiveShot = true;
+            }
+        }
+        // 투사체 설정 (기본 공격력 + 폭발 여부)
+        Setup(stats.Attack, isExplosiveShot);
+
+        float finalDamage = damage;
         if (collisionLayer.value == (collisionLayer.value | (1 << collision.gameObject.layer))) //벽면 충돌체랑 같은 레이어인지 or 연산으로 확인
         {
             DestroyProjectile(collision.ClosestPoint(transform.position) - direction * .2f, fxOnDestroy);
@@ -57,9 +82,19 @@ public class ProjectileController : MonoBehaviour
             IDamagable damagableObject = collision.gameObject.GetComponent<IDamagable>();
 
             if (damagableObject != null)
-            {
                 damagableObject.TakeDamage(rangeWeaponHandler.power);
+
+            // 패시브 효과: 폭발
+            if (isExplosive)
+            {
+                // 폭발 이펙트 생성 로직 추가 가능
+                finalDamage = damage * 2; // 데미지 2배
+                Debug.Log("패시브 발동! 으아아 이게 뭐야 (폭발 데미지)");
+
+                if (damagableObject != null)
+                    damagableObject.TakeDamage(finalDamage);
             }
+
             DestroyProjectile(collision.ClosestPoint(transform.position), fxOnDestroy);
         }
     }
