@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class ResouceController : MonoBehaviour
 {
@@ -41,15 +39,6 @@ public class ResouceController : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collisionLayer.value == (collisionLayer.value | (1 << collision.gameObject.layer))) //충돌체랑 같은 레이어인지 확인
-        {
-            ChangeHealth(-1);
-            Debug.Log("체력 감소");
-        }
-    }
-
     public bool ChangeHealth(float change)
     {
         if (baseController != null && baseController.IsInvincible)
@@ -84,6 +73,15 @@ public class ResouceController : MonoBehaviour
     private void Death()
     {
         Debug.Log("사망");
+    }
+
+    public void FullRecovery()
+    {
+        CurrentHealth = statHandler.Health; // 현재 체력을 최대 체력으로
+
+        Debug.Log("레벨업 보너스! 체력 완전 회복: " + CurrentHealth);
+
+        // 체력 UI 여기서 갱신 필요
     }
 
 }

@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class BaseController : MonoBehaviour
@@ -137,14 +136,6 @@ public class BaseController : MonoBehaviour
             weaponPivot.rotation = Quaternion.Euler(0f, 0f, rotZ);
         }
         weaponHandler?.Rotate(isLeft);
-    }
-
-    public void ApplyKnockback(Transform other, float power, float duration)
-    {
-        if (IsInvincible) return; //무적 상태(대쉬 중)라면 넉백 무시
-
-        knockbackDuration = duration; //넉백의 시간
-        knockback = -(other.position - transform.position).normalized * power; //넉백의 방향
     }
 
     private void HandleAttackDelay()
