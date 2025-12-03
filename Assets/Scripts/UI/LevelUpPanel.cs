@@ -38,13 +38,16 @@ public class LevelUpPanel : MonoBehaviour
     public TMP_Text cd;
     public TMP_Text projectilenum;
 
+    public bool isOpen { get; private set; }
+    public GameObject window;
+
     private void Awake()
     {
         Instance = this;
 
         //gameObject.SetActive(false);
 
-        rerollButton.onClick.AddListener(RerollOptions);
+        rerollButton.interactable = false;
 
         // Delete 버튼은 이번 프로젝트에서 비활성화
         deleteButton.interactable = false;
@@ -52,13 +55,16 @@ public class LevelUpPanel : MonoBehaviour
 
     private void Start()
     {
-        TestOpen();   // 게임 시작하면 UI 단독 테스트
+        // TestOpen();
+        window.SetActive(false);
     }
 
     // 패널 열기
     public void Open(LevelUpOptionData[] options)
     {
-        gameObject.SetActive(true);
+        isOpen = true;
+
+        window.SetActive(true);
         Time.timeScale = 0f;
 
         CreateCards(options);
@@ -93,18 +99,11 @@ public class LevelUpPanel : MonoBehaviour
         ClosePanel();
     }
 
-    // 리롤 버튼
-    private void RerollOptions()
-    {
-        Debug.Log("리롤!");
-
-        LevelUpOptionData[] newOptions = CreateDummyOptions();
-        CreateCards(newOptions);
-    }
-
     private void ClosePanel()
     {
-        gameObject.SetActive(false);
+        isOpen = false;
+
+        window.SetActive(false);
         Time.timeScale = 1f;
     }
 

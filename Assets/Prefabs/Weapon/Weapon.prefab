@@ -183,7 +183,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e22758dd822c99d43aec91ecf9b9d99b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  delay: 2
+  delay: 0.7
   weaponSize: 0.7
   power: 5
   speed: 10
@@ -199,9 +199,9 @@ MonoBehaviour:
   bulletSize: 0.7
   duration: 10
   spread: 1
+  projectileColor: {r: 1, g: 1, b: 1, a: 1}
   numberOfPrijectilesPerShot: 3
   multipleProjectileAngle: 3
-  projectileColor: {r: 1, g: 1, b: 1, a: 1}
   isAutoTargeting: 1
   enemyLayer:
     serializedVersion: 2

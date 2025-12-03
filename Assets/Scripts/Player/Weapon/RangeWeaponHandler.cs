@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using UnityEngine;
+﻿using UnityEngine;
 using System.Linq;
 
 public class RangeWeaponHandler : WeaponHandler
@@ -21,14 +18,16 @@ public class RangeWeaponHandler : WeaponHandler
     [SerializeField] private float spread;
     public float Spread { get { return spread; } }
 
+    [SerializeField] private Color projectileColor;
+    public Color ProjectileColor { get { return projectileColor; } }
+
+    [Header("한번에 발사할 발사체 수")]
     [SerializeField] private int numberOfPrijectilesPerShot;
     public int NumberOfPrijectilesPerShot { get { return numberOfPrijectilesPerShot; } }
 
+    [Header("발사체 간의 각도 간격")]
     [SerializeField] private float multipleProjectileAngle;
     public float MultipleProjectileAngle { get { return multipleProjectileAngle; } }
-
-    [SerializeField] private Color projectileColor;
-    public Color ProjectileColor { get { return projectileColor; } }
 
     [Header("Auto Targeting")]
     [SerializeField] private bool isAutoTargeting = false; // 자동 타겟팅 활성화 여부

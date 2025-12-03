@@ -7,6 +7,7 @@ public class ItemSlotController : MonoBehaviour
     //[Header("Slot Settings")]
     //public SlotType slotType; // Weapon, Equipment
     //public Image icon;
+    //public TMP_Text levelText;
 
     //private ItemData currentItem;    
 
@@ -30,6 +31,14 @@ public class ItemSlotController : MonoBehaviour
     //    // 아이콘 표시
     //    icon.sprite = item.icon;
     //    icon.enabled = true;
+
+    //    // 레벨 표시
+    //    SetLevel(level);
+    //}
+
+    //public void SetLevel(int level)
+    //{
+    //    levelText.text = $"Lv {level}";
     //}
 
     //public void Clear()
