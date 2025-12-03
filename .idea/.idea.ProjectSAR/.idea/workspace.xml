@@ -6,8 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="e88a339b-ddf8-41ba-9e08-ff5b81a4e014" name="변경" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ProjectSAR/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ProjectSAR/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Item/FoodDrop.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Item/FoodDrop.prefab" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scenes/KDKScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/KDKScene.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/TextMesh Pro/Resources/Fonts &amp; Materials/LiberationSans SDF - Fallback.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/TextMesh Pro/Resources/Fonts &amp; Materials/LiberationSans SDF - Fallback.asset" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
