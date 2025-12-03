@@ -80,10 +80,10 @@ public class UIManager : MonoBehaviour
         int sec = (int)(time % 60);
         timerText.text = $"{min:00}:{sec:00}";
     }
-    // 레벨업 패널 열기->나중에 GameManager가 호출하게 됨
+    // 레벨업 패널 열기
     public void OpenLevelUp(LevelUpOptionData[] options)
     {
-        levelUpPanel.Open(options);
+        LevelUpPanel.Instance.Open(options);
     }
     // 스킬 선택 패널 열기
     public void OpenSkillChoice(SkillOptionData[] options)
