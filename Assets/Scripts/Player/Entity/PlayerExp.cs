@@ -52,6 +52,8 @@ public class PlayerExp : MonoBehaviour, IExpReceiver
             {
                 resourceController.FullRecovery();
             }
+            // 게임매니저와 연결
+            GameManager.Instance.OnPlayerLevelUp(level);
         }
     }
 }
