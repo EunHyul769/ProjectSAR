@@ -68,7 +68,7 @@ public class LevelUpPanel : MonoBehaviour
         Time.timeScale = 0f;
 
         CreateCards(options);
-        RefreshStatsDummy();
+        RefreshStats();
         CreateEmptyWeaponSlots();
         CreateEmptyEquipSlots();
     }
@@ -126,14 +126,21 @@ public class LevelUpPanel : MonoBehaviour
         return arr;
     }
 
-    private void RefreshStatsDummy()
+    private void RefreshStats()
     {
-        hpText.text = "-";
+        var player = GameObject.FindWithTag("Player");
+        if (player == null) return;
+
+        var stat = player.GetComponent<StatHandler>();
+        var resource = player.GetComponent<ResouceController>();
+
+        hpText.text = $"HP : {(int)resource.CurrentHealth} / {stat.MaxHealth}";
+        spdText.text = $"SPD : {stat.Speed}";
+        atkText.text = $"ATK : {stat.Attack}";
+        atkspdText.text = $"ATK SPD : {stat.AttackSpeed}";
+
         hpgenText.text = "-";
         defText.text = "-";
-        spdText.text = "-";
-        atkText.text = "-";
-        atkspdText.text = "-";
         atkareaText.text = "-";
         cri.text = "-";
         cridmg.text = "-";

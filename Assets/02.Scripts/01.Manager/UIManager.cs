@@ -6,6 +6,9 @@ public class UIManager : MonoBehaviour
 {
     public static UIManager Instance;
 
+    [Header("Character")]
+    public Image characterIllust;
+
     [Header("HUD")]
     public Slider hpBar;
     public Slider expBar;
@@ -33,6 +36,10 @@ public class UIManager : MonoBehaviour
     public MultiSlotUI slotZ;
     public MultiSlotUI slotX;
     public MultiSlotUI slotC;
+    
+    [Header("player Mini StatusBar")]
+    public PlayerStatusBar playerStatusBar;
+
 
     private void Awake()
     {
@@ -46,21 +53,33 @@ public class UIManager : MonoBehaviour
     }
     private void Start()
     {
+        Debug.Log("Selected Character = " + CharacterSelectManager.selectedCharacter);
+
+        if (CharacterSelectManager.selectedCharacter != null)
+        {
+            characterIllust.sprite = CharacterSelectManager.selectedCharacter.hudSprite;
+        }
         CreateSlots(weaponSlotParent, weaponSlotPrefab, 6);
         CreateSlots(equipmentSlotParent, equipmentSlotPrefab, 6);
+
         // 대쉬 슬롯 초기 세팅 추가
         var player = FindObjectOfType<BaseController>();
         if (player != null)
         {
-            dashSlot.SetSkill(
-                dashSlot.icon.sprite,
-                GetDashCooldown(player),
-                "Shift"
-            );
+            dashSlot.SetSkill(dashSlot.icon.sprite, GetDashCooldown(player), "Shift", null);
+        }
+
+        if (CharacterSelectManager.selectedCharacter != null)
+        {
+            characterIllust.sprite = CharacterSelectManager.selectedCharacter.hudSprite;
+            characterIllust.color = Color.white;
         }
     }
     private void Update()
     {
+        HandleSkillInput();
+
+
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (Input.GetKeyDown(KeyCode.Escape))
@@ -77,6 +96,41 @@ public class UIManager : MonoBehaviour
             }
         }
     }
+    private void HandleSkillInput()
+    {
+        // Z
+        if (Input.GetKeyDown(KeyCode.Z))
+        {
+            TryUseSkill(slotZ);
+        }
+
+        // X
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            TryUseSkill(slotX);
+        }
+
+        // C (궁극기)
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            TryUseSkill(slotC);
+        }
+    }
+
+    private void TryUseSkill(MultiSlotUI slot)
+    {
+        if (slot == null) return;
+        if (slot.currentSkill == null) return;
+
+        bool cooling = slot.cooldownMask.fillAmount > 0;
+        if (cooling) return;
+
+        // ★ PlayerSkillController에 직접 전달
+        PlayerSkillController.Instance.UseSkillFromHUD(slot.currentSkill);
+
+        // ★ HUD 쿨다운 시작
+        slot.StartCooldown();
+    }
     private void CreateSlots(Transform parent, GameObject prefab, int count)
     {
         for (int i = 0; i < count; i++)
@@ -91,6 +145,10 @@ public class UIManager : MonoBehaviour
 
         if (hpText != null)
             hpText.text = $"{(int)current} / {(int)max}";
+
+        //minibar
+        if (playerStatusBar != null)
+            playerStatusBar.SetHp(current, max);
     }
 
     public void UpdateEXP(float current, float max)
@@ -103,6 +161,10 @@ public class UIManager : MonoBehaviour
             float percent = (current / max) * 100f;
             expText.text = $"{percent:0}%";
         }
+
+        // minibar
+        if (playerStatusBar != null)
+            playerStatusBar.SetExp(current, max);
     }
     public void UpdateTimer(float time)
     {
@@ -146,24 +208,39 @@ public class UIManager : MonoBehaviour
         switch (data.type)
         {
             case SkillsType.Active:
-                if (slotZ.IsEmpty()) { target = slotZ; key = "Z"; }
-                else if (slotX.IsEmpty()) { target = slotX; key = "X"; }
+            case SkillsType.Passive:
+                if (slotZ.currentSkill == null)
+                {
+                    target = slotZ;
+                    key = "Z";
+                }
+                else if (slotX.currentSkill == null)
+                {
+                    target = slotX;
+                    key = "X";
+                }
                 break;
 
             case SkillsType.Ultimate:
-                if (slotC.IsEmpty()) { target = slotC; key = "C"; }
+                if (slotC.currentSkill == null)
+                {
+                    target = slotC;
+                    key = "C";
+                }
                 break;
         }
 
         if (target == null)
         {
-            Debug.Log("HUD 슬롯이 비어있지 않습니다");
+            Debug.Log("HUD 슬롯이 이미 가득 차 있습니다.");
             return;
         }
 
-        // HUD 슬롯 UI에 아이콘 / 쿨타임 / 키 지정
-        target.SetSkill(data.icon, data.coolTime, key);
+        // HUD 슬롯에 스킬 데이터 + 아이콘 + 쿨타임 + 키 전달
+        target.SetSkill(data.icon,data.coolTime,key,data);
+        PlayerSkillController.Instance.SetSkillFromHUD(key, data);
     }
+
 
     private void OnDestroy()
     {

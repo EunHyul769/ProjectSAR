@@ -67,7 +67,7 @@ public class SkillChoicePanel : MonoBehaviour
         slotX.SetEmpty();
         slotC.SetEmpty();
 
-        RefreshStatsDummy();
+        RefreshStats();
         CreateEmptyWeaponSlots();
         CreateEmptyEquipSlots();
     }
@@ -102,11 +102,14 @@ public class SkillChoicePanel : MonoBehaviour
             ClosePanel();
             return;
         }
+
+        GameManager.Instance.AddOwnedNormalSkill(data);
+
         // 일반 스킬 Z → X
         if (slotZ.IsEmpty())
         {
             slotZ.SetSkill(data);
-            UIManager.Instance.SetSkillToHUD(data);    // HUD에도 넣기
+            UIManager.Instance.SetSkillToHUD(data);
         }
         else if (slotX.IsEmpty())
         {
@@ -126,14 +129,21 @@ public class SkillChoicePanel : MonoBehaviour
         window.SetActive(false);
         Time.timeScale = 1f;
     }
-    private void RefreshStatsDummy()
+    private void RefreshStats()
     {
-        hpText.text = "-";
+        var player = GameObject.FindWithTag("Player");
+        if (player == null) return;
+
+        var stat = player.GetComponent<StatHandler>();
+        var resource = player.GetComponent<ResouceController>();
+
+        hpText.text = $"HP : {(int)resource.CurrentHealth} / {stat.MaxHealth}";
+        spdText.text = $"SPD : {stat.Speed}";
+        atkText.text = $"ATK : {stat.Attack}";
+        atkspdText.text = $"ATK SPD : {stat.AttackSpeed}";
+
         hpgenText.text = "-";
         defText.text = "-";
-        spdText.text = "-";
-        atkText.text = "-";
-        atkspdText.text = "-";
         atkareaText.text = "-";
         cri.text = "-";
         cridmg.text = "-";

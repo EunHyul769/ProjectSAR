@@ -19,22 +19,30 @@ public class MultiSlotUI : MonoBehaviour
     private float currentTime;
     private float maxTime;
 
-    public void SetSkill(Sprite iconSprite, float cooldown, string key)
-    {
-        //slotType = SlotType.Skill;
+    public SkillData currentSkill; // HUD 슬롯에 실제 들어간 스킬
 
+    public void SetSkill(Sprite iconSprite, float cooldown, string key, SkillData data)
+    {
+        // 현재 스킬 데이터 저장
+        currentSkill = data;
+
+        // 아이콘 표시
         icon.sprite = iconSprite;
         icon.enabled = true;
 
+        // 쿨타임 설정
         maxTime = cooldown;
         currentTime = 0f;
 
+        // 키(Z/X/C) 표시
         keyText.text = key;
-        keyText.gameObject.SetActive(true);  // Skill에만 표시
+        keyText.gameObject.SetActive(true);
 
+        // 쿨타임 마스크 초기화
         cooldownMask.fillAmount = 0f;
         cooldownText.gameObject.SetActive(false);
     }
+
 
     public void SetBuff(Sprite iconSprite, float duration)
     {

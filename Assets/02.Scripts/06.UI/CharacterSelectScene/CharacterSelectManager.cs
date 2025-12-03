@@ -4,6 +4,8 @@ using UnityEngine.UI;
 
 public class CharacterSelectManager : MonoBehaviour
 {
+    public static CharacterData selectedCharacter;
+
     [Header("=== Character Data (SO) ===")]
     public CharacterData[] characterDataList;
 
@@ -26,6 +28,8 @@ public class CharacterSelectManager : MonoBehaviour
     [Header("캐릭터 셀렉트 슬롯 18칸")]
     public Image[] characterSlots;
     public Sprite XMark;
+
+
 
 
     void Start()
@@ -89,7 +93,7 @@ public class CharacterSelectManager : MonoBehaviour
         // 0번 슬롯: 캐릭터 대표 아이콘
         if (characterSlots.Length > 0)
         {
-            characterSlots[0].sprite = data.characterSprite;
+            characterSlots[0].sprite = data.hudSprite;
             characterSlots[0].color = Color.white;
         }
 
@@ -100,11 +104,14 @@ public class CharacterSelectManager : MonoBehaviour
             characterSlots[i].color = Color.white;
         }
     }
-
-
+    public void OnClickSlot(int index)
+    {
+        UpdateUI(index);
+    }
 
     public void OnSelectComplete()
     {
+        selectedCharacter = characterDataList[currentIndex]; // 선택 데이터 저장
         UnityEngine.SceneManagement.SceneManager.LoadScene("GameScene");
     }
 

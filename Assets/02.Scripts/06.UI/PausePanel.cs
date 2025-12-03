@@ -7,13 +7,14 @@ public class PausePanel : MonoBehaviour
 {
     [Header("Skill Select Slots")]
     public int skillSlotCount = 15;
-    public Transform skillSlotParent; 
-    public GameObject skillSlotPrefab;  
+    public Transform skillSlotParent;
+    public GameObject skillSlotPrefab;
+    private SkillChoiceSlotUI[] pauseSkillSlots;
 
     [Header("Owned Item Slots")]
     public int itemSlotCount = 48;
     public Transform itemSlotParent;
-    public GameObject itemSlotPrefab; 
+    public GameObject itemSlotPrefab;
 
     [Header("Character Stats")]
     public TMP_Text hpText;
@@ -41,7 +42,6 @@ public class PausePanel : MonoBehaviour
 
     private void Awake()
     {
-        // 버튼 기능 연결
         resumeButton.onClick.AddListener(OnResumeClicked);
         retryButton.onClick.AddListener(OnRetryClicked);
         mainButton.onClick.AddListener(OnMainClicked);
@@ -52,20 +52,18 @@ public class PausePanel : MonoBehaviour
         GenerateSkillSlots();
         GenerateItemSlots();
         RefreshStatsDummy();
-        window.SetActive(false);   // PausePanel은 기본 비활성화
+        window.SetActive(false);
+        pauseSkillSlots = skillSlotParent.GetComponentsInChildren<SkillChoiceSlotUI>();
     }
 
-
-    //자동 슬롯 생성
+    // 자동 슬롯 생성
     void GenerateSkillSlots()
     {
         foreach (Transform child in skillSlotParent)
             Destroy(child.gameObject);
 
         for (int i = 0; i < skillSlotCount; i++)
-        {
             Instantiate(skillSlotPrefab, skillSlotParent);
-        }
     }
 
     void GenerateItemSlots()
@@ -74,12 +72,10 @@ public class PausePanel : MonoBehaviour
             Destroy(child.gameObject);
 
         for (int i = 0; i < itemSlotCount; i++)
-        {
             Instantiate(itemSlotPrefab, itemSlotParent);
-        }
     }
 
-    //스탯 표시 더미 (LevelUpPanel 참고)
+    // 더미 스탯 (데이터 없을 때)
     public void RefreshStatsDummy()
     {
         hpText.text = "-";
@@ -97,32 +93,59 @@ public class PausePanel : MonoBehaviour
         projectilenum.text = "-";
     }
 
-    //버튼 기능
-    void OnResumeClicked()
+
+    // 실제 스탯 출력
+    public void RefreshStats(StatHandler stat, ResouceController resource)
     {
-        Close();
+        // 실제 존재하는 스탯만 표시
+        hpText.text = $"HP : {resource.CurrentHealth} / {stat.MaxHealth}";
+        spdText.text = $"SPD : {stat.Speed}";
+        atkText.text = $"ATK : {stat.Attack}";
+        atkspdText.text = $"ATK SPD : {stat.AttackSpeed}";
+
+        // StatHandler에 없는 값은 "-" 처리
+        hpgenText.text = "-";
+        defText.text = "-";
+        atkareaText.text = "-";
+        cri.text = "-";
+        cridmg.text = "-";
+        projectilespd.text = "-";
+        dur.text = "-";
+        cd.text = "-";
+        projectilenum.text = "-";
     }
 
-    void OnRetryClicked()
+    public void RefreshSkillSlots()
     {
-        // 패널 먼저 닫기
-        window.SetActive(false);
-        isOpen = false;
+        var ui = UIManager.Instance;
 
-        // 타임스케일 복구
-        Time.timeScale = 1f;
+        // 플레이어가 현재 보유 중인 스킬들
+        SkillData[] ownedSkills = new SkillData[]
+        {
+        ui.slotZ.currentSkill,
+        ui.slotX.currentSkill,
+        ui.slotC.currentSkill
+        };
 
-        // 게임씬 다시 로드
-        SceneLoader.Load(SceneType.GameScene);
+        int index = 0;
+
+        // 1) 실제 사용 스킬들 먼저 채우기
+        for (int i = 0; i < ownedSkills.Length; i++)
+        {
+            if (ownedSkills[i] != null)
+            {
+                pauseSkillSlots[index].SetSkill(ownedSkills[i]);
+                index++;
+            }
+        }
+
+        // 2) 남은 칸은 전부 빈 슬롯
+        for (; index < pauseSkillSlots.Length; index++)
+        {
+            pauseSkillSlots[index].SetEmpty();
+        }
     }
 
-    void OnMainClicked()
-    {
-        // 메인 화면으로 이동
-        SceneLoader.Load(SceneType.MainScene);
-    }
-
-    //외부에서 ESC로 열기
 
     public void Open()
     {
@@ -130,15 +153,49 @@ public class PausePanel : MonoBehaviour
 
         window.SetActive(true);
         Time.timeScale = 0f;
-        RefreshStatsDummy(); // 나중엔 실제 플레이어 스탯 불러오면 됨
+
+        // 플레이어 찾기
+        var player = FindObjectOfType<BaseController>();
+        if (player != null)
+        {
+            var stat = player.GetComponent<StatHandler>();
+            var resource = player.GetComponent<ResouceController>();
+
+            if (stat != null && resource != null)
+                RefreshStats(stat, resource);
+            else
+                RefreshStatsDummy();
+        }
+        else
+            RefreshStatsDummy();
 
         isOpen = true;
+
+        RefreshSkillSlots();
     }
+
     public void Close()
     {
         window.SetActive(false);
         Time.timeScale = 1f;
-
         isOpen = false;
+    }
+    
+    void OnResumeClicked()
+    {
+        Close();
+    }
+
+    void OnRetryClicked()
+    {
+        window.SetActive(false);
+        isOpen = false;
+        Time.timeScale = 1f;
+        SceneLoader.Load(SceneType.GameScene);
+    }
+
+    void OnMainClicked()
+    {
+        SceneLoader.Load(SceneType.MainScene);
     }
 }

@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class PlayerSkillController : MonoBehaviour
 {
+    public static PlayerSkillController Instance { get; private set; } //UI연결문제로 추가
+
     [Header("Data")]
     [SerializeField] private CharacterData characterData;
     [SerializeField] private GameObject explosionPrefab; // 궁극기용 폭발 이펙트 프리팹
@@ -18,6 +20,7 @@ public class PlayerSkillController : MonoBehaviour
 
     private void Awake()
     {
+        Instance = this; //UI연결문제로 추가
         statHandler = GetComponent<StatHandler>();
         baseController = GetComponent<BaseController>();
     }
@@ -185,6 +188,61 @@ public class PlayerSkillController : MonoBehaviour
                 hit.GetComponent<Enemy>()?.TakeDamage(damage);
                 Debug.Log($"{hit.name}에게 궁극기 데미지 {damage} 입힘!");
             }
+        } 
+    }
+
+    //UI연결문제로 추가
+        public void SetSkillFromHUD(string key, SkillData data)
+    {
+        switch (key)
+        {
+            case "Z":
+                characterData.active1 = data;
+                break;
+
+            case "X":
+                characterData.active2 = data;
+                break;
+
+            case "C":
+                characterData.ultimate = data;
+                break;
+        }
+
+        Debug.Log($"스킬 등록됨 [{key}] → {data.skillName}");
+    }
+    public void UseSkillFromHUD(SkillData skill)
+    {
+        if (skill == null) return;
+
+        // HUD Z → active1 스킬 실행
+        if (skill == characterData.active1)
+        {
+            if (active1CooldownTimer <= 0)
+            {
+                StartCoroutine(UseActiveSkill1());
+                active1CooldownTimer = characterData.active1.coolTime;
+            }
+            return;
+        }
+
+        // HUD X → active2 스킬 실행
+        if (skill == characterData.active2)
+        {
+            if (active2CooldownTimer <= 0)
+            {
+                StartCoroutine(UseActiveSkill2());
+                active2CooldownTimer = characterData.active2.coolTime;
+            }
+            return;
+        }
+
+        // HUD C → 궁극기 실행
+        if (skill == characterData.ultimate)
+        {
+            AttemptUltimate();
+            return;
         }
     }
+
 }
