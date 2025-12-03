@@ -9199,11 +9199,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 418f6381eb3184a4497a0713af74d428, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startingSkill1: {fileID: 11400000, guid: b0b8ab377206b5545b4965226c98fd87, type: 2}
-  startingSkill2: {fileID: 11400000, guid: ede7961d0fc51414482a78174c540e3c, type: 2}
   ultimateSkillSO: {fileID: 11400000, guid: fd62ca5b7c2be324f854eb8492c272f3, type: 2}
-  normalSkillA: {fileID: 11400000, guid: 458a185eaffca23479ab5e11f6fbf5b0, type: 2}
-  normalSkillB: {fileID: 11400000, guid: 22e2ef4c9c6faf649964966d508f3c61, type: 2}
+  normalSkillPool:
+  - {fileID: 11400000, guid: b0b8ab377206b5545b4965226c98fd87, type: 2}
+  - {fileID: 11400000, guid: ede7961d0fc51414482a78174c540e3c, type: 2}
+  - {fileID: 11400000, guid: 458a185eaffca23479ab5e11f6fbf5b0, type: 2}
+  - {fileID: 11400000, guid: 22e2ef4c9c6faf649964966d508f3c61, type: 2}
   playTime: 0
   testItemIcon: {fileID: 21300000, guid: dfc5b064c50c49f4b81278502c23eb7d, type: 3}
 --- !u!4 &1186078125
@@ -15704,6 +15705,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 225655803}
     - target: {fileID: 795062798860509518, guid: 234100b19ad189f4daeed1dcd912c61c, type: 3}
+      propertyPath: playerStatusBar
+      value: 
+      objectReference: {fileID: 1955648288}
+    - target: {fileID: 795062798860509518, guid: 234100b19ad189f4daeed1dcd912c61c, type: 3}
       propertyPath: skillChoicePanel
       value: 
       objectReference: {fileID: 696770484}
@@ -15769,6 +15774,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1762396808433306420, guid: 234100b19ad189f4daeed1dcd912c61c, type: 3}
   m_PrefabInstance: {fileID: 1922681929}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1955648288 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8147719662387634559, guid: 2dace58ad5f5a6140b5e2ccaf549d24a, type: 3}
+  m_PrefabInstance: {fileID: 1685053441}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7dfe16c4b454fc24eaa6f75e4111ce70, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1957197558
 GameObject:
   m_ObjectHideFlags: 0
