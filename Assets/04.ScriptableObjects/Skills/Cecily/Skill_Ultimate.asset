@@ -18,7 +18,7 @@ MonoBehaviour:
     \uBC1C\uC0DD"
   type: 2
   coolTime: 50
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 690063288f901413bb0cfcf64da9fa3e, type: 3}
   value1: 0
   value2: 0
   duration: 0
