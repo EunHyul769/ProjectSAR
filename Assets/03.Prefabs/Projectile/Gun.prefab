@@ -239,3 +239,4 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4096
   fxOnDestroy: 1
+  explosionFxPrefab: {fileID: 493208432636849777, guid: db197603559e3498f9976c7e4327f1f1, type: 3}
