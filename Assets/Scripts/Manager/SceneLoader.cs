@@ -3,11 +3,11 @@ using UnityEngine.SceneManagement;
 
 public enum SceneType
 {
-    Main,
-    CharacterSelect,
-    StageSelect,
-    Game,
-    Result
+    MainScene,
+    CharacterSelectScene,
+    StageSelectScene,
+    GameScene,
+    ResultScene
 }
 
 public class SceneLoader : MonoBehaviour

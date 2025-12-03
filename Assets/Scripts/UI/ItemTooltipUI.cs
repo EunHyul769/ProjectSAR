@@ -61,6 +61,23 @@ public class ItemTooltipUI : MonoBehaviour
         gameObject.SetActive(true);
         UpdatePosition();
     }
+    public void ShowSkill(SkillOptionData skill)
+    {
+        if (iconImage != null)
+        {
+            iconImage.enabled = skill.icon != null;
+            iconImage.sprite = skill.icon;
+        }
+
+        if (nameText != null)
+            nameText.text = skill.name;
+
+        if (descText != null)
+            descText.text = skill.description;
+
+        gameObject.SetActive(true);
+        UpdatePosition();
+    }
 
     public void Hide()
     {
