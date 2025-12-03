@@ -44,9 +44,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed9aa73966b577f41beef8dc64003edf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waves:
+  spawnPhases:
   - {fileID: 11400000, guid: d1844a8fcdc546348944523ecec97b3f, type: 2}
+  - {fileID: 11400000, guid: 29c6f16e10f89714fa06923e6cc1c3d9, type: 2}
   - {fileID: 11400000, guid: cca430e951b0dcc4abc5bb3ab870225f, type: 2}
+  - {fileID: 11400000, guid: 2b58ccc83ee4b7a4dadf10be9c5bdb77, type: 2}
+  - {fileID: 11400000, guid: 7cb961a0ae8d1ec4faecdf6584c18687, type: 2}
   playerTransform: {fileID: 0}
-  minSpawnDistance: 10
-  maxSpawnDistance: 15
+  minSpawnDistance: 15
+  maxSpawnDistance: 20
