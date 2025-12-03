@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyProjectile : MonoBehaviour, IProjectilable
@@ -79,6 +77,7 @@ public class EnemyProjectile : MonoBehaviour, IProjectilable
         }
     }
 
+    // 
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
@@ -86,8 +85,9 @@ public class EnemyProjectile : MonoBehaviour, IProjectilable
             ResouceController resouceController = other.GetComponent<ResouceController>();
             if (resouceController != null)
             {
-                resouceController.ChangeHealth(damage);
-                Debug.Log($"플레이어가 {damage}의 피해를 입음 - 투사체");
+                resouceController.ChangeHealth(-damage);
+                Debug.Log($"Player에게 {-damage} 데미지");
+                Debug.Log($"남은 player 체력 :{resouceController.CurrentHealth}");
             }
 
             ReturnToPool();

@@ -183,11 +183,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e22758dd822c99d43aec91ecf9b9d99b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  delay: 2
+  delay: 0.7
   weaponSize: 0.7
   power: 5
   speed: 10
-  attackRange: 10
+  attackRange: 20
   target:
     serializedVersion: 2
     m_Bits: 3072

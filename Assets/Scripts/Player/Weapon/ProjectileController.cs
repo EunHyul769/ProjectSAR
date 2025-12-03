@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class ProjectileController : MonoBehaviour
 {
@@ -11,7 +9,6 @@ public class ProjectileController : MonoBehaviour
     private Vector2 direction;
     private bool isReady;
     private Transform pivot;
-    private Vector2 startPosition;
 
     private Rigidbody2D _rigidbody;
     private SpriteRenderer spriteRenderer;
@@ -36,17 +33,17 @@ public class ProjectileController : MonoBehaviour
             DestroyProjectile(transform.position, false);
             return;
         }
-
-        float distanceTravelledSqr = (startPosition - (Vector2)transform.position).sqrMagnitude;
-        float maxRangeSqr = rangeWeaponHandler.AttackRange * rangeWeaponHandler.AttackRange;
-
-        if (distanceTravelledSqr > maxRangeSqr)
-        {
-            DestroyProjectile(transform.position, false); // 거리 초과 시 파괴 (이펙트 없음)
-            return;
-        }
-
         _rigidbody.velocity = direction * rangeWeaponHandler.Speed;
+    }
+
+    private void OnEnable()
+    {
+        Invoke("Despawn", 1f);
+    }
+
+    private void Despawn()
+    {
+        DestroyProjectile(transform.position, false);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -54,8 +51,8 @@ public class ProjectileController : MonoBehaviour
         if (collisionLayer.value == (collisionLayer.value | (1 << collision.gameObject.layer))) //벽면 충돌체랑 같은 레이어인지 or 연산으로 확인
         {
             DestroyProjectile(collision.ClosestPoint(transform.position) - direction * .2f, fxOnDestroy);
-        } //collision.ClosestPoint(transform.position) 충돌체랑 가장 가까운 부분
-        else if (rangeWeaponHandler.target.value == (rangeWeaponHandler.target.value | (1 << collision.gameObject.layer))) //타겟 충돌체
+        } //collision.ClosestPoint(transform.position) -> 충돌체랑 가장 가까운 부분
+        else if (rangeWeaponHandler.target.value == (rangeWeaponHandler.target.value | (1 << collision.gameObject.layer))) //타겟 충돌체와 같은지 확인 (웨폰 핸들러에서 지정)
         {
             IDamagable damagableObject = collision.gameObject.GetComponent<IDamagable>();
 

@@ -3,19 +3,15 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class LevelUpPanel : MonoBehaviour
+public class SkillChoicePanel : MonoBehaviour
 {
-    public static LevelUpPanel Instance;
+    public static SkillChoicePanel Instance;
 
     [Header("Card")]
-    public OptionCardUI cardPrefab;
+    public SkillCardUI cardPrefab;
     public Transform cardParent;
 
-    [Header("Buttons")]
-    public Button rerollButton;
-    public Button deleteButton;   // Delete 버튼 (UI만 존재)
-
-    private LevelUpOptionData[] currentOptions;
+    private SkillOptionData[] currentOptions;
 
     [Header("Owned Item Slots")]
     public TItemSlotUI slotPrefab;
@@ -23,7 +19,7 @@ public class LevelUpPanel : MonoBehaviour
     public Transform weaponSlotParent;   // OwnedWeaponGroup
     public Transform equipSlotParent;    // OwnedEquipGroup
 
-    [Header("Character Stats")]
+    [Header("캐릭터 스탯")]
     public TMP_Text hpText;
     public TMP_Text hpgenText;
     public TMP_Text defText;
@@ -38,29 +34,27 @@ public class LevelUpPanel : MonoBehaviour
     public TMP_Text cd;
     public TMP_Text projectilenum;
 
-    public bool isOpen { get; private set; }
+    [Header("스킬 슬롯")]
+    public SkillChoiceSlotUI slotZ;
+    public SkillChoiceSlotUI slotX;
+    public SkillChoiceSlotUI slotC;
+    
+    [Header("그 외")]
     public GameObject window;
+    public bool isOpen { get; private set; }
 
     private void Awake()
     {
         Instance = this;
-
-        //gameObject.SetActive(false);
-
-        rerollButton.interactable = false;
-
-        // Delete 버튼은 이번 프로젝트에서 비활성화
-        deleteButton.interactable = false;
     }
 
     private void Start()
     {
-        // TestOpen();
         window.SetActive(false);
     }
 
     // 패널 열기
-    public void Open(LevelUpOptionData[] options)
+    public void Open(SkillOptionData[] options)
     {
         isOpen = true;
 
@@ -68,18 +62,21 @@ public class LevelUpPanel : MonoBehaviour
         Time.timeScale = 0f;
 
         CreateCards(options);
+
+        slotZ.SetEmpty();
+        slotX.SetEmpty();
+        slotC.SetEmpty();
+
         RefreshStatsDummy();
         CreateEmptyWeaponSlots();
         CreateEmptyEquipSlots();
     }
 
     // 카드 생성
-    private void CreateCards(LevelUpOptionData[] options)
+    private void CreateCards(SkillOptionData[] options)
     {
         foreach (Transform child in cardParent)
             Destroy(child.gameObject);
-
-        currentOptions = options;
 
         foreach (var opt in options)
         {
@@ -89,15 +86,41 @@ public class LevelUpPanel : MonoBehaviour
     }
 
     // 카드 선택
-    public void SelectCard(LevelUpOptionData option)
+    public void SelectCard(SkillOptionData option)
     {
-        Debug.Log("선택됨: " + option.name);
+        // 궁극기 스킬이면 무조건 C 슬롯
+        if (option.skillType == SkillType.Ultimate)
+        {
+            if (slotC.IsEmpty())
+            {
+                slotC.SetSkill(option);
+            }
+            else
+            {
+                Debug.Log("궁극기 슬롯이 이미 찼습니다!");
+            }
 
-        // GameManager가 준비되면 아래 줄 활성화
-        // GameManager.Instance.ApplyLevelUp(option);
+            ClosePanel();
+            return;
+        }
+
+        // 일반 스킬이면 Z → X 순서
+        if (slotZ.IsEmpty())
+        {
+            slotZ.SetSkill(option);
+        }
+        else if (slotX.IsEmpty())
+        {
+            slotX.SetSkill(option);
+        }
+        else
+        {
+            Debug.Log("일반 스킬 슬롯 두 개가 이미 찼습니다!");
+        }
 
         ClosePanel();
     }
+
 
     private void ClosePanel()
     {
@@ -108,18 +131,16 @@ public class LevelUpPanel : MonoBehaviour
     }
 
     // 임시 옵션 생성 (테스트용)
-    private LevelUpOptionData[] CreateDummyOptions()
+    private SkillOptionData[] CreateDummyOptions()
     {
-        LevelUpOptionData[] arr = new LevelUpOptionData[3];
+        SkillOptionData[] arr = new SkillOptionData[2];
 
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < 2; i++)
         {
-            arr[i] = new LevelUpOptionData()
+            arr[i] = new SkillOptionData()
             {
                 name = $"임시 옵션 {i + 1}",
-                metaInfo = "희귀도/타입/보유수",
                 description = "테스트 설명",
-                rarityColor = Color.white
             };
         }
 
@@ -169,7 +190,7 @@ public class LevelUpPanel : MonoBehaviour
     // 테스트 함수
     public void TestOpen()
     {
-        LevelUpOptionData[] dummy = CreateDummyOptions();
+        SkillOptionData[] dummy = CreateDummyOptions();
         Open(dummy);
     }
 }
