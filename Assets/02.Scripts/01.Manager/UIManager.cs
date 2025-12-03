@@ -22,6 +22,7 @@ public class UIManager : MonoBehaviour
     public LevelUpPanel levelUpPanel;
     public SkillChoicePanel skillChoicePanel;
     public PausePanel pausePanel;
+    public GameOverPanel gameOverPanel;
 
     private void Awake()
     {
@@ -98,6 +99,12 @@ public class UIManager : MonoBehaviour
         else
             pausePanel.Open();
     }
+    // 게임오버 패널 열기
+    public void OpenGameOver(string playtime)
+    {
+        gameOverPanel.Open(playtime);
+    }
+
     private void OnDestroy()
     {
         if (Instance == this)

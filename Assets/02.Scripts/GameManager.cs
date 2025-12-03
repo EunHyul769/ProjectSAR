@@ -1,5 +1,6 @@
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public enum GameState
 {
@@ -124,7 +125,7 @@ public class GameManager : MonoBehaviour
         };
     }
 
-    // ✔ 아이템 / 무기 / 장비 3개 옵션 (기본 레벨업)
+    // 아이템 / 무기 / 장비 3개 옵션 (기본 레벨업)
     private LevelUpOptionData[] CreateItemOptions()
     {
         return new LevelUpOptionData[]
@@ -158,7 +159,23 @@ public class GameManager : MonoBehaviour
 
     public void GameOver()
     {
+        if (State == GameState.GameOver)
+            return;
+
         State = GameState.GameOver;
+
+        int min = (int)(playTime / 60);
+        int sec = (int)(playTime % 60);
+        string playtimeStr = $"{min:00}:{sec:00}";
+
+        UIManager.Instance.OpenGameOver(playtimeStr);
+
+        Debug.Log("게임 오버!");
+    }
+    public void RestartGame()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     private void OnDestroy()
