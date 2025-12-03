@@ -132,6 +132,9 @@ public class Enemy : MonoBehaviour, IDamagable
 
     private void ShootProjectile()
     {
+        // 원거리 몬스터 공격 사운드 추가
+        SoundManager.Instance.PlaySFX(SoundManager.Instance.enemyLongAttack, 1f);
+        
         if (objectPoolManager == null)
         {
             Debug.LogError("Enemy: ObjectPoolManager를 찾을 수 없음");
