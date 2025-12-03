@@ -92,7 +92,10 @@ public class SkillChoicePanel : MonoBehaviour
         if (data.type == SkillsType.Ultimate)
         {
             if (slotC.IsEmpty())
+            {
                 slotC.SetSkill(data);
+                UIManager.Instance.SetSkillToHUD(data);
+            }
             else
                 Debug.Log("궁극기 슬롯이 이미 찼습니다!");
 
@@ -101,9 +104,15 @@ public class SkillChoicePanel : MonoBehaviour
         }
         // 일반 스킬 Z → X
         if (slotZ.IsEmpty())
+        {
             slotZ.SetSkill(data);
+            UIManager.Instance.SetSkillToHUD(data);    // HUD에도 넣기
+        }
         else if (slotX.IsEmpty())
+        {
             slotX.SetSkill(data);
+            UIManager.Instance.SetSkillToHUD(data);
+        }
         else
             Debug.Log("일반 스킬 슬롯 두 개가 이미 찼습니다!");
 

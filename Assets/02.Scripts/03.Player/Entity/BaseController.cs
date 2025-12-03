@@ -36,6 +36,7 @@ public class BaseController : MonoBehaviour
     private float lastDashTime = -10f;
 
     public bool IsInvincible { get; private set; } = false;
+    public float GetDashCooldown() => dashCooldown; //dashcooldown UIManager에서 접근할 수 있도록 수정했습니다
 
     protected virtual void Awake()
     {
@@ -99,6 +100,8 @@ public class BaseController : MonoBehaviour
     {
         // 쿨타임 체크 및 이미 대쉬 중인지 확인
         if (Time.time < lastDashTime + dashCooldown || isDashing) return;
+
+        UIManager.Instance?.OnDashUsed(); //UIManager에게 전달
 
         StartCoroutine(DashCoroutine());
     }

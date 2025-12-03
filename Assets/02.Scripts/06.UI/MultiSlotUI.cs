@@ -76,10 +76,10 @@ public class MultiSlotUI : MonoBehaviour
 
     public void StartCooldown()
     {
-        //if (slotType != SlotType.Skill) return;
-
-        //currentTime = maxTime;
-        //StartCoroutine(CountDownRoutine());
+        currentTime = maxTime;
+        cooldownMask.fillAmount = 1f;
+        cooldownText.gameObject.SetActive(true);
+        StartCoroutine(CountDownRoutine());
     }
 
     private IEnumerator CountDownRoutine()
@@ -98,5 +98,10 @@ public class MultiSlotUI : MonoBehaviour
 
         cooldownMask.fillAmount = 0;
         cooldownText.gameObject.SetActive(false);
+    }
+    public bool IsEmpty()
+    {
+        // 아이콘이 null이거나, 아이콘 이미지가 비활성화되어 있으면 empty 취급
+        return icon.sprite == null || icon.enabled == false;
     }
 }
