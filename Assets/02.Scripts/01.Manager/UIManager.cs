@@ -80,17 +80,17 @@ public class UIManager : MonoBehaviour
         int sec = (int)(time % 60);
         timerText.text = $"{min:00}:{sec:00}";
     }
-    // ·¹º§¾÷ ÆÐ³Î ¿­±â
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ð³ï¿½ ï¿½ï¿½ï¿½ï¿½
     public void OpenLevelUp(LevelUpOptionData[] options)
     {
         LevelUpPanel.Instance.Open(options);
     }
-    // ½ºÅ³ ¼±ÅÃ ÆÐ³Î ¿­±â
+    // ï¿½ï¿½Å³ ï¿½ï¿½ï¿½ï¿½ ï¿½Ð³ï¿½ ï¿½ï¿½ï¿½ï¿½
     public void OpenSkillChoice(SkillOptionData[] options)
     {
         skillChoicePanel.Open(options);
     }
-    // ÀÏ½ÃÁ¤Áö ÆÐ³Î ¿­±â
+    // ï¿½Ï½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ð³ï¿½ ï¿½ï¿½ï¿½ï¿½
     public void TogglePause()
     {
         if (pausePanel.isOpen)

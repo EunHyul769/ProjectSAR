@@ -5,12 +5,14 @@ public class Enemy : MonoBehaviour, IDamagable
 {
     [Header("적 유닛 설정")]
     [SerializeField] private EnemyData enemyData;
+    public EnemyData EnemyData {  get { return enemyData; } }
     private GameObject originalPrefab;
 
     private Rigidbody2D rb;
     private Transform playerTransform;
 
     private float currentHealth;
+    public float CurrentHealth { get { return currentHealth; } }
     private float enemyDamage;
     private bool isActive = false;
 
