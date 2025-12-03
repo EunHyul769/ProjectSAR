@@ -61,7 +61,7 @@ public class ResouceController : MonoBehaviour
         {
             animationHandler.Damage();
         }
-        // 체력 UI 갱신 필요한 지점 1.
+        // 체력 UI 갱신 필요한 지점
         UIManager.Instance.UpdateHP(CurrentHealth, MaxHealth);
 
         if (CurrentHealth <= 0f)
@@ -76,15 +76,4 @@ public class ResouceController : MonoBehaviour
     {
         Debug.Log("사망");
     }
-
-    public void FullRecovery()
-    {
-        CurrentHealth = statHandler.Health; // 현재 체력을 최대 체력으로
-
-        Debug.Log("레벨업 보너스! 체력 완전 회복: " + CurrentHealth);
-
-        // 체력 UI 갱신 필요한 지점 2.
-        UIManager.Instance.UpdateHP(CurrentHealth, MaxHealth);
-    }
-
 }

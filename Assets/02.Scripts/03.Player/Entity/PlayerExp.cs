@@ -52,11 +52,6 @@ public class PlayerExp : MonoBehaviour, IExpReceiver
 
             Debug.Log($"<color=yellow>레벨 업! 현재 레벨: {level}</color>");
 
-            // 레벨업 시 체력 전체 회복 호출
-            if (resourceController != null)
-            {
-                resourceController.FullRecovery();
-            }
             // 게임매니저와 연결
             GameManager.Instance.OnPlayerLevelUp(level);
         }

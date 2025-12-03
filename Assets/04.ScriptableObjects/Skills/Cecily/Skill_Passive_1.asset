@@ -16,7 +16,7 @@ MonoBehaviour:
   description: "\uD68D\uB4DD \uACE8\uB4DC\uB7C9 n% \uC99D\uAC00"
   type: 0
   coolTime: 0
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 6e98eea02754b4b859fe1fb7c365c59e, type: 3}
   value1: 0.1
   value2: 0.2
   duration: 0
