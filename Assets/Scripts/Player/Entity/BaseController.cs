@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using UnityEditor.U2D.Animation;
 using UnityEngine;
 
 public class BaseController : MonoBehaviour
@@ -6,6 +7,7 @@ public class BaseController : MonoBehaviour
     protected Rigidbody2D _rigidbody;
     [SerializeField] private SpriteRenderer characterRenderer;
     [SerializeField] private Transform weaponPivot;
+    [SerializeField] private CharacterData characterData;
 
     protected Vector2 movementDirection = Vector2.zero;
     public Vector2 MovementDirection { get { return movementDirection; } }
@@ -40,6 +42,8 @@ public class BaseController : MonoBehaviour
         _rigidbody = GetComponent<Rigidbody2D>();
         animationHandler = GetComponent<AnimationHandler>();
         statHandler = GetComponent<StatHandler>();
+        characterRenderer = GetComponentInChildren<SpriteRenderer>();
+        characterRenderer.sprite = characterData.characterSprite;
 
         if (WeaponPrefab != null)
         {

@@ -187,7 +187,7 @@ MonoBehaviour:
   weaponSize: 0.7
   power: 5
   speed: 10
-  attackRange: 20
+  attackRange: 10
   target:
     serializedVersion: 2
     m_Bits: 3072
@@ -199,9 +199,9 @@ MonoBehaviour:
   bulletSize: 0.7
   duration: 10
   spread: 1
+  projectileColor: {r: 1, g: 1, b: 1, a: 1}
   numberOfPrijectilesPerShot: 3
   multipleProjectileAngle: 3
-  projectileColor: {r: 1, g: 1, b: 1, a: 1}
   isAutoTargeting: 1
   enemyLayer:
     serializedVersion: 2
