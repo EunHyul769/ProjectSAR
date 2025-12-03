@@ -39,15 +39,6 @@ public class ResouceController : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collisionLayer.value == (collisionLayer.value | (1 << collision.gameObject.layer))) //충돌체랑 같은 레이어인지 확인
-        {
-            ChangeHealth(-1);
-            Debug.Log("체력 감소");
-        }
-    }
-
     public bool ChangeHealth(float change)
     {
         if (baseController != null && baseController.IsInvincible)
