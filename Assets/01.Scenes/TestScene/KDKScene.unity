@@ -8517,6 +8517,7 @@ MonoBehaviour:
   moonlightForest: {fileID: 8300000, guid: 8ce77779847824784bc5d655e4e0beb1, type: 3}
   sfxSource: {fileID: 1126129583}
   bgmSource: {fileID: 1126129584}
+  defaultSfxInterval: 0.2
 --- !u!1001 &1129726175
 PrefabInstance:
   m_ObjectHideFlags: 0
