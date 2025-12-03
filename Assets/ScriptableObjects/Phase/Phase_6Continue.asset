@@ -10,15 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c5feb3e3c5807884db04768f4ead9529, type: 3}
-  m_Name: Phase_Test
+  m_Name: Phase_6Continue
   m_EditorClassIdentifier: 
   phaseID: 0
-  phaseName: Phase_Test
+  phaseName: 
   isBossPhase: 0
-  activeAtGameTime: 0
+  activeAtGameTime: 1
   spawnableEnemies:
-  - {fileID: 11400000, guid: 8315661662309ac4d93e152d3450444d, type: 2}
-  spawnInterval: 1
-  totalEnemiesToSpawnPerCycle: 1
+  - {fileID: 11400000, guid: 78cd501b75e5cf34294e2e3ad22c46c6, type: 2}
+  - {fileID: 11400000, guid: 2efcc1b2790fb0f4ea78b024771c2124, type: 2}
+  spawnInterval: 2
+  totalEnemiesToSpawnPerCycle: 5
   healthMultiplier: 1
   damageMultiplier: 1

@@ -20,16 +20,6 @@ public class WeaponHandler : MonoBehaviour
 
     public LayerMask target;
 
-    [Header("Knock Back Info")]
-    [SerializeField] private bool isOnKnockback = false;
-    public bool IsOnKnockback { get => isOnKnockback; set => isOnKnockback = value; }
-
-    [SerializeField] private float knockbackPower = 0.1f;
-    public float KnockbackPower { get => knockbackPower; set => knockbackPower = value; }
-
-    [SerializeField] private float knockbackTime = 0.5f;
-    public float KnockbackTime { get => knockbackTime; set => knockbackTime = value; }
-
     private static readonly int IsAttack = Animator.StringToHash("IsAttack");
 
     public BaseController Controller { get; private set; }

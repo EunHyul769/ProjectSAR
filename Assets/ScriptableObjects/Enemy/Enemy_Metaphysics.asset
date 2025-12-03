@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0ef631c60daecf54baeac8711d7faa81, type: 3}
-  m_Name: Enemy_Boss
+  m_Name: Enemy_Metaphysics
   m_EditorClassIdentifier: 
-  enemyName: "\uBCF4\uC2A4\uC720\uB2DB"
+  enemyName: Metaphysics
   enemyType: 2
   enemyPrefab: {fileID: 9076800433690292658, guid: 6456509748f346247b92a56afdf5b852, type: 3}
-  moveSpeed: 4
-  attackRange: 20
+  moveSpeed: 3
+  attackRange: 1
   attackRate: 5
   attackDamage: 50
   maxHealth: 1200
