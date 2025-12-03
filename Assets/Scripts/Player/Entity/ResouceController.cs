@@ -61,6 +61,7 @@ public class ResouceController : MonoBehaviour
         {
             animationHandler.Damage();
         }
+        // 체력 UI 갱신 필요한 지점 1.
 
         if (CurrentHealth <= 0f)
         {
@@ -81,7 +82,7 @@ public class ResouceController : MonoBehaviour
 
         Debug.Log("레벨업 보너스! 체력 완전 회복: " + CurrentHealth);
 
-        // 체력 UI 여기서 갱신 필요
+        // 체력 UI 갱신 필요한 지점 2.
     }
 
 }
