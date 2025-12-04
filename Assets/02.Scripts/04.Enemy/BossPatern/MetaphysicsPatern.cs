@@ -24,9 +24,9 @@ public class MetaphysicsPatern : IBossAttackable
 
     private Collider2D physicalCollider;
 
-    
+    private GameObject warningSign;
 
-    public MetaphysicsPatern(float initialPatternInterval, Collider2D physicalCollider, float dashDst = 10f, float dashSpd = 8f, float warnDur = 0.8f, float postDur = 0.5f)
+    public MetaphysicsPatern(float initialPatternInterval, Collider2D physicalCollider, GameObject warningSign, float dashDst = 10f, float dashSpd = 8f, float warnDur = 0.8f, float postDur = 0.5f)
     {
         patternInterval = initialPatternInterval;
         dashDistance = dashDst;
@@ -34,6 +34,7 @@ public class MetaphysicsPatern : IBossAttackable
         warningDuration = warnDur;
         dashStopDuration = postDur;
         this.physicalCollider = physicalCollider;
+        this.warningSign = warningSign;
 
         currentPatternTimer = patternInterval;
     }
@@ -65,12 +66,12 @@ public class MetaphysicsPatern : IBossAttackable
         }
 
         // 느낌표 ui able
-
+        warningSign.SetActive(true);
         bossEnemyRef.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
 
         yield return new WaitForSeconds(warningDuration);
 
-
+        warningSign.SetActive(false);
         // 느낌표 ui disable
         Debug.Log("Boss: 돌진 시작");
 
