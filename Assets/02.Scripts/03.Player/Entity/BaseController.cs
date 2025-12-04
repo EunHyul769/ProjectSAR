@@ -1,5 +1,5 @@
 ﻿using System.Collections;
-using UnityEditor.U2D.Animation;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class BaseController : MonoBehaviour
@@ -10,6 +10,9 @@ public class BaseController : MonoBehaviour
     [SerializeField] private SpriteRenderer characterRenderer;
     [SerializeField] private Transform weaponPivot;
     [SerializeField] private CharacterData characterData;
+
+    // 시작 시 기본으로 장착할 무기 데이터 (SO)
+    [SerializeField] private WeaponData defaultWeaponData;
 
     protected Vector2 movementDirection = Vector2.zero;
     public Vector2 MovementDirection { get { return movementDirection; } }
@@ -23,12 +26,8 @@ public class BaseController : MonoBehaviour
     protected AnimationHandler animationHandler;
     protected StatHandler statHandler;
 
-    [SerializeField] public WeaponHandler DefaltWeaponPrefab;
-    protected WeaponHandler defaltWeaponHandler;
-    [SerializeField] public WeaponHandler ShurikenPrefab;
-    protected WeaponHandler shurikenHandler;
-    [SerializeField] public WeaponHandler BoltPrefab;
-    protected WeaponHandler boltHandler;
+    // 무기 장착을 담을 리스트
+    protected List<WeaponHandler> activeWeapons = new List<WeaponHandler>();
 
     protected bool isAttacking;
     private float timeSinceLastAttack = float.MaxValue;
@@ -52,15 +51,18 @@ public class BaseController : MonoBehaviour
         animationHandler = GetComponent<AnimationHandler>();
         statHandler = GetComponent<StatHandler>();
         characterRenderer = GetComponentInChildren<SpriteRenderer>();
-        characterRenderer.sprite = characterData.characterSprite;
+        if (characterData != null)
+            characterRenderer.sprite = characterData.characterSprite;
 
-        if (DefaltWeaponPrefab != null)
-        {
-            defaltWeaponHandler = Instantiate(DefaltWeaponPrefab, weaponPivot);
+        if (defaultWeaponData != null)
+        {   // 기본 무기가 설정되어 있다면 장착
+            EquipWeapon(defaultWeaponData);
         }
         else
         {
-            defaltWeaponHandler = GetComponentInChildren<WeaponHandler>();
+            // 데이터가 없으면 자식에 있는 거라도 가져오기
+            WeaponHandler[] existing = GetComponentsInChildren<WeaponHandler>();
+            activeWeapons.AddRange(existing);
         }
     }
 
@@ -105,31 +107,26 @@ public class BaseController : MonoBehaviour
     }
 
     //레벨업으로 아이템 획득 시 아래 메서드로 무기 생성
-    //매개변수에 해당 아이템 이름 전달해서 호출
-    public void InstantiateWeapon(string name)
+    //매개변수에 해당 SO 전달해서 호출
+    public void EquipWeapon(WeaponData data)
     {
-        if (name == "shuriken")
+        if (data == null || data.weaponPrefab == null) return;
+
+        WeaponHandler existingWeapon = activeWeapons.Find(w => w.gameObject.name.Contains(data.weaponName));
+
+        if (existingWeapon != null)
         {
-            if (ShurikenPrefab != null)
-            {
-                shurikenHandler = Instantiate(ShurikenPrefab, weaponPivot);
-            }
-            else
-            {
-                shurikenHandler = GetComponentInChildren<WeaponHandler>();
-            }
+            // 이미 있으면 레벨업 등의 로직 (나중에 구현)
+            Debug.Log($"{data.weaponName}은(는) 이미 보유 중입니다.");
+            return;
         }
-        else if (name == "bolt")
-        {
-            if (BoltPrefab != null)
-            {
-                boltHandler = Instantiate(BoltPrefab, weaponPivot);
-            }
-            else
-            {
-                boltHandler = GetComponentInChildren<WeaponHandler>();
-            }
-        }
+
+        WeaponHandler newWeapon = Instantiate(data.weaponPrefab, weaponPivot);
+        newWeapon.name = data.weaponName; // 이름 설정
+
+        activeWeapons.Add(newWeapon);
+
+        Debug.Log($"무기 장착 완료: {data.weaponName}");
     }
 
     public void AttemptDash()
@@ -178,25 +175,30 @@ public class BaseController : MonoBehaviour
         {
             weaponPivot.rotation = Quaternion.Euler(0f, 0f, rotZ);
         }
-        defaltWeaponHandler?.Rotate(isLeft);
-        shurikenHandler?.Rotate(isLeft);
-        boltHandler?.Rotate(isLeft);
+        foreach (var weapon in activeWeapons)
+        {
+            weapon.Rotate(isLeft);
+        }
     }
 
+    // 공격 사이의 딜레이 처리(없으면 매우 빠르게 발사됨)
     private void HandleAttackDelay()
     {
-        if (defaltWeaponHandler == null)
+        foreach (var weapon in activeWeapons)
         {
-            return;
-        }
-        if (timeSinceLastAttack <= defaltWeaponHandler.Delay)
-        {
-            timeSinceLastAttack += Time.deltaTime;
-        }
-        if (isAttacking && timeSinceLastAttack > defaltWeaponHandler.Delay)
-        {
-            timeSinceLastAttack = 0;
-            Attack();
+            if (weapon == null)
+            {
+                return;
+            }
+            if (timeSinceLastAttack <= weapon.Delay)
+            {
+                timeSinceLastAttack += Time.deltaTime;
+            }
+            if (isAttacking && timeSinceLastAttack > weapon.Delay)
+            {
+                timeSinceLastAttack = 0;
+                Attack();
+            }
         }
     }
 
@@ -204,9 +206,11 @@ public class BaseController : MonoBehaviour
     {
         if (lookDirection != Vector2.zero)
         {
-            defaltWeaponHandler?.Attack();
-            shurikenHandler?.Attack();
-            boltHandler?.Attack();
+            // 리스트를 순회하며 모든 무기 공격 시도
+            foreach (var weapon in activeWeapons)
+            {
+                weapon.Attack();
+            }
         }
     }
 }
