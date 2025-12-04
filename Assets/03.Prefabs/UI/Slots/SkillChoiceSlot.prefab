@@ -90,13 +90,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   icon: {fileID: 4773809951309966455}
-  currentSkill:
-    icon: {fileID: 0}
-    name: 
-    description: 
-    cooldown: 0
-    key: 
-    skillType: 0
+  currentSkill: {fileID: 0}
   slotType: 0
 --- !u!1 &8223698519919606882
 GameObject:
@@ -163,7 +157,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: b889772c7449c4949ab9420930006297, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
