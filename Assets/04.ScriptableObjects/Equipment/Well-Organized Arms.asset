@@ -10,8 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c5395654f72f86d4f95da885c27f01fe, type: 3}
-  m_Name: Shuriken
+  m_Name: Well-Organized Arms
   m_EditorClassIdentifier: 
-  weaponName: Shuriken
-  icon: {fileID: 21300000, guid: d3ec5cd241ee2124ba7d0ae5a2467875, type: 3}
-  WeaponPrefab: {fileID: 5070733156463116750, guid: 39bfd493c35482746a5ef22d20b3a688, type: 3}
+  itemName: "\uC815\uB3C8\uB41C \uBB34\uC7A5"
+  description: "\uACF5\uACA9\uB825\uACFC \uBC29\uC5B4\uB825 \uC99D\uAC00"
+  icon: {fileID: 0}
+  modifiers:
+  - type: 1
+    value: 5
+  - type: 2
+    value: 5

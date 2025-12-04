@@ -17,6 +17,10 @@ public class PlayerSkillController : MonoBehaviour
     private float active2CooldownTimer = 0f;
     private float gameTime = 0f; // 게임 시작 후 경과 시간
     private bool isUltimateUsed = false; // 궁극기 사용 여부 (게임 당 1회)
+    private const float ULTIMATE_AVAILABLE_TIME = 30f; // 30초 후 사용 가능
+
+    public float GetActive1Cooldown() => active1CooldownTimer;
+    public float GetActive2Cooldown() => active2CooldownTimer;
 
     private void Awake()
     {
@@ -27,7 +31,7 @@ public class PlayerSkillController : MonoBehaviour
 
     private void Start()
     {
-        ApplyPassives();
+        ApplyPassives(); // 게임 시작 시 패시브 효과 적용
     }
 
     private void Update()
@@ -43,6 +47,18 @@ public class PlayerSkillController : MonoBehaviour
         gameTime += Time.deltaTime;
     }
 
+    private float GetReducedCooldown(float baseCoolTime)
+    {
+        // StatHandler가 없으면 기본값 반환
+        if (statHandler == null) return baseCoolTime;
+
+        // 예: 쿨감 10%(0.1) -> 1.0 - 0.1 = 0.9 (90% 시간만 적용)
+        float multiplier = 1.0f - statHandler.CooldownReduction;
+
+        // 계산된 쿨타임 (최소 0.1초는 보장하도록 설정)
+        return Mathf.Max(0.1f, baseCoolTime * multiplier);
+    }
+
     private void HandleInput()
     {
         // 액티브 1번 (키보드 1)
@@ -51,7 +67,7 @@ public class PlayerSkillController : MonoBehaviour
             if (active1CooldownTimer <= 0)
             {
                 StartCoroutine(UseActiveSkill1());
-                active1CooldownTimer = characterData.active1.coolTime; // 10초
+                active1CooldownTimer = GetReducedCooldown(characterData.active1.coolTime);
             }
             else
             {
@@ -65,7 +81,7 @@ public class PlayerSkillController : MonoBehaviour
             if (active2CooldownTimer <= 0)
             {
                 StartCoroutine(UseActiveSkill2());
-                active2CooldownTimer = characterData.active2.coolTime; // 10초
+                active2CooldownTimer = GetReducedCooldown(characterData.active2.coolTime);
             }
             else
             {
@@ -148,9 +164,9 @@ public class PlayerSkillController : MonoBehaviour
     // 궁극기: 비장의 마법이야!
     private void AttemptUltimate()
     {
-        if (gameTime < 30f)
+        if (gameTime < ULTIMATE_AVAILABLE_TIME)
         {
-            Debug.Log($"궁극기 준비 중... {30f - gameTime:F1}초 남음");
+            Debug.Log($"궁극기 준비 중... {ULTIMATE_AVAILABLE_TIME - gameTime:F1}초 남음");
             return;
         }
 
@@ -223,7 +239,7 @@ public class PlayerSkillController : MonoBehaviour
             if (active1CooldownTimer <= 0)
             {
                 StartCoroutine(UseActiveSkill1());
-                active1CooldownTimer = characterData.active1.coolTime;
+                active1CooldownTimer = GetReducedCooldown(characterData.active1.coolTime);
             }
             return;
         }
@@ -234,7 +250,7 @@ public class PlayerSkillController : MonoBehaviour
             if (active2CooldownTimer <= 0)
             {
                 StartCoroutine(UseActiveSkill2());
-                active2CooldownTimer = characterData.active2.coolTime;
+                active2CooldownTimer = GetReducedCooldown(characterData.active2.coolTime);
             }
             return;
         }

@@ -226,7 +226,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 100
-  speed: 5
   characterData: {fileID: 11400000, guid: 795ec74b154f3974ba7c0d2312b73652, type: 2}
 --- !u!114 &7160257969130030979
 MonoBehaviour:
@@ -312,6 +311,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 057a8f7ce095ec64bab95c365dcd69fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  itemData: {fileID: 11400000, guid: d9e8cabf394e4da4c8c2d374f4bc9e49, type: 2}
 --- !u!1 &2497786025377729573
 GameObject:
   m_ObjectHideFlags: 0
