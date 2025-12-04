@@ -74,7 +74,10 @@ public class BaseController : MonoBehaviour
     protected virtual void Update()
     {
         HandleAction();
-        Rotate(lookDirection);
+        if (movementDirection.sqrMagnitude > 0.01f)
+            Rotate(movementDirection);
+        else
+            Rotate(lookDirection); // 멈추면 마우스를 봄
         HandleAttackDelay();
     }
 
@@ -90,7 +93,12 @@ public class BaseController : MonoBehaviour
     }
 
     protected virtual void HandleAction()
-    {
+    {  
+        Vector3 mouseWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        mouseWorld.z = 0f;
+
+        // 2) lookDirection 업데이트
+        lookDirection = (mouseWorld - transform.position).normalized;
 
     }
 
@@ -178,19 +186,30 @@ public class BaseController : MonoBehaviour
 
     protected virtual void Rotate(Vector2 direction)
     {
-        float rotZ = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-        bool isLeft = Mathf.Abs(rotZ) > 90f;
+        float rotZ = Mathf.Atan2(lookDirection.y, lookDirection.x) * Mathf.Rad2Deg;
 
-        characterRenderer.flipX = isLeft;
+        bool flipX;
 
-        if (weaponPivot != null) 
+        if (movementDirection.sqrMagnitude > 0.01f)
         {
+            flipX = movementDirection.x > 0f;
+        }
+        else
+        {
+            flipX = lookDirection.x > 0f;
+            Vector2 mouseWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            float deltaX = mouseWorld.x - transform.position.x;
+
+            flipX = deltaX < 0f;
+        }
+        
+        characterRenderer.flipX = flipX;
+        
+        if (weaponPivot != null)
             weaponPivot.rotation = Quaternion.Euler(0f, 0f, rotZ);
-        }
+        
         foreach (var weapon in activeWeapons)
-        {
-            weapon.Rotate(isLeft);
-        }
+            weapon.Rotate(flipX);
     }
 
     // 공격 사이의 딜레이 처리(없으면 매우 빠르게 발사됨)
