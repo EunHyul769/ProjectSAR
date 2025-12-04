@@ -7,9 +7,8 @@
     <list default="true" id="e88a339b-ddf8-41ba-9e08-ff5b81a4e014" name="변경" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ProjectSAR/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ProjectSAR/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/01.Scenes/GameScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/01.Scenes/GameScene.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/01.Scenes/MainScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/01.Scenes/MainScene.unity" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/02.Scripts/07.Audio/SoundManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/02.Scripts/07.Audio/SoundManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/03.Prefabs/Manager/SoundManager.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/03.Prefabs/Manager/SoundManager.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/03.Prefabs/Grid.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/03.Prefabs/Grid.prefab" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
