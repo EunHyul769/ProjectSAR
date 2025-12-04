@@ -5,9 +5,7 @@ public enum SceneType
 {
     MainScene,
     CharacterSelectScene,
-    StageSelectScene,
     GameScene,
-    ResultScene
 }
 
 public class SceneLoader : MonoBehaviour
