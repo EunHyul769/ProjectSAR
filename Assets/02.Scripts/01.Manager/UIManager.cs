@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using System.Collections;
 
 public class UIManager : MonoBehaviour
 {
@@ -39,6 +40,10 @@ public class UIManager : MonoBehaviour
     
     [Header("player Mini StatusBar")]
     public PlayerStatusBar playerStatusBar;
+
+    [Header("Ultimate Cut-in")]
+    public Image ultimateCutInImage;
+    public float ultimateCutInDuration = 0.5f;
 
 
     private void Awake()
@@ -125,11 +130,30 @@ public class UIManager : MonoBehaviour
         bool cooling = slot.cooldownMask.fillAmount > 0;
         if (cooling) return;
 
-        // ★ PlayerSkillController에 직접 전달
+        // PlayerSkillController에 직접 전달
         PlayerSkillController.Instance.UseSkillFromHUD(slot.currentSkill);
 
-        // ★ HUD 쿨다운 시작
+        // HUD 쿨다운 시작
         slot.StartCooldown();
+    }
+    public void PlayUltimateCutIn()
+    {
+        if (ultimateCutInImage == null)
+            return;
+
+        StartCoroutine(UltimateCutInRoutine());
+    }
+    // 얼티밋컷씬
+    private IEnumerator UltimateCutInRoutine()
+    {
+        // 켜고
+        ultimateCutInImage.gameObject.SetActive(true);
+
+        // 0.5초(혹은 설정한 duration) 기다렸다가
+        yield return new WaitForSeconds(ultimateCutInDuration);
+
+        // 끄기
+        ultimateCutInImage.gameObject.SetActive(false);
     }
     private void CreateSlots(Transform parent, GameObject prefab, int count)
     {
