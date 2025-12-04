@@ -20,7 +20,7 @@ MonoBehaviour:
   attackRate: 5
   shootingAttackRate: 999
   attackDamage: 50
-  maxHealth: 1200
+  maxHealth: 2000
   expAmount: 0
   expOrbPrefab: {fileID: 5499391159527633536, guid: 58b2cbd02c7394d3f8b0e8be7659d447, type: 3}
   dropItemPrefabs:
