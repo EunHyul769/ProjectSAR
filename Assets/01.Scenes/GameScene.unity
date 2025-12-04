@@ -18385,58 +18385,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: EnemySpawnManager
       objectReference: {fileID: 0}
-    - target: {fileID: 5552628464084232380, guid: 7254ea405662b4f48b033805b82c84ed, type: 3}
-      propertyPath: maxSpawnDistance
-      value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 5552628464084232380, guid: 7254ea405662b4f48b033805b82c84ed, type: 3}
-      propertyPath: minSpawnDistance
-      value: 15
-      objectReference: {fileID: 0}
-    - target: {fileID: 5552628464084232380, guid: 7254ea405662b4f48b033805b82c84ed, type: 3}
-      propertyPath: waves.Array.size
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 5552628464084232380, guid: 7254ea405662b4f48b033805b82c84ed, type: 3}
-      propertyPath: waves.Array.data[2]
-      value: 
-      objectReference: {fileID: 11400000, guid: fd367d1cd8ae268429a298e948e48c88, type: 2}
-    - target: {fileID: 5552628464084232380, guid: 7254ea405662b4f48b033805b82c84ed, type: 3}
-      propertyPath: waves.Array.data[3]
-      value: 
-      objectReference: {fileID: 11400000, guid: dfc14c3d16e6a0245b42486891a3ba11, type: 2}
-    - target: {fileID: 5552628464084232380, guid: 7254ea405662b4f48b033805b82c84ed, type: 3}
-      propertyPath: spawnPhases.Array.size
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 5552628464084232380, guid: 7254ea405662b4f48b033805b82c84ed, type: 3}
-      propertyPath: spawnPhases.Array.data[0]
-      value: 
-      objectReference: {fileID: 11400000, guid: d1844a8fcdc546348944523ecec97b3f, type: 2}
-    - target: {fileID: 5552628464084232380, guid: 7254ea405662b4f48b033805b82c84ed, type: 3}
-      propertyPath: spawnPhases.Array.data[1]
-      value: 
-      objectReference: {fileID: 11400000, guid: 29c6f16e10f89714fa06923e6cc1c3d9, type: 2}
-    - target: {fileID: 5552628464084232380, guid: 7254ea405662b4f48b033805b82c84ed, type: 3}
-      propertyPath: spawnPhases.Array.data[2]
-      value: 
-      objectReference: {fileID: 11400000, guid: cca430e951b0dcc4abc5bb3ab870225f, type: 2}
-    - target: {fileID: 5552628464084232380, guid: 7254ea405662b4f48b033805b82c84ed, type: 3}
-      propertyPath: spawnPhases.Array.data[3]
-      value: 
-      objectReference: {fileID: 11400000, guid: 2b58ccc83ee4b7a4dadf10be9c5bdb77, type: 2}
-    - target: {fileID: 5552628464084232380, guid: 7254ea405662b4f48b033805b82c84ed, type: 3}
-      propertyPath: spawnPhases.Array.data[4]
-      value: 
-      objectReference: {fileID: 11400000, guid: 7cb961a0ae8d1ec4faecdf6584c18687, type: 2}
-    - target: {fileID: 5552628464084232380, guid: 7254ea405662b4f48b033805b82c84ed, type: 3}
-      propertyPath: spawnPhases.Array.data[5]
-      value: 
-      objectReference: {fileID: 11400000, guid: 7cb961a0ae8d1ec4faecdf6584c18687, type: 2}
-    - target: {fileID: 5552628464084232380, guid: 7254ea405662b4f48b033805b82c84ed, type: 3}
-      propertyPath: spawnPhases.Array.data[6]
-      value: 
-      objectReference: {fileID: 11400000, guid: 432b1869c653cbc479ebb3104d76dbfc, type: 2}
     - target: {fileID: 7127602196003017545, guid: 7254ea405662b4f48b033805b82c84ed, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
