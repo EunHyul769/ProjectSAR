@@ -192,11 +192,11 @@ public class PlayerSkillController : MonoBehaviour
         // 폭발 이펙트 생성 (데미지 로직은 프리팹 자체 스크립트 혹은 여기서 처리)
         GameObject boom = Instantiate(explosionPrefab, spawnPos, Quaternion.identity);
 
-        // 폭발 크기 설정 (400x400px -> Unity Scale로 변환 필요, 대략 4x4라 가정)
-        boom.transform.localScale = new Vector3(4, 4, 1);
+        // 폭발 크기 설정 (400x400px -> Unity Scale로 변환 필요, 대략 8x8라 가정)
+        boom.transform.localScale = new Vector3(8, 8, 1);
 
         // 범위 데미지 처리
-        Collider2D[] hits = Physics2D.OverlapBoxAll(spawnPos, new Vector2(4, 4), 0);
+        Collider2D[] hits = Physics2D.OverlapBoxAll(spawnPos, new Vector2(8, 8), 0);
         float damage = 100 + (statHandler.Attack * 2);
 
         foreach (Collider2D hit in hits)
