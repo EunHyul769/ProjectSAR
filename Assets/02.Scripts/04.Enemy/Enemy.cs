@@ -201,7 +201,7 @@ public class Enemy : MonoBehaviour, IDamagable
     private void ShootProjectile()
     {
         // 원거리 몬스터 공격 사운드 추가
-        SoundManager.Instance.PlaySFX(SoundManager.Instance.enemyLongAttack, 1f);     // 해당 부분 존재시 원거리 유닛이 투사체 발사 안함 확인 필요
+        //SoundManager.Instance.PlaySFX(SoundManager.Instance.enemyLongAttack, 1f);     // 해당 부분 존재시 원거리 유닛이 투사체 발사 안함 확인 필요
 
         if (objectPoolManager == null)
         {
