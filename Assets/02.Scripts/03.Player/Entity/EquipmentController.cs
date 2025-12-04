@@ -10,9 +10,6 @@ public class EquipmentController : MonoBehaviour
     // 획득한 장비 아이템들을 저장할 리스트
     public List<EquipmentData> equippedItems = new List<EquipmentData>();
 
-
-    [SerializeField] private EquipmentData itemData; //테스트용: 장비 아이템 할당
-
     private void Awake()
     {
         Instance = this; //UI연결문제로 추가
@@ -21,11 +18,7 @@ public class EquipmentController : MonoBehaviour
 
     private void Start()
     {
-        // 테스트용: 게임 시작 시 아이템 1개 장착
-        if (itemData != null)
-        {
-            EquipItem(itemData);
-        }
+
     }
 
     // 아이템 획득 시 호출할 메서드
