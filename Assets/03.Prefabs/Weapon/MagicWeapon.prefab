@@ -197,7 +197,7 @@ MonoBehaviour:
   duration: 10
   spread: 1
   projectileColor: {r: 1, g: 1, b: 1, a: 1}
-  numberOfPrijectilesPerShot: 5
+  numberOfPrijectilesPerShot: 3
   multipleProjectileAngle: 0
   isAutoTargeting: 1
   isManualTargeting: 0
