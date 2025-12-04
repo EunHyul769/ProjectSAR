@@ -18,10 +18,12 @@ MonoBehaviour:
   moveSpeed: 3
   attackRange: 1
   attackRate: 5
+  shootingAttackRate: 999
   attackDamage: 50
   maxHealth: 1200
   expAmount: 0
   expOrbPrefab: {fileID: 5499391159527633536, guid: 58b2cbd02c7394d3f8b0e8be7659d447, type: 3}
   dropItemPrefabs:
   - {fileID: 623183117809672311, guid: b65f7eeccd833473386eaead6bec16f1, type: 3}
+  - {fileID: 6585045322200012874, guid: 0637a4145b7274081b46bafc35669ba5, type: 3}
   dropChance: 1

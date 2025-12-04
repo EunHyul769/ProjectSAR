@@ -80,6 +80,9 @@ public class EnemySpawnManager : MonoBehaviour
             currentPhaseIndex++;
             ApplyPhaseSettings(spawnPhases[currentPhaseIndex]);
             Debug.Log($"게임 시간 {gameManager.playTime:F1}초, 스폰 페이즈 '{spawnPhases[currentPhaseIndex].name}' 시작");
+
+            PerformSpawnCycle();
+            nextSpawnTime = gameManager.playTime + currentSpawnInterval;
         }
     }
 
@@ -92,27 +95,31 @@ public class EnemySpawnManager : MonoBehaviour
         currentDamageMultiplier = phaseData.damageMultiplier;
     }
 
+    private void PerformSpawnCycle()
+    {
+        // 현재 페이즈에 스폰 가능한 몬스터 종류가 없다면 스폰하지 않음
+        if (activeSpawnableEnemy.Count == 0)
+        {
+            Debug.LogWarning("현재 페이즈에 스폰할 몬스터가 설정되어 있지 않음.");
+        }
+        else
+        {
+            // 설정된 갯수만큼 몬스터 스폰
+            for (int i = 0; i < currentTotalEnemiesToSpawnPerCycle; i++)
+            {
+                EnemyData EnemyToSpawn = activeSpawnableEnemy[Random.Range(0, activeSpawnableEnemy.Count)];
+                SpawnSingleEnemy(EnemyToSpawn);
+            }
+        }
+    }
+
     IEnumerator ContinuousSpawnRoutine()
     {
         while (true) // 게임 끝까지 지속적으로 스폰
         {
             if (gameManager.playTime >= nextSpawnTime)
             {
-                // 현재 페이즈에 스폰 가능한 몬스터 종류가 없다면 스폰하지 않음
-                if (activeSpawnableEnemy.Count == 0)
-                {
-                    Debug.LogWarning("현재 페이즈에 스폰할 몬스터가 설정되어 있지 않음.");
-                }
-                else
-                {
-                    // 설정된 갯수만큼 몬스터 스폰
-                    for (int i = 0; i < currentTotalEnemiesToSpawnPerCycle; i++)
-                    {
-                        EnemyData EnemyToSpawn = activeSpawnableEnemy[Random.Range(0, activeSpawnableEnemy.Count)];
-                        SpawnSingleEnemy(EnemyToSpawn);
-                    }
-                }
-
+                PerformSpawnCycle();
                 nextSpawnTime = gameManager.playTime + currentSpawnInterval; // 다음 스폰 시간 갱신
             }
             yield return null; // 매 프레임 체크

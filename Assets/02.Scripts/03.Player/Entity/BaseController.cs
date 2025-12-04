@@ -1,13 +1,18 @@
 ﻿using System.Collections;
-using UnityEditor.U2D.Animation;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class BaseController : MonoBehaviour
 {
+    public static BaseController Instance { get; private set; } //UI연결문제로 추가
+
     protected Rigidbody2D _rigidbody;
     [SerializeField] private SpriteRenderer characterRenderer;
     [SerializeField] private Transform weaponPivot;
     [SerializeField] private CharacterData characterData;
+
+    // 시작 시 기본으로 장착할 무기 데이터 (SO)
+    [SerializeField] private WeaponData defaultWeaponData;
 
     protected Vector2 movementDirection = Vector2.zero;
     public Vector2 MovementDirection { get { return movementDirection; } }
@@ -21,8 +26,8 @@ public class BaseController : MonoBehaviour
     protected AnimationHandler animationHandler;
     protected StatHandler statHandler;
 
-    [SerializeField] public WeaponHandler WeaponPrefab;
-    protected WeaponHandler weaponHandler;
+    // 무기 장착을 담을 리스트
+    protected List<WeaponHandler> activeWeapons = new List<WeaponHandler>();
 
     protected bool isAttacking;
     private float timeSinceLastAttack = float.MaxValue;
@@ -36,22 +41,28 @@ public class BaseController : MonoBehaviour
     private float lastDashTime = -10f;
 
     public bool IsInvincible { get; private set; } = false;
+    public float GetDashCooldown() => dashCooldown; //dashcooldown UIManager에서 접근할 수 있도록 수정했습니다
 
     protected virtual void Awake()
     {
+        Instance = this; //UI연결문제로 추가
+
         _rigidbody = GetComponent<Rigidbody2D>();
         animationHandler = GetComponent<AnimationHandler>();
         statHandler = GetComponent<StatHandler>();
         characterRenderer = GetComponentInChildren<SpriteRenderer>();
-        characterRenderer.sprite = characterData.characterSprite;
+        if (characterData != null)
+            characterRenderer.sprite = characterData.characterSprite;
 
-        if (WeaponPrefab != null)
-        {
-            weaponHandler = Instantiate(WeaponPrefab, weaponPivot);
+        if (defaultWeaponData != null)
+        {   // 기본 무기가 설정되어 있다면 장착
+            EquipWeapon(defaultWeaponData);
         }
         else
         {
-            weaponHandler = GetComponentInChildren<WeaponHandler>();
+            // 데이터가 없으면 자식에 있는 거라도 가져오기
+            WeaponHandler[] existing = GetComponentsInChildren<WeaponHandler>();
+            activeWeapons.AddRange(existing);
         }
     }
 
@@ -95,10 +106,40 @@ public class BaseController : MonoBehaviour
         animationHandler.Move(direction);
     }
 
+    //레벨업으로 아이템 획득 시 아래 메서드로 무기 생성
+    //매개변수에 해당 SO 전달해서 호출
+    public void EquipWeapon(WeaponData data)
+    {
+        if (data == null || data.weaponPrefab == null) return;
+
+        WeaponHandler existingWeapon = activeWeapons.Find(w => w.gameObject.name.Contains(data.weaponName));
+
+        if (existingWeapon != null)
+        {
+            // 이미 있으면 레벨업 등의 로직 (나중에 구현)
+            Debug.Log($"{data.weaponName}은(는) 이미 보유 중입니다.");
+            return;
+        }
+
+        WeaponHandler newWeapon = Instantiate(data.weaponPrefab, weaponPivot);
+
+        newWeapon.weaponData = data;
+
+        newWeapon.name = data.weaponName; // 이름 설정
+
+        activeWeapons.Add(newWeapon);
+
+        Debug.Log($"무기 장착 완료: {data.weaponName}");
+
+        UIManager.Instance.RefreshWeaponSlots(activeWeapons); //UI
+    }
+
     public void AttemptDash()
     {
         // 쿨타임 체크 및 이미 대쉬 중인지 확인
         if (Time.time < lastDashTime + dashCooldown || isDashing) return;
+
+        UIManager.Instance?.OnDashUsed(); //UIManager에게 전달
 
         StartCoroutine(DashCoroutine());
     }
@@ -128,7 +169,7 @@ public class BaseController : MonoBehaviour
         IsInvincible = false; // 무적 종료
     }
 
-    private void Rotate(Vector2 direction)
+    protected virtual void Rotate(Vector2 direction)
     {
         float rotZ = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         bool isLeft = Mathf.Abs(rotZ) > 90f;
@@ -139,29 +180,47 @@ public class BaseController : MonoBehaviour
         {
             weaponPivot.rotation = Quaternion.Euler(0f, 0f, rotZ);
         }
-        weaponHandler?.Rotate(isLeft);
+        foreach (var weapon in activeWeapons)
+        {
+            weapon.Rotate(isLeft);
+        }
     }
 
+    // 공격 사이의 딜레이 처리(없으면 매우 빠르게 발사됨)
     private void HandleAttackDelay()
     {
-        if (weaponHandler == null)
+        foreach (var weapon in activeWeapons)
         {
-            return;
-        }
-        if (timeSinceLastAttack <= weaponHandler.Delay)
-        {
-            timeSinceLastAttack += Time.deltaTime;
-        }
-        if (isAttacking && timeSinceLastAttack > weaponHandler.Delay)
-        {
-            timeSinceLastAttack = 0;
-            Attack();
+            if (weapon == null)
+            {
+                return;
+            }
+            if (timeSinceLastAttack <= weapon.Delay)
+            {
+                timeSinceLastAttack += Time.deltaTime;
+            }
+            if (isAttacking && timeSinceLastAttack > weapon.Delay)
+            {
+                timeSinceLastAttack = 0;
+                Attack();
+            }
         }
     }
 
     protected virtual void Attack()
     {
         if (lookDirection != Vector2.zero)
-            weaponHandler?.Attack();
+        {
+            // 리스트를 순회하며 모든 무기 공격 시도
+            foreach (var weapon in activeWeapons)
+            {
+                weapon.Attack();
+            }
+        }
     }
+
+    public List<WeaponHandler> GetActiveWeapons()
+    {
+        return activeWeapons;
+    } //ui로 목록 가져가기
 }

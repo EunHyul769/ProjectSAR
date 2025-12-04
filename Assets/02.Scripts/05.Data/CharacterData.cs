@@ -19,4 +19,7 @@ public class CharacterData : ScriptableObject
     public SkillData active1;  // 우왓, 저리 가!
     public SkillData active2;  // 마력 증강
     public SkillData ultimate; // 비장의 마법이야!
+
+    [Header("Image (얼굴 전용)")]
+    public Sprite hudSprite;
 }

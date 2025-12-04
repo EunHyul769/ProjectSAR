@@ -18,6 +18,7 @@ public class ProjectileController : MonoBehaviour
     private bool isExplosive;
 
     public bool fxOnDestroy = true; //삭제시의 이펙트 출력 여부
+    [SerializeField] private GameObject explosionFxPrefab;
 
     private void Awake()
     {
@@ -121,6 +122,11 @@ public class ProjectileController : MonoBehaviour
     private void DestroyProjectile(Vector3 position, bool createFx)
     {
         // TODO: createFx가 true일 때 파괴 이펙트(Particle)를 생성하는 코드를 여기에 추가할 수 있습니다.
+        if (createFx && explosionFxPrefab != null)
+        {
+            // 파티클 생성
+            Instantiate(explosionFxPrefab, position, Quaternion.identity);
+        }
         Destroy(this.gameObject);
     }
 }

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using TMPro;
 using UnityEditor.PackageManager.UI;
 using UnityEngine;
@@ -7,13 +8,14 @@ public class PausePanel : MonoBehaviour
 {
     [Header("Skill Select Slots")]
     public int skillSlotCount = 15;
-    public Transform skillSlotParent; 
-    public GameObject skillSlotPrefab;  
+    public Transform skillSlotParent;
+    public GameObject skillSlotPrefab;
+    private SkillChoiceSlotUI[] pauseSkillSlots;
 
     [Header("Owned Item Slots")]
     public int itemSlotCount = 48;
     public Transform itemSlotParent;
-    public GameObject itemSlotPrefab; 
+    public GameObject itemSlotPrefab;
 
     [Header("Character Stats")]
     public TMP_Text hpText;
@@ -41,7 +43,6 @@ public class PausePanel : MonoBehaviour
 
     private void Awake()
     {
-        // 버튼 기능 연결
         resumeButton.onClick.AddListener(OnResumeClicked);
         retryButton.onClick.AddListener(OnRetryClicked);
         mainButton.onClick.AddListener(OnMainClicked);
@@ -52,20 +53,18 @@ public class PausePanel : MonoBehaviour
         GenerateSkillSlots();
         GenerateItemSlots();
         RefreshStatsDummy();
-        window.SetActive(false);   // PausePanel은 기본 비활성화
+        window.SetActive(false);
+        pauseSkillSlots = skillSlotParent.GetComponentsInChildren<SkillChoiceSlotUI>();
     }
 
-
-    //자동 슬롯 생성
+    // 자동 슬롯 생성
     void GenerateSkillSlots()
     {
         foreach (Transform child in skillSlotParent)
             Destroy(child.gameObject);
 
         for (int i = 0; i < skillSlotCount; i++)
-        {
             Instantiate(skillSlotPrefab, skillSlotParent);
-        }
     }
 
     void GenerateItemSlots()
@@ -74,12 +73,10 @@ public class PausePanel : MonoBehaviour
             Destroy(child.gameObject);
 
         for (int i = 0; i < itemSlotCount; i++)
-        {
             Instantiate(itemSlotPrefab, itemSlotParent);
-        }
     }
 
-    //스탯 표시 더미 (LevelUpPanel 참고)
+    // 더미 스탯 (데이터 없을 때)
     public void RefreshStatsDummy()
     {
         hpText.text = "-";
@@ -97,7 +94,125 @@ public class PausePanel : MonoBehaviour
         projectilenum.text = "-";
     }
 
-    //버튼 기능
+
+    // 실제 스탯 출력
+    public void RefreshStats(StatHandler stat, ResouceController resource)
+    {
+        // 실제 존재하는 스탯만 표시
+        hpText.text = $"HP : {resource.CurrentHealth} / {stat.MaxHealth}";
+        spdText.text = $"SPD : {stat.Speed}";
+        atkText.text = $"ATK : {stat.Attack}";
+        atkspdText.text = $"ATK SPD : {stat.AttackSpeed}";
+
+        // StatHandler에 없는 값은 "-" 처리
+        hpgenText.text = "-";
+        defText.text = "-";
+        atkareaText.text = "-";
+        cri.text = "-";
+        cridmg.text = "-";
+        projectilespd.text = "-";
+        dur.text = "-";
+        cd.text = "-";
+        projectilenum.text = "-";
+    }
+
+    public void RefreshSkillSlots()
+    {
+        var ui = UIManager.Instance;
+
+        // 플레이어가 현재 보유 중인 스킬들
+        SkillData[] ownedSkills = new SkillData[]
+        {
+        ui.slotZ.currentSkill,
+        ui.slotX.currentSkill,
+        ui.slotC.currentSkill
+        };
+
+        int index = 0;
+
+        // 1) 실제 사용 스킬들 먼저 채우기
+        for (int i = 0; i < ownedSkills.Length; i++)
+        {
+            if (ownedSkills[i] != null)
+            {
+                pauseSkillSlots[index].SetSkill(ownedSkills[i]);
+                index++;
+            }
+        }
+
+        // 2) 남은 칸은 전부 빈 슬롯
+        for (; index < pauseSkillSlots.Length; index++)
+        {
+            pauseSkillSlots[index].SetEmpty();
+        }
+    }
+    public void Open()
+    {
+        if (isOpen) return;
+
+        window.SetActive(true);
+        Time.timeScale = 0f;
+
+        // 플레이어 찾기
+        var player = FindObjectOfType<BaseController>();
+        if (player != null)
+        {
+            var stat = player.GetComponent<StatHandler>();
+            var resource = player.GetComponent<ResouceController>();
+
+            if (stat != null && resource != null)
+                RefreshStats(stat, resource);
+            else
+                RefreshStatsDummy();
+        }
+        else
+            RefreshStatsDummy();
+
+        isOpen = true;
+
+        RefreshSkillSlots();
+        RefreshItemSlots();
+    }
+    private void RefreshItemSlots()
+    {
+        var equips = EquipmentController.Instance.equippedItems;
+        var weapons = BaseController.Instance.GetActiveWeapons();
+
+        // 장비 + 무기를 하나의 리스트로 합치기
+        List<Sprite> icons = new List<Sprite>();
+
+        // 장비 아이콘 추가
+        foreach (var e in equips)
+            icons.Add(e.icon);
+
+        // 무기 아이콘 추가 (weaponData.icon)
+        foreach (var w in weapons)
+            icons.Add(w.weaponData.icon);
+
+        var slots = itemSlotParent.GetComponentsInChildren<TItemSlotUI>();
+
+        for (int i = 0; i < slots.Length; i++)
+        {
+            if (i < icons.Count)
+            {
+                slots[i].icon.enabled = true;
+                slots[i].icon.sprite = icons[i];
+                slots[i].levelText.text = "Lv -";
+            }
+            else
+            {
+                slots[i].SetEmpty();
+            }
+        }
+    }
+
+    public void Close()
+    {
+        window.SetActive(false);
+        Time.timeScale = 1f;
+        isOpen = false;
+    }
+    
     void OnResumeClicked()
     {
         Close();
@@ -105,40 +220,14 @@ public class PausePanel : MonoBehaviour
 
     void OnRetryClicked()
     {
-        // 패널 먼저 닫기
         window.SetActive(false);
         isOpen = false;
-
-        // 타임스케일 복구
         Time.timeScale = 1f;
-
-        // 게임씬 다시 로드
         SceneLoader.Load(SceneType.GameScene);
     }
 
     void OnMainClicked()
     {
-        // 메인 화면으로 이동
         SceneLoader.Load(SceneType.MainScene);
-    }
-
-    //외부에서 ESC로 열기
-
-    public void Open()
-    {
-        if (isOpen) return;
-
-        window.SetActive(true);
-        Time.timeScale = 0f;
-        RefreshStatsDummy(); // 나중엔 실제 플레이어 스탯 불러오면 됨
-
-        isOpen = true;
-    }
-    public void Close()
-    {
-        window.SetActive(false);
-        Time.timeScale = 1f;
-
-        isOpen = false;
     }
 }

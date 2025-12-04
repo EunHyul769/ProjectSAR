@@ -1,5 +1,6 @@
-using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using System.Collections.Generic;
 
 public enum GameState
 {
@@ -12,11 +13,21 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
+    [Header("Skill Data (ScriptableObjects)")]
+    public SkillData ultimateSkillSO;       // 20레벨 궁극기
+    public SkillData[] normalSkillPool;     // 일반 스킬 Pool
+
+    // 이미 선택된 일반 스킬 리스트 (중복 방지)
+    private List<SkillData> ownedNormalSkills = new List<SkillData>();
+
+    [Header("Equipment Pool")]
+    public EquipmentData[] equipmentPool;   // 레벨업 장비 선택 Pool (SO 폴더에서 연결)
+
+    [Header("Weapon Pool")]
+    public WeaponData[] weaponPool;
+
     public GameState State { get; private set; }
     public float playTime = 0f;
-
-    // 테스트용 아이콘
-    public Sprite testItemIcon;
 
     private void Awake()
     {
@@ -41,124 +52,173 @@ public class GameManager : MonoBehaviour
             UIManager.Instance.UpdateTimer(playTime);
     }
 
-    // 게임 시작 시 최초 스킬 선택
+    // 게임 시작 시 첫 스킬 선택창 오픈
     public void StartGame()
     {
         State = GameState.Playing;
 
-        SkillOptionData[] startingOptions = new SkillOptionData[2];
-
-        startingOptions[0] = new SkillOptionData()
-        {
-            name = "스타팅 스킬 1",
-            description = "시작 스킬 설명 1",
-            skillType = SkillType.Normal
-        };
-
-        startingOptions[1] = new SkillOptionData()
-        {
-            name = "스타팅 스킬 2",
-            description = "시작 스킬 설명 2",
-            skillType = SkillType.Normal
-        };
-
-        // 게임 시작 → 스킬 선택창
-        UIManager.Instance.OpenSkillChoice(startingOptions);
+        SkillData[] startingSkills = GetRandomNormalSkills(2);
+        UIManager.Instance.OpenSkillChoice(startingSkills);
     }
 
-    //레벨업 발생 시 호출됨 (PlayerExp에서 level 넘김)
+    // 스킬 선택 저장
+    public void AddOwnedNormalSkill(SkillData data)
+    {
+        if (data == null) return;
+        if (!ownedNormalSkills.Contains(data))
+            ownedNormalSkills.Add(data);
+    }
+
+    // 일반 스킬 랜덤 추출
+    private SkillData[] GetRandomNormalSkills(int count)
+    {
+        if (normalSkillPool == null || normalSkillPool.Length == 0)
+            return new SkillData[0];
+
+        List<SkillData> available = new List<SkillData>();
+
+        foreach (var s in normalSkillPool)
+        {
+            if (!ownedNormalSkills.Contains(s))
+                available.Add(s);
+        }
+
+        if (available.Count == 0)
+            return new SkillData[0];
+
+        // Shuffle
+        for (int i = 0; i < available.Count; i++)
+        {
+            int rand = Random.Range(0, available.Count);
+            (available[i], available[rand]) = (available[rand], available[i]);
+        }
+
+        int pick = Mathf.Min(count, available.Count);
+        SkillData[] result = new SkillData[pick];
+
+        for (int i = 0; i < pick; i++)
+            result[i] = available[i];
+
+        return result;
+    }
+
+    // 레벨업 트리거
     public void OnPlayerLevelUp(int level)
     {
-        // 20레벨 → 궁극기 스킬 선택
+        // 20레벨 → 궁극기
         if (level == 20)
         {
-            var ultimate = CreateUltimateSkillOption();
-            UIManager.Instance.OpenSkillChoice(ultimate);
+            SkillData[] ult = { ultimateSkillSO };
+            UIManager.Instance.OpenSkillChoice(ult);
             return;
         }
 
-        // 40레벨 → 일반 스킬 2번째 선택
+        // 40레벨 → 일반 스킬
         if (level == 40)
         {
-            var normals = CreateNormalSkillOptions();
+            var normals = GetRandomNormalSkills(2);
             UIManager.Instance.OpenSkillChoice(normals);
             return;
         }
 
-        // 그 외 → 아이템 / 무기 / 장비 카드
-        var items = CreateItemOptions();
-        UIManager.Instance.OpenLevelUp(items);
+        // 나머지 모든 레벨 → 장비 + 무기 혼합 옵션 제공
+        object[] options = GetMixedUpgradeOptions(3);
+        LevelUpPanel.Instance.Open(options);
     }
-
-    // 궁극기 스킬 1개 (20레벨)
-    private SkillOptionData[] CreateUltimateSkillOption()
+    private object[] GetMixedUpgradeOptions(int count)
     {
-        return new SkillOptionData[]
-        {
-            new SkillOptionData()
-            {
-                name = "궁극기 스킬",
-                description = "강력한 충격파를 발사합니다.",
-                skillType = SkillType.Ultimate
-            }
-        };
-    }
+        List<object> result = new List<object>();
 
-    // 일반 스킬 2개 (40레벨)
-    private SkillOptionData[] CreateNormalSkillOptions()
+        // 장비 랜덤 2개
+        var equips = GetRandomEquipments(2);
+        foreach (var e in equips)
+            result.Add(e);
+
+        // 무기 랜덤 1개
+        var weapons = GetRandomWeapons(1);
+        foreach (var w in weapons)
+            result.Add(w);
+
+        // 필요한 개수만큼 자르기
+        while (result.Count > count)
+            result.RemoveAt(Random.Range(0, result.Count));
+
+        // 셔플
+        for (int i = 0; i < result.Count; i++)
+        {
+            int r = Random.Range(0, result.Count);
+            (result[i], result[r]) = (result[r], result[i]);
+        }
+
+        return result.ToArray();
+    }
+    // 장비 랜덤 선택
+    private EquipmentData[] GetRandomEquipments(int count)
     {
-        return new SkillOptionData[]
-        {
-            new SkillOptionData()
-            {
-                name = "스킬 A",
-                description = "일반 스킬 설명 A",
-                skillType = SkillType.Normal
-            },
-            new SkillOptionData()
-            {
-                name = "스킬 B",
-                description = "일반 스킬 설명 B",
-                skillType = SkillType.Normal
-            }
-        };
-    }
+        if (equipmentPool == null || equipmentPool.Length == 0)
+            return new EquipmentData[0];
 
-    // ✔ 아이템 / 무기 / 장비 3개 옵션 (기본 레벨업)
-    private LevelUpOptionData[] CreateItemOptions()
+        List<EquipmentData> list = new List<EquipmentData>(equipmentPool);
+
+        // Shuffle
+        for (int i = 0; i < list.Count; i++)
+        {
+            int rand = Random.Range(0, list.Count);
+            (list[i], list[rand]) = (list[rand], list[i]);
+        }
+
+        int pick = Mathf.Min(count, list.Count);
+        EquipmentData[] result = new EquipmentData[pick];
+
+        for (int i = 0; i < pick; i++)
+            result[i] = list[i];
+
+        return result;
+    }
+    private WeaponData[] GetRandomWeapons(int count)
     {
-        return new LevelUpOptionData[]
+        if (weaponPool == null || weaponPool.Length == 0)
+            return new WeaponData[0];
+
+        List<WeaponData> list = new List<WeaponData>(weaponPool);
+
+        // Shuffle
+        for (int i = 0; i < list.Count; i++)
         {
-            new LevelUpOptionData()
-            {
-                icon = testItemIcon,
-                name = "단검",
-                metaInfo = "언커먼 / 무기 / 보유 1개",
-                description = "Lv 2 → Lv 3\n공격력 +10%",
-                rarityColor = Color.green
-            },
-            new LevelUpOptionData()
-            {
-                icon = testItemIcon,
-                name = "방패",
-                metaInfo = "레어 / 장비 / 보유 0개",
-                description = "Lv 1 → Lv 2\n방어력 +15",
-                rarityColor = Color.blue
-            },
-            new LevelUpOptionData()
-            {
-                icon = testItemIcon,
-                name = "부츠",
-                metaInfo = "커먼 / 장비 / 보유 1개",
-                description = "Lv 1 → Lv 2\n이동속도 +5%",
-                rarityColor = Color.white
-            }
-        };
+            int rand = Random.Range(0, list.Count);
+            (list[i], list[rand]) = (list[rand], list[i]);
+        }
+
+        int pick = Mathf.Min(count, list.Count);
+        WeaponData[] result = new WeaponData[pick];
+
+        for (int i = 0; i < pick; i++)
+            result[i] = list[i];
+
+        return result;
     }
 
+    // 게임 오버
     public void GameOver()
     {
+        if (State == GameState.GameOver)
+            return;
+
         State = GameState.GameOver;
+
+        int min = (int)(playTime / 60);
+        int sec = (int)(playTime % 60);
+        string playtimeStr = $"{min:00}:{sec:00}";
+
+        UIManager.Instance.OpenGameOver(playtimeStr);
+
+        Debug.Log("게임 오버!");
+    }
+
+    public void RestartGame()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     private void OnDestroy()

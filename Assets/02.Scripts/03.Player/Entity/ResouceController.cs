@@ -15,6 +15,8 @@ public class ResouceController : MonoBehaviour
     
     [SerializeField] private GameObject expOrbPrefab;
 
+    [SerializeField] private bool isPlayer = true;
+
     private void Awake()
     {
         baseController = GetComponent<BaseController>();
@@ -51,7 +53,13 @@ public class ResouceController : MonoBehaviour
         {
             return false; //데미지를 받지 않음
         }
-
+        float defense = statHandler.Defense; // 방어력 수치 가져오기
+        if (change < 0)
+        {
+            // 데미지일 경우 방어력 적용
+            float damageAfterDefense = -change - defense;
+            change = damageAfterDefense < 1 ? 1 : -damageAfterDefense; //최소 데미지는 1로 설정
+        }
         timeSinceLastChange = 0f;
         CurrentHealth += change;
         CurrentHealth = CurrentHealth > MaxHealth ? MaxHealth : CurrentHealth;
@@ -61,7 +69,7 @@ public class ResouceController : MonoBehaviour
         {
             animationHandler.Damage();
         }
-        // 체력 UI 갱신 필요한 지점 1.
+        // 체력 UI 갱신 필요한 지점
         UIManager.Instance.UpdateHP(CurrentHealth, MaxHealth);
 
         if (CurrentHealth <= 0f)
@@ -75,16 +83,15 @@ public class ResouceController : MonoBehaviour
     private void Death()
     {
         Debug.Log("사망");
+
+        if (isPlayer)
+        {
+            // 플레이어면 바로 GameOver 호출
+            GameManager.Instance.GameOver();
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
-
-    public void FullRecovery()
-    {
-        CurrentHealth = statHandler.Health; // 현재 체력을 최대 체력으로
-
-        Debug.Log("레벨업 보너스! 체력 완전 회복: " + CurrentHealth);
-
-        // 체력 UI 갱신 필요한 지점 2.
-        UIManager.Instance.UpdateHP(CurrentHealth, MaxHealth);
-    }
-
 }

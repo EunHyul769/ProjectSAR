@@ -61,7 +61,7 @@ public class ItemTooltipUI : MonoBehaviour
         gameObject.SetActive(true);
         UpdatePosition();
     }
-    public void ShowSkill(SkillOptionData skill)
+    public void ShowSkill(SkillData skill)
     {
         if (iconImage != null)
         {
@@ -70,7 +70,7 @@ public class ItemTooltipUI : MonoBehaviour
         }
 
         if (nameText != null)
-            nameText.text = skill.name;
+            nameText.text = skill.skillName;
 
         if (descText != null)
             descText.text = skill.description;

@@ -14,6 +14,10 @@ public class MainSceneUI : MonoBehaviour
     [Header("setting")]
     public GameObject settingsPopup;
 
+    [Header("Setting Sliders")]
+    public Slider sliderBGM;
+    public Slider sliderSFX;
+
     private void Start()
     {
         btnStart.onClick.AddListener(OnClickStart);
@@ -21,6 +25,22 @@ public class MainSceneUI : MonoBehaviour
         btnBook.onClick.AddListener(OnClickBook);
         btnSettings.onClick.AddListener(OnClickSettings);
         btnQuit.onClick.AddListener(OnClickQuit);
+
+        sliderBGM.value = SoundManager.Instance.bgmVolume;
+        sliderSFX.value = SoundManager.Instance.sfxVolume;
+
+        sliderBGM.onValueChanged.AddListener(OnChangeBGM);
+        sliderSFX.onValueChanged.AddListener(OnChangeSFX);
+    }
+
+    private void OnChangeBGM(float value)
+    {
+        SoundManager.Instance.bgmVolume = value;
+    }
+
+    private void OnChangeSFX(float value)
+    {
+        SoundManager.Instance.sfxVolume = value;
     }
 
     private void OnClickStart()
@@ -30,12 +50,12 @@ public class MainSceneUI : MonoBehaviour
 
     private void OnClickUpgrade()
     {
-        Debug.Log("¾÷±×·¹ÀÌµå(±¸»ö¿ë) - ½ÇÁ¦ ±â´É ¾øÀ½");
+        Debug.Log("ï¿½ï¿½ï¿½×·ï¿½ï¿½Ìµï¿½(ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½) - ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
     }
 
     private void OnClickBook()
     {
-        Debug.Log("µµ°¨(±¸»ö¿ë) - ½ÇÁ¦ ±â´É ¾øÀ½");
+        Debug.Log("ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½) - ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
     }
 
     private void OnClickSettings()
@@ -46,6 +66,6 @@ public class MainSceneUI : MonoBehaviour
     private void OnClickQuit()
     {
         Application.Quit();
-        Debug.Log("°ÔÀÓ Á¾·á");
+        Debug.Log("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
     }
 }

@@ -1,7 +1,8 @@
+using System.Collections.Generic;
+using TMPro;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
 public class SkillChoicePanel : MonoBehaviour
 {
@@ -11,7 +12,7 @@ public class SkillChoicePanel : MonoBehaviour
     public SkillCardUI cardPrefab;
     public Transform cardParent;
 
-    private SkillOptionData[] currentOptions;
+    private SkillData[] currentOptions;
 
     [Header("Owned Item Slots")]
     public TItemSlotUI slotPrefab;
@@ -54,73 +55,76 @@ public class SkillChoicePanel : MonoBehaviour
     }
 
     // 패널 열기
-    public void Open(SkillOptionData[] options)
+    public void Open(SkillData[] datas)
     {
         isOpen = true;
 
         window.SetActive(true);
         Time.timeScale = 0f;
 
-        CreateCards(options);
+        CreateCards(datas);
 
         slotZ.SetEmpty();
         slotX.SetEmpty();
         slotC.SetEmpty();
 
-        RefreshStatsDummy();
+        RefreshStats();
         CreateEmptyWeaponSlots();
         CreateEmptyEquipSlots();
+
+        RefreshEquipSlots(EquipmentController.Instance.equippedItems);
+        RefreshWeaponSlots(BaseController.Instance.GetActiveWeapons());
     }
 
     // 카드 생성
-    private void CreateCards(SkillOptionData[] options)
+    private void CreateCards(SkillData[] datas)
     {
         foreach (Transform child in cardParent)
             Destroy(child.gameObject);
 
-        foreach (var opt in options)
+        foreach (var data in datas)
         {
             var card = Instantiate(cardPrefab, cardParent);
-            card.SetCard(opt);
+            card.SetCard(data);
         }
     }
 
     // 카드 선택
-    public void SelectCard(SkillOptionData option)
+    public void SelectCard(SkillData data)
     {
-        // 궁극기 스킬이면 무조건 C 슬롯
-        if (option.skillType == SkillType.Ultimate)
+        // 궁극기
+        if (data.type == SkillsType.Ultimate)
         {
             if (slotC.IsEmpty())
             {
-                slotC.SetSkill(option);
+                slotC.SetSkill(data);
+                UIManager.Instance.SetSkillToHUD(data);
             }
             else
-            {
                 Debug.Log("궁극기 슬롯이 이미 찼습니다!");
-            }
 
             ClosePanel();
             return;
         }
 
-        // 일반 스킬이면 Z → X 순서
+        GameManager.Instance.AddOwnedNormalSkill(data);
+
+        // 일반 스킬 Z → X
         if (slotZ.IsEmpty())
         {
-            slotZ.SetSkill(option);
+            slotZ.SetSkill(data);
+            UIManager.Instance.SetSkillToHUD(data);
         }
         else if (slotX.IsEmpty())
         {
-            slotX.SetSkill(option);
+            slotX.SetSkill(data);
+            UIManager.Instance.SetSkillToHUD(data);
         }
         else
-        {
             Debug.Log("일반 스킬 슬롯 두 개가 이미 찼습니다!");
-        }
 
         ClosePanel();
     }
-
 
     private void ClosePanel()
     {
@@ -129,32 +133,21 @@ public class SkillChoicePanel : MonoBehaviour
         window.SetActive(false);
         Time.timeScale = 1f;
     }
-
-    // 임시 옵션 생성 (테스트용)
-    private SkillOptionData[] CreateDummyOptions()
+    private void RefreshStats()
     {
-        SkillOptionData[] arr = new SkillOptionData[2];
+        var player = GameObject.FindWithTag("Player");
+        if (player == null) return;
 
-        for (int i = 0; i < 2; i++)
-        {
-            arr[i] = new SkillOptionData()
-            {
-                name = $"임시 옵션 {i + 1}",
-                description = "테스트 설명",
-            };
-        }
+        var stat = player.GetComponent<StatHandler>();
+        var resource = player.GetComponent<ResouceController>();
 
-        return arr;
-    }
+        hpText.text = $"HP : {(int)resource.CurrentHealth} / {stat.MaxHealth}";
+        spdText.text = $"SPD : {stat.Speed}";
+        atkText.text = $"ATK : {stat.Attack}";
+        atkspdText.text = $"ATK SPD : {stat.AttackSpeed}";
 
-    private void RefreshStatsDummy()
-    {
-        hpText.text = "-";
         hpgenText.text = "-";
         defText.text = "-";
-        spdText.text = "-";
-        atkText.text = "-";
-        atkspdText.text = "-";
         atkareaText.text = "-";
         cri.text = "-";
         cridmg.text = "-";
@@ -186,11 +179,41 @@ public class SkillChoicePanel : MonoBehaviour
             slot.SetEmpty();
         }
     }
-
-    // 테스트 함수
-    public void TestOpen()
+    private void RefreshEquipSlots(List<EquipmentData> items)
     {
-        SkillOptionData[] dummy = CreateDummyOptions();
-        Open(dummy);
+        var slots = equipSlotParent.GetComponentsInChildren<TItemSlotUI>();
+
+        for (int i = 0; i < slots.Length; i++)
+        {
+            if (items != null && i < items.Count && items[i] != null)
+            {
+                slots[i].icon.enabled = true;
+                slots[i].icon.sprite = items[i].icon;
+                slots[i].levelText.text = "Lv -";
+            }
+            else
+            {
+                slots[i].SetEmpty();
+            }
+        }
     }
+    private void RefreshWeaponSlots(List<WeaponHandler> weapons)
+    {
+        var slots = weaponSlotParent.GetComponentsInChildren<TItemSlotUI>();
+
+        for (int i = 0; i < slots.Length; i++)
+        {
+            if (weapons != null && i < weapons.Count && weapons[i] != null)
+            {
+                slots[i].icon.enabled = true;
+                slots[i].icon.sprite = weapons[i].weaponData.icon;
+                slots[i].levelText.text = "Lv -";
+            }
+            else
+            {
+                slots[i].SetEmpty();
+            }
+        }
+    }
+
 }

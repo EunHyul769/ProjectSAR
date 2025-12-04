@@ -5,12 +5,14 @@ public class Enemy : MonoBehaviour, IDamagable
 {
     [Header("적 유닛 설정")]
     [SerializeField] private EnemyData enemyData;
+    public EnemyData EnemyData {  get { return enemyData; } }
     private GameObject originalPrefab;
 
     private Rigidbody2D rb;
     private Transform playerTransform;
 
     private float currentHealth;
+    public float CurrentHealth { get { return currentHealth; } }
     private float enemyDamage;
     private bool isActive = false;
 
@@ -24,6 +26,7 @@ public class Enemy : MonoBehaviour, IDamagable
     [SerializeField] private Transform shootPoint;
 
     private float attackCooldown;
+    private float shootingAttackCooldown;
 
     private SpriteRenderer spriteRenderer;
 
@@ -31,6 +34,11 @@ public class Enemy : MonoBehaviour, IDamagable
 
     [Header("물리 충돌용 collider")]
     [SerializeField] private Collider2D physicalCollisionCollider;
+
+    public static event Action<Enemy> OnBossSpawnedGlobal;
+    public static event Action<Enemy> OnBossDiedGlobal;
+
+    public event Action<Enemy> OnThisBossDied;
 
     private void Awake()
     {
@@ -40,7 +48,7 @@ public class Enemy : MonoBehaviour, IDamagable
         rb.freezeRotation = true;
 
         spriteRenderer = GetComponent<SpriteRenderer>();
-        if(spriteRenderer == null)
+        if (spriteRenderer == null)
         {
             Debug.LogError("Enemy: SpriteRenderer가 없음");
         }
@@ -83,12 +91,15 @@ public class Enemy : MonoBehaviour, IDamagable
             UpdateSpriteDirectionBasedOnTarget();
         }
 
-        if (enemyData.enemyType ==EnemyType.Boss)
+        if (enemyData.enemyType == EnemyType.Boss)
         {
-            if(enemyData.enemyName == "Metaphysics")
+            Debug.Log("Initialize에서 보스 스폰");
+            OnBossSpawnedGlobal?.Invoke(this);
+            if (enemyData.enemyName == "Metaphysics")
             {
+                Debug.Log($"{enemyData.enemyName} 생성됨");
                 currentBossPattern = new MetaphysicsPatern(5f, physicalCollisionCollider);
-
+                Debug.Log($"{enemyData.enemyName} 패턴 적용됨");
                 if (physicalCollisionCollider != null)
                 {
                     physicalCollisionCollider.enabled = true;
@@ -122,11 +133,6 @@ public class Enemy : MonoBehaviour, IDamagable
         }
     }
 
-    private void Update()
-    {
-        attackCooldown -= Time.deltaTime;
-    }
-
     private void FixedUpdate()
     {
         if (!isActive || playerTransform == null || enemyData == null)
@@ -135,7 +141,17 @@ public class Enemy : MonoBehaviour, IDamagable
             return;
         }
 
-        if ( enemyData.enemyType == EnemyType.Boss && currentBossPattern != null)
+        if (attackCooldown > 0)
+        {
+            attackCooldown = Mathf.Max(0, attackCooldown - Time.fixedDeltaTime);
+        }
+
+        if (shootingAttackCooldown > 0)
+        {
+            shootingAttackCooldown = Mathf.Max(0, shootingAttackCooldown - Time.fixedDeltaTime);
+        }
+
+        if (enemyData.enemyType == EnemyType.Boss && currentBossPattern != null)
         {
             currentBossPattern.BossAttack(this, playerTransform);
 
@@ -147,6 +163,13 @@ public class Enemy : MonoBehaviour, IDamagable
         else
         {
             UpdateMovement();
+
+            float distanceToPlayer = Vector2.Distance(transform.position, playerTransform.position);
+            if (distanceToPlayer <= enemyData.attackRange)
+            {
+                rb.velocity = Vector2.zero;
+                Attack();
+            }
         }
 
         UpdateSpriteDirectionBasedOnTarget();
@@ -155,18 +178,9 @@ public class Enemy : MonoBehaviour, IDamagable
     private void UpdateMovement()
     {
         Vector2 directionToPlayer = (playerTransform.position - transform.position).normalized;
-        float distanceToPlayer = Vector2.Distance(transform.position, playerTransform.position);
-
-        if (distanceToPlayer > enemyData.attackRange)
-        {
-            rb.velocity = directionToPlayer * enemyData.moveSpeed;
-        }
-        else
-        {
-            rb.velocity = Vector2.zero;
-            Attack();
-        }
+        rb.velocity = directionToPlayer * enemyData.moveSpeed;
     }
+
     private void Attack()
     {
         switch (enemyData.enemyType)
@@ -174,10 +188,10 @@ public class Enemy : MonoBehaviour, IDamagable
             case EnemyType.Melee:
                 break;
             case EnemyType.Range:
-                if (attackCooldown <= 0f && projectilePrefab != null && shootPoint != null)
+                if (shootingAttackCooldown <= 0f && projectilePrefab != null && shootPoint != null)
                 {
                     ShootProjectile();
-                    attackCooldown = enemyData.attackRate;
+                    shootingAttackCooldown = enemyData.shootingAttackRate;
                 }
                 break;
             case EnemyType.Boss:
@@ -188,8 +202,8 @@ public class Enemy : MonoBehaviour, IDamagable
     private void ShootProjectile()
     {
         // 원거리 몬스터 공격 사운드 추가
-        SoundManager.Instance.PlaySFX(SoundManager.Instance.enemyLongAttack, 1f);
-        
+        //SoundManager.Instance.PlaySFX(SoundManager.Instance.enemyLongAttack, 1f);     // 해당 부분 존재시 원거리 유닛이 투사체 발사 안함 확인 필요
+
         if (objectPoolManager == null)
         {
             Debug.LogError("Enemy: ObjectPoolManager를 찾을 수 없음");
@@ -252,7 +266,7 @@ public class Enemy : MonoBehaviour, IDamagable
             if (expOrb != null)
             {
                 expOrb.transform.position = transform.position;
-                orb.OnSpawned(objectPoolManager, enemyData.expOrbPrefab);  
+                orb.OnSpawned(objectPoolManager, enemyData.expOrbPrefab);
                 Debug.Log("경험치 오브젝트 드랍");
             }
         }
@@ -285,6 +299,8 @@ public class Enemy : MonoBehaviour, IDamagable
             Debug.LogWarning("드랍 아이템 리스트가 비어있거나 오브젝트 풀 매니저가 할당되지 않음");
         }
 
+        OnThisBossDied?.Invoke(this);
+        OnBossDiedGlobal?.Invoke(this);
         OnDeathEvent?.Invoke(this.gameObject, originalPrefab); // 사망 이벤트 발생 시 자신과 원본 프리팹 전달
         isActive = false; // 비활성화 상태
     }
@@ -325,7 +341,7 @@ public class Enemy : MonoBehaviour, IDamagable
         }
         else if (transform.position.x > playerTransform.position.x)
         {
-            spriteRenderer.flipX = false; 
+            spriteRenderer.flipX = false;
         }
     }
 }

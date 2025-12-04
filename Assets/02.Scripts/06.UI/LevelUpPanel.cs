@@ -1,7 +1,8 @@
+using System.Collections.Generic;
+using TMPro;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
 public class LevelUpPanel : MonoBehaviour
 {
@@ -19,6 +20,7 @@ public class LevelUpPanel : MonoBehaviour
 
     [Header("Owned Item Slots")]
     public TItemSlotUI slotPrefab;
+
 
     public Transform weaponSlotParent;   // OwnedWeaponGroup
     public Transform equipSlotParent;    // OwnedEquipGroup
@@ -60,45 +62,56 @@ public class LevelUpPanel : MonoBehaviour
     }
 
     // 패널 열기
-    public void Open(LevelUpOptionData[] options)
+    public void Open(object[] options)
     {
         isOpen = true;
-
         window.SetActive(true);
         Time.timeScale = 0f;
 
         CreateCards(options);
-        RefreshStatsDummy();
-        CreateEmptyWeaponSlots();
-        CreateEmptyEquipSlots();
-    }
+        RefreshStats();
 
+        CreateEmptyEquipSlots();
+        CreateEmptyWeaponSlots();
+
+        RefreshEquipSlots(EquipmentController.Instance.equippedItems);
+        RefreshWeaponSlots(BaseController.Instance.GetActiveWeapons());
+    }
     // 카드 생성
-    private void CreateCards(LevelUpOptionData[] options)
+    private void CreateCards(object[] options)
     {
         foreach (Transform child in cardParent)
             Destroy(child.gameObject);
 
-        currentOptions = options;
-
-        foreach (var opt in options)
+        foreach (var obj in options)
         {
             var card = Instantiate(cardPrefab, cardParent);
-            card.SetCard(opt);
+
+            if (obj is EquipmentData e)
+                card.SetCard(e);
+            else if (obj is WeaponData w)
+                card.SetCard(w);
         }
     }
-
     // 카드 선택
-    public void SelectCard(LevelUpOptionData option)
+    public void SelectEquipment(EquipmentData data)
     {
-        Debug.Log("선택됨: " + option.name);
+        EquipmentController.Instance.EquipItem(data);
 
-        // GameManager가 준비되면 아래 줄 활성화
-        // GameManager.Instance.ApplyLevelUp(option);
+        RefreshEquipSlots(EquipmentController.Instance.equippedItems);
+        RefreshWeaponSlots(BaseController.Instance.GetActiveWeapons());
 
         ClosePanel();
     }
+    public void SelectWeapon(WeaponData data)
+    {
+        BaseController.Instance.EquipWeapon(data);
 
+        RefreshEquipSlots(EquipmentController.Instance.equippedItems);
+        RefreshWeaponSlots(BaseController.Instance.GetActiveWeapons());
+
+        ClosePanel();
+    }
     private void ClosePanel()
     {
         isOpen = false;
@@ -106,34 +119,21 @@ public class LevelUpPanel : MonoBehaviour
         window.SetActive(false);
         Time.timeScale = 1f;
     }
-
-    // 임시 옵션 생성 (테스트용)
-    private LevelUpOptionData[] CreateDummyOptions()
+    private void RefreshStats()
     {
-        LevelUpOptionData[] arr = new LevelUpOptionData[3];
+        var player = GameObject.FindWithTag("Player");
+        if (player == null) return;
 
-        for (int i = 0; i < 3; i++)
-        {
-            arr[i] = new LevelUpOptionData()
-            {
-                name = $"임시 옵션 {i + 1}",
-                metaInfo = "희귀도/타입/보유수",
-                description = "테스트 설명",
-                rarityColor = Color.white
-            };
-        }
+        var stat = player.GetComponent<StatHandler>();
+        var resource = player.GetComponent<ResouceController>();
 
-        return arr;
-    }
+        hpText.text = $"HP : {(int)resource.CurrentHealth} / {stat.MaxHealth}";
+        spdText.text = $"SPD : {stat.Speed}";
+        atkText.text = $"ATK : {stat.Attack}";
+        atkspdText.text = $"ATK SPD : {stat.AttackSpeed}";
 
-    private void RefreshStatsDummy()
-    {
-        hpText.text = "-";
         hpgenText.text = "-";
         defText.text = "-";
-        spdText.text = "-";
-        atkText.text = "-";
-        atkspdText.text = "-";
         atkareaText.text = "-";
         cri.text = "-";
         cridmg.text = "-";
@@ -153,7 +153,6 @@ public class LevelUpPanel : MonoBehaviour
             slot.SetEmpty();
         }
     }
-
     private void CreateEmptyEquipSlots()
     {
         foreach (Transform child in equipSlotParent)
@@ -165,11 +164,41 @@ public class LevelUpPanel : MonoBehaviour
             slot.SetEmpty();
         }
     }
-
-    // 테스트 함수
-    public void TestOpen()
+    // 오른쪽 OwnedEquipGroup 갱신
+    private void RefreshEquipSlots(List<EquipmentData> items)
     {
-        LevelUpOptionData[] dummy = CreateDummyOptions();
-        Open(dummy);
+        var slots = equipSlotParent.GetComponentsInChildren<TItemSlotUI>();
+
+        for (int i = 0; i < slots.Length; i++)
+        {
+            if (items != null && i < items.Count && items[i] != null)
+            {
+                slots[i].icon.enabled = true;
+                slots[i].icon.sprite = items[i].icon;
+                slots[i].levelText.text = "Lv -";
+            }
+            else
+            {
+                slots[i].SetEmpty();
+            }
+        }
+    }
+    private void RefreshWeaponSlots(List<WeaponHandler> weapons)
+    {
+        var slots = weaponSlotParent.GetComponentsInChildren<TItemSlotUI>();
+
+        for (int i = 0; i < slots.Length; i++)
+        {
+            if (i < weapons.Count && weapons[i] != null)
+            {
+                slots[i].icon.enabled = true;
+                slots[i].icon.sprite = weapons[i].weaponData.icon;
+                slots[i].levelText.text = "Lv -";
+            }
+            else
+            {
+                slots[i].SetEmpty();
+            }
+        }
     }
 }

@@ -16,7 +16,7 @@ MonoBehaviour:
   description: "3\uCD08\uAC04 SPD 50%\uC99D\uAC00"
   type: 1
   coolTime: 10
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: f4e20a209d3f54c5bb0dd2c649c513a9, type: 3}
   value1: 0.5
   value2: 0
   duration: 0

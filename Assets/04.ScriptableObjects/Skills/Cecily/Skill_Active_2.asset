@@ -17,7 +17,7 @@ MonoBehaviour:
     ATKSPD 50% \uAC10\uC18C"
   type: 1
   coolTime: 10
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 3bacba0d958ad4defab7782914cfad1e, type: 3}
   value1: 0.5
   value2: 0.5
   duration: 0

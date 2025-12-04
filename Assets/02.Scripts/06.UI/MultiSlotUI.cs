@@ -19,22 +19,31 @@ public class MultiSlotUI : MonoBehaviour
     private float currentTime;
     private float maxTime;
 
-    public void SetSkill(Sprite iconSprite, float cooldown, string key)
-    {
-        //slotType = SlotType.Skill;
+    public SkillData currentSkill; // HUD 슬롯에 실제 들어간 스킬
+    public Sprite emptySprite;
 
+    public void SetSkill(Sprite iconSprite, float cooldown, string key, SkillData data)
+    {
+        // 현재 스킬 데이터 저장
+        currentSkill = data;
+
+        // 아이콘 표시
         icon.sprite = iconSprite;
         icon.enabled = true;
 
+        // 쿨타임 설정
         maxTime = cooldown;
         currentTime = 0f;
 
+        // 키(Z/X/C) 표시
         keyText.text = key;
-        keyText.gameObject.SetActive(true);  // Skill에만 표시
+        keyText.gameObject.SetActive(true);
 
+        // 쿨타임 마스크 초기화
         cooldownMask.fillAmount = 0f;
         cooldownText.gameObject.SetActive(false);
     }
+
 
     public void SetBuff(Sprite iconSprite, float duration)
     {
@@ -76,10 +85,10 @@ public class MultiSlotUI : MonoBehaviour
 
     public void StartCooldown()
     {
-        //if (slotType != SlotType.Skill) return;
-
-        //currentTime = maxTime;
-        //StartCoroutine(CountDownRoutine());
+        currentTime = maxTime;
+        cooldownMask.fillAmount = 1f;
+        cooldownText.gameObject.SetActive(true);
+        StartCoroutine(CountDownRoutine());
     }
 
     private IEnumerator CountDownRoutine()
@@ -98,5 +107,21 @@ public class MultiSlotUI : MonoBehaviour
 
         cooldownMask.fillAmount = 0;
         cooldownText.gameObject.SetActive(false);
+    }
+    public bool IsEmpty()
+    {
+        // 아이콘이 null이거나, 아이콘 이미지가 비활성화되어 있으면 empty 취급
+        return icon.sprite == null || icon.enabled == false;
+    }
+    public void SetEmpty()
+    {
+        icon.enabled = true;
+        icon.sprite = emptySprite;
+
+        keyText.text = "";
+        cooldownMask.fillAmount = 0f;
+        cooldownText.gameObject.SetActive(false);
+
+        currentSkill = null;
     }
 }
