@@ -94,6 +94,7 @@ GameObject:
   - component: {fileID: 3654926770403678071}
   - component: {fileID: 6407477810268211094}
   - component: {fileID: 8580478245290866599}
+  - component: {fileID: 5343965980131712090}
   m_Layer: 9
   m_Name: Player
   m_TagString: Player
@@ -206,7 +207,9 @@ MonoBehaviour:
   characterRenderer: {fileID: 8419153692804091075}
   weaponPivot: {fileID: 8880431785759292641}
   characterData: {fileID: 11400000, guid: 795ec74b154f3974ba7c0d2312b73652, type: 2}
-  WeaponPrefab: {fileID: 8875164933983385359, guid: 6de9967e48642114fa154b15b12a2f3e, type: 3}
+  DefaltWeaponPrefab: {fileID: 8875164933983385359, guid: 6de9967e48642114fa154b15b12a2f3e, type: 3}
+  ShurikenPrefab: {fileID: 6480699726659683145, guid: 218875603c10c9642bbf822fad11ff1d, type: 3}
+  BoltPrefab: {fileID: 2672049116195395833, guid: 1a624e5b18a91b6458e1a0f8e6fdb49f, type: 3}
   dashDistance: 3
   dashDuration: 0.2
   dashCooldown: 1
@@ -297,6 +300,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gold: 0
+--- !u!114 &5343965980131712090
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1862219804075385791}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 057a8f7ce095ec64bab95c365dcd69fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2497786025377729573
 GameObject:
   m_ObjectHideFlags: 0

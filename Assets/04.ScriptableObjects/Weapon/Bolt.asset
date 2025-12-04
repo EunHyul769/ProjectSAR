@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5395654f72f86d4f95da885c27f01fe, type: 3}
+  m_Name: Bolt
+  m_EditorClassIdentifier: 
+  weaponName: Bolt
+  icon: {fileID: 21300000, guid: 3330b895d3f893f44bd9f1fe7f3457e4, type: 3}
+  WeaponPrefab: {fileID: 6458731029516545337, guid: d66fa5b2f2ff3de478ee345be33b4215, type: 3}
