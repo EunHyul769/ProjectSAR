@@ -107,8 +107,8 @@ public class GameManager : MonoBehaviour
     // 레벨업 트리거
     public void OnPlayerLevelUp(int level)
     {
-        // 20레벨 → 궁극기
-        if (level == 20)
+        // 20레벨 → 궁극기 ->5로변경
+        if (level == 5)
         {
             SkillData[] ult = { ultimateSkillSO };
             UIManager.Instance.OpenSkillChoice(ult);
