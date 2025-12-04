@@ -59,6 +59,8 @@ public class GameManager : MonoBehaviour
 
         SkillData[] startingSkills = GetRandomNormalSkills(2);
         UIManager.Instance.OpenSkillChoice(startingSkills);
+        UIManager.Instance.RefreshWeaponSlots(BaseController.Instance.GetActiveWeapons());
+
     }
 
     // 스킬 선택 저장
