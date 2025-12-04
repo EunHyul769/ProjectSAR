@@ -29,6 +29,16 @@ public class GameManager : MonoBehaviour
     public GameState State { get; private set; }
     public float playTime = 0f;
 
+    private void OnEnable()
+    {
+        Enemy.OnBossDiedGlobal += GameOver;
+    }
+
+    private void OnDisable()
+    {
+        Enemy.OnBossDiedGlobal -= GameOver;
+    }
+
     private void Awake()
     {
         Instance = this;
@@ -59,6 +69,7 @@ public class GameManager : MonoBehaviour
 
         SkillData[] startingSkills = GetRandomNormalSkills(2);
         UIManager.Instance.OpenSkillChoice(startingSkills);
+        UIManager.Instance.RefreshWeaponSlots(BaseController.Instance.GetActiveWeapons());
     }
 
     // 스킬 선택 저장
@@ -213,6 +224,25 @@ public class GameManager : MonoBehaviour
         UIManager.Instance.OpenGameOver(playtimeStr);
 
         Debug.Log("게임 오버!");
+    }
+
+    public void GameOver(Enemy diedBoss)
+    {
+        if (diedBoss.EnemyData.enemyType == EnemyType.Boss)
+        {
+            if (State == GameState.GameOver)
+                return;
+
+            State = GameState.GameOver;
+
+            int min = (int)(playTime / 60);
+            int sec = (int)(playTime % 60);
+            string playtimeStr = $"{min:00}:{sec:00}";
+
+            UIManager.Instance.OpenGameOver(playtimeStr);
+
+            Debug.Log("게임 오버!");
+        }
     }
 
     public void RestartGame()

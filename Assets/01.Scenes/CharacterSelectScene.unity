@@ -1255,8 +1255,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: New Text
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8c0fe608756f2604384cff707105f52f, type: 2}
+  m_sharedMaterial: {fileID: -7120847016797675053, guid: 8c0fe608756f2604384cff707105f52f, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -4003,6 +4003,8 @@ MonoBehaviour:
   characterNameText: {fileID: 1941842220}
   paramText: {fileID: 213629176}
   weaponNameText: {fileID: 649631992}
+  weaponIcon: {fileID: 747882924}
+  weaponDescText: {fileID: 533143063}
   skillSlots:
   - {fileID: 83836778}
   - {fileID: 447057571}
