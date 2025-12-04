@@ -23,6 +23,9 @@ public class GameManager : MonoBehaviour
     [Header("Equipment Pool")]
     public EquipmentData[] equipmentPool;   // 레벨업 장비 선택 Pool (SO 폴더에서 연결)
 
+    [Header("Weapon Pool")]
+    public WeaponData[] weaponPool;
+
     public GameState State { get; private set; }
     public float playTime = 0f;
 
@@ -102,7 +105,7 @@ public class GameManager : MonoBehaviour
     // 레벨업 트리거
     public void OnPlayerLevelUp(int level)
     {
-        // 20레벨 → 궁극기 선택창
+        // 20레벨 → 궁극기
         if (level == 20)
         {
             SkillData[] ult = { ultimateSkillSO };
@@ -110,7 +113,7 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        // 40레벨 → 일반 스킬 2개 선택창
+        // 40레벨 → 일반 스킬
         if (level == 40)
         {
             var normals = GetRandomNormalSkills(2);
@@ -118,11 +121,37 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        // 이외의 모든 레벨 → 장비 선택창
-        var equipOptions = GetRandomEquipments(3);
-        UIManager.Instance.OpenLevelUp(equipOptions);
+        // 나머지 모든 레벨 → 장비 + 무기 혼합 옵션 제공
+        object[] options = GetMixedUpgradeOptions(3);
+        LevelUpPanel.Instance.Open(options);
     }
+    private object[] GetMixedUpgradeOptions(int count)
+    {
+        List<object> result = new List<object>();
 
+        // 장비 랜덤 2개
+        var equips = GetRandomEquipments(2);
+        foreach (var e in equips)
+            result.Add(e);
+
+        // 무기 랜덤 1개
+        var weapons = GetRandomWeapons(1);
+        foreach (var w in weapons)
+            result.Add(w);
+
+        // 필요한 개수만큼 자르기
+        while (result.Count > count)
+            result.RemoveAt(Random.Range(0, result.Count));
+
+        // 셔플
+        for (int i = 0; i < result.Count; i++)
+        {
+            int r = Random.Range(0, result.Count);
+            (result[i], result[r]) = (result[r], result[i]);
+        }
+
+        return result.ToArray();
+    }
     // 장비 랜덤 선택
     private EquipmentData[] GetRandomEquipments(int count)
     {
@@ -140,6 +169,28 @@ public class GameManager : MonoBehaviour
 
         int pick = Mathf.Min(count, list.Count);
         EquipmentData[] result = new EquipmentData[pick];
+
+        for (int i = 0; i < pick; i++)
+            result[i] = list[i];
+
+        return result;
+    }
+    private WeaponData[] GetRandomWeapons(int count)
+    {
+        if (weaponPool == null || weaponPool.Length == 0)
+            return new WeaponData[0];
+
+        List<WeaponData> list = new List<WeaponData>(weaponPool);
+
+        // Shuffle
+        for (int i = 0; i < list.Count; i++)
+        {
+            int rand = Random.Range(0, list.Count);
+            (list[i], list[rand]) = (list[rand], list[i]);
+        }
+
+        int pick = Mathf.Min(count, list.Count);
+        WeaponData[] result = new WeaponData[pick];
 
         for (int i = 0; i < pick; i++)
             result[i] = list[i];

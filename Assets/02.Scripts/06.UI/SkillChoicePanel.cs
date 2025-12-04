@@ -73,6 +73,7 @@ public class SkillChoicePanel : MonoBehaviour
         CreateEmptyEquipSlots();
 
         RefreshEquipSlots(EquipmentController.Instance.equippedItems);
+        RefreshWeaponSlots(BaseController.Instance.GetActiveWeapons());
     }
 
     // 카드 생성
@@ -196,4 +197,23 @@ public class SkillChoicePanel : MonoBehaviour
             }
         }
     }
+    private void RefreshWeaponSlots(List<WeaponHandler> weapons)
+    {
+        var slots = weaponSlotParent.GetComponentsInChildren<TItemSlotUI>();
+
+        for (int i = 0; i < slots.Length; i++)
+        {
+            if (weapons != null && i < weapons.Count && weapons[i] != null)
+            {
+                slots[i].icon.enabled = true;
+                slots[i].icon.sprite = weapons[i].weaponData.icon;
+                slots[i].levelText.text = "Lv -";
+            }
+            else
+            {
+                slots[i].SetEmpty();
+            }
+        }
+    }
+
 }

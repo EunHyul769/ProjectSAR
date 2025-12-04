@@ -122,11 +122,16 @@ public class BaseController : MonoBehaviour
         }
 
         WeaponHandler newWeapon = Instantiate(data.weaponPrefab, weaponPivot);
+
+        newWeapon.weaponData = data;
+
         newWeapon.name = data.weaponName; // 이름 설정
 
         activeWeapons.Add(newWeapon);
 
         Debug.Log($"무기 장착 완료: {data.weaponName}");
+
+        UIManager.Instance.RefreshWeaponSlots(activeWeapons); //UI
     }
 
     public void AttemptDash()
@@ -213,4 +218,9 @@ public class BaseController : MonoBehaviour
             }
         }
     }
+
+    public List<WeaponHandler> GetActiveWeapons()
+    {
+        return activeWeapons;
+    } //ui로 목록 가져가기
 }

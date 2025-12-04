@@ -17,8 +17,10 @@ public class OptionCardUI : MonoBehaviour,
     [Header("Scale Root")]
     public Transform scaleRoot;
 
-    [Header("Equip Data")]
+    [Header("Data")]
     public EquipmentData equipment;
+    public WeaponData weapon;
+    public bool isWeapon; // ← 무기인지 장비인지 구분
 
     private Vector3 originalScale;
 
@@ -52,6 +54,37 @@ public class OptionCardUI : MonoBehaviour,
         // 희귀도 데이터x
         rarityFrame.color = Color.white;
     }
+    public void SetCard(WeaponData data)
+    {
+        isWeapon = true;
+        weapon = data;
+        equipment = null;
+
+        if (data == null)
+        {
+            SetEmptyCard();
+            return;
+        }
+
+        itemImage.sprite = data.icon;
+        nameText.text = data.weaponName;
+        levelText.text = "Lv -";
+        typeText.text = "무기";
+
+        // 무기 설명 표시
+        optionText.text = data.description;
+
+        rarityFrame.color = Color.white;
+    }
+    private void SetEmptyCard()
+    {
+        nameText.text = "데이터 없음";
+        levelText.text = "-";
+        typeText.text = "-";
+        optionText.text = "데이터 준비중";
+        itemImage.sprite = null;
+        rarityFrame.color = Color.gray;
+    }
 
     // 마우스 올리면 확대
     public void OnPointerEnter(PointerEventData eventData)
@@ -70,7 +103,9 @@ public class OptionCardUI : MonoBehaviour,
     // 클릭 시 선택 처리
     public void OnPointerClick(PointerEventData eventData)
     {
-        // LevelUpPanel로 EquipmentData 넘김
-        LevelUpPanel.Instance.SelectCard(equipment);
+        if (isWeapon)
+            LevelUpPanel.Instance.SelectWeapon(weapon);
+        else
+            LevelUpPanel.Instance.SelectEquipment(equipment);
     }
 }

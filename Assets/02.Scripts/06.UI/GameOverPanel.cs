@@ -15,6 +15,7 @@ public class GameOverPanel : MonoBehaviour
     [Header("Used Item Groups")]
     public Transform usedWeaponGroup;   // UsedWeaponGroup
     public Transform usedEquipGroup;    // UsedEquipGroup
+    public ItemSlotController slotPrefab;
 
     [Header("Buttons")]
     public Button restartButton;
@@ -43,6 +44,9 @@ public class GameOverPanel : MonoBehaviour
         Time.timeScale = 0f;
 
         window.SetActive(true);
+
+        RefreshUsedWeapons();
+        RefreshUsedEquip();
     }
 
 
@@ -68,4 +72,35 @@ public class GameOverPanel : MonoBehaviour
         Time.timeScale = 1f;
         SceneLoader.Load(SceneType.MainScene);
     }
+
+    private void RefreshUsedWeapons()
+    {
+        foreach (Transform child in usedWeaponGroup)
+            Destroy(child.gameObject);
+
+        var weapons = BaseController.Instance.GetActiveWeapons();
+
+        foreach (var w in weapons)
+        {
+            var slot = Instantiate(slotPrefab, usedWeaponGroup);
+            slot.icon.sprite = w.weaponData.icon;
+            slot.levelText.text = "Lv -";
+        }
+    }
+
+    private void RefreshUsedEquip()
+    {
+        foreach (Transform child in usedEquipGroup)
+            Destroy(child.gameObject);
+
+        var equips = EquipmentController.Instance.equippedItems;
+
+        foreach (var e in equips)
+        {
+            var slot = Instantiate(slotPrefab, usedEquipGroup);
+            slot.icon.sprite = e.icon;
+            slot.levelText.text = "Lv -";
+        }
+    }
+
 }

@@ -26,6 +26,7 @@ public class WeaponHandler : MonoBehaviour
 
     private Animator animator;
     private SpriteRenderer weaponRenderer;
+    public WeaponData weaponData;
 
     protected virtual void Awake()
     {

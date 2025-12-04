@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using TMPro;
 using UnityEditor.PackageManager.UI;
 using UnityEngine;
@@ -145,8 +146,6 @@ public class PausePanel : MonoBehaviour
             pauseSkillSlots[index].SetEmpty();
         }
     }
-
-
     public void Open()
     {
         if (isOpen) return;
@@ -176,15 +175,28 @@ public class PausePanel : MonoBehaviour
     }
     private void RefreshItemSlots()
     {
-        var items = EquipmentController.Instance.equippedItems;
+        var equips = EquipmentController.Instance.equippedItems;
+        var weapons = BaseController.Instance.GetActiveWeapons();
+
+        // 장비 + 무기를 하나의 리스트로 합치기
+        List<Sprite> icons = new List<Sprite>();
+
+        // 장비 아이콘 추가
+        foreach (var e in equips)
+            icons.Add(e.icon);
+
+        // 무기 아이콘 추가 (weaponData.icon)
+        foreach (var w in weapons)
+            icons.Add(w.weaponData.icon);
+
         var slots = itemSlotParent.GetComponentsInChildren<TItemSlotUI>();
 
         for (int i = 0; i < slots.Length; i++)
         {
-            if (items != null && i < items.Count && items[i] != null)
+            if (i < icons.Count)
             {
                 slots[i].icon.enabled = true;
-                slots[i].icon.sprite = items[i].icon;
+                slots[i].icon.sprite = icons[i];
                 slots[i].levelText.text = "Lv -";
             }
             else
@@ -193,6 +205,7 @@ public class PausePanel : MonoBehaviour
             }
         }
     }
+
     public void Close()
     {
         window.SetActive(false);

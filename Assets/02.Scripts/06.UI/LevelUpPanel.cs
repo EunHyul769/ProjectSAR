@@ -21,6 +21,7 @@ public class LevelUpPanel : MonoBehaviour
     [Header("Owned Item Slots")]
     public TItemSlotUI slotPrefab;
 
+
     public Transform weaponSlotParent;   // OwnedWeaponGroup
     public Transform equipSlotParent;    // OwnedEquipGroup
 
@@ -61,57 +62,56 @@ public class LevelUpPanel : MonoBehaviour
     }
 
     // 패널 열기
-    public void Open(EquipmentData[] datas)
+    public void Open(object[] options)
     {
         isOpen = true;
-
         window.SetActive(true);
         Time.timeScale = 0f;
 
-        CreateCards(datas);
+        CreateCards(options);
         RefreshStats();
-        CreateEmptyWeaponSlots();
+
         CreateEmptyEquipSlots();
+        CreateEmptyWeaponSlots();
 
-        // 현재 장착 장비 표시
         RefreshEquipSlots(EquipmentController.Instance.equippedItems);
+        RefreshWeaponSlots(BaseController.Instance.GetActiveWeapons());
     }
-
     // 카드 생성
-    private void CreateCards(EquipmentData[] datas)
+    private void CreateCards(object[] options)
     {
         foreach (Transform child in cardParent)
             Destroy(child.gameObject);
 
-        if (datas == null) return;
-
-        foreach (var data in datas)
+        foreach (var obj in options)
         {
             var card = Instantiate(cardPrefab, cardParent);
-            card.SetCard(data);
+
+            if (obj is EquipmentData e)
+                card.SetCard(e);
+            else if (obj is WeaponData w)
+                card.SetCard(w);
         }
     }
-
     // 카드 선택
-    public void SelectCard(EquipmentData equipment)
+    public void SelectEquipment(EquipmentData data)
     {
-        if (equipment != null)
-        {
-            // 1) 장비 장착
-            EquipmentController.Instance.EquipItem(equipment);
+        EquipmentController.Instance.EquipItem(data);
 
-            // 2) HUD 장비 슬롯 갱신
-            UIManager.Instance.RefreshEquipmentSlots(
-                EquipmentController.Instance.equippedItems
-            );
-
-            // 3) 레벨업 패널 오른쪽 장비 슬롯 갱신
-            RefreshEquipSlots(EquipmentController.Instance.equippedItems);
-        }
+        RefreshEquipSlots(EquipmentController.Instance.equippedItems);
+        RefreshWeaponSlots(BaseController.Instance.GetActiveWeapons());
 
         ClosePanel();
     }
+    public void SelectWeapon(WeaponData data)
+    {
+        BaseController.Instance.EquipWeapon(data);
 
+        RefreshEquipSlots(EquipmentController.Instance.equippedItems);
+        RefreshWeaponSlots(BaseController.Instance.GetActiveWeapons());
+
+        ClosePanel();
+    }
     private void ClosePanel()
     {
         isOpen = false;
@@ -153,7 +153,6 @@ public class LevelUpPanel : MonoBehaviour
             slot.SetEmpty();
         }
     }
-
     private void CreateEmptyEquipSlots()
     {
         foreach (Transform child in equipSlotParent)
@@ -176,6 +175,24 @@ public class LevelUpPanel : MonoBehaviour
             {
                 slots[i].icon.enabled = true;
                 slots[i].icon.sprite = items[i].icon;
+                slots[i].levelText.text = "Lv -";
+            }
+            else
+            {
+                slots[i].SetEmpty();
+            }
+        }
+    }
+    private void RefreshWeaponSlots(List<WeaponHandler> weapons)
+    {
+        var slots = weaponSlotParent.GetComponentsInChildren<TItemSlotUI>();
+
+        for (int i = 0; i < slots.Length; i++)
+        {
+            if (i < weapons.Count && weapons[i] != null)
+            {
+                slots[i].icon.enabled = true;
+                slots[i].icon.sprite = weapons[i].weaponData.icon;
                 slots[i].levelText.text = "Lv -";
             }
             else
