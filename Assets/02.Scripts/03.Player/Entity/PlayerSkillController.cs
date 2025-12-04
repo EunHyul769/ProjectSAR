@@ -37,7 +37,7 @@ public class PlayerSkillController : MonoBehaviour
     private void Update()
     {
         HandleCooldowns();
-        HandleInput();
+        //HandleInput();
     }
 
     private void HandleCooldowns()
@@ -59,42 +59,42 @@ public class PlayerSkillController : MonoBehaviour
         return Mathf.Max(0.1f, baseCoolTime * multiplier);
     }
 
-    private void HandleInput()
-    {
-        // 액티브 1번 (키보드 1)
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            if (active1CooldownTimer <= 0)
-            {
-                StartCoroutine(UseActiveSkill1());
-                active1CooldownTimer = GetReducedCooldown(characterData.active1.coolTime);
-            }
-            else
-            {
-                Debug.Log($"스킬 1 쿨타임: {active1CooldownTimer:F1}초 남음");
-            }
-        }
+    //private void HandleInput()
+    //{
+    //    // 액티브 1번 (키보드 1)
+    //    if (Input.GetKeyDown(KeyCode.Alpha1))
+    //    {
+    //        if (active1CooldownTimer <= 0)
+    //        {
+    //            StartCoroutine(UseActiveSkill1());
+    //            active1CooldownTimer = GetReducedCooldown(characterData.active1.coolTime);
+    //        }
+    //        else
+    //        {
+    //            Debug.Log($"스킬 1 쿨타임: {active1CooldownTimer:F1}초 남음");
+    //        }
+    //    }
 
-        // 액티브 2번 (키보드 2)
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            if (active2CooldownTimer <= 0)
-            {
-                StartCoroutine(UseActiveSkill2());
-                active2CooldownTimer = GetReducedCooldown(characterData.active2.coolTime);
-            }
-            else
-            {
-                Debug.Log($"스킬 2 쿨타임: {active2CooldownTimer:F1}초 남음");
-            }
-        }
+    //    // 액티브 2번 (키보드 2)
+    //    if (Input.GetKeyDown(KeyCode.Alpha2))
+    //    {
+    //        if (active2CooldownTimer <= 0)
+    //        {
+    //            StartCoroutine(UseActiveSkill2());
+    //            active2CooldownTimer = GetReducedCooldown(characterData.active2.coolTime);
+    //        }
+    //        else
+    //        {
+    //            Debug.Log($"스킬 2 쿨타임: {active2CooldownTimer:F1}초 남음");
+    //        }
+    //    }
 
-        // 궁극기 (키보드 3)
-        if (Input.GetKeyDown(KeyCode.Alpha3))
-        {
-            AttemptUltimate();
-        }
-    }
+    //    // 궁극기 (키보드 3)
+    //    if (Input.GetKeyDown(KeyCode.Alpha3))
+    //    {
+    //        AttemptUltimate();
+    //    }
+    //}
 
     // --- 패시브 적용 ---
     private void ApplyPassives()

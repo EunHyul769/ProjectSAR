@@ -207,9 +207,7 @@ MonoBehaviour:
   characterRenderer: {fileID: 8419153692804091075}
   weaponPivot: {fileID: 8880431785759292641}
   characterData: {fileID: 11400000, guid: 795ec74b154f3974ba7c0d2312b73652, type: 2}
-  DefaltWeaponPrefab: {fileID: 8875164933983385359, guid: 6de9967e48642114fa154b15b12a2f3e, type: 3}
-  ShurikenPrefab: {fileID: 6480699726659683145, guid: 218875603c10c9642bbf822fad11ff1d, type: 3}
-  BoltPrefab: {fileID: 2672049116195395833, guid: 1a624e5b18a91b6458e1a0f8e6fdb49f, type: 3}
+  defaultWeaponData: {fileID: 11400000, guid: 9277d54b41192384d9cce918bfff3573, type: 2}
   dashDistance: 3
   dashDuration: 0.2
   dashCooldown: 1
@@ -311,6 +309,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 057a8f7ce095ec64bab95c365dcd69fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  equippedItems: []
   itemData: {fileID: 11400000, guid: d9e8cabf394e4da4c8c2d374f4bc9e49, type: 2}
 --- !u!1 &2497786025377729573
 GameObject:
