@@ -22,4 +22,7 @@ public class CharacterData : ScriptableObject
 
     [Header("Image (얼굴 전용)")]
     public Sprite hudSprite;
+
+    [Header("Unique Weapon")]
+    public WeaponData uniqueWeapon;
 }

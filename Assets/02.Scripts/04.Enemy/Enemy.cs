@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour, IDamagable
@@ -315,7 +315,7 @@ public class Enemy : MonoBehaviour, IDamagable
                 {
                     Debug.Log("플레이어와 접촉");
                     // IDamagable을 상속받으면 해당 스크립트로 변경
-                    resouceController.ChangeHealth(-enemyData.attackDamage);
+                    resouceController.ChangeHealth((int)-enemyData.attackDamage);
                     Debug.Log($"Player에게 {-enemyData.attackDamage} 데미지");
                     Debug.Log($"남은 player 체력 :{resouceController.CurrentHealth}");
                     attackCooldown = enemyData.attackRate;
