@@ -10185,6 +10185,7 @@ MonoBehaviour:
   optionText: {fileID: 0}
   rarityFrame: {fileID: 0}
   scaleRoot: {fileID: 0}
+  equipment: {fileID: 0}
 --- !u!114 &1176502083
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10204,6 +10205,7 @@ MonoBehaviour:
   optionText: {fileID: 0}
   rarityFrame: {fileID: 0}
   scaleRoot: {fileID: 0}
+  equipment: {fileID: 0}
 --- !u!114 &1176502084
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10223,6 +10225,7 @@ MonoBehaviour:
   optionText: {fileID: 0}
   rarityFrame: {fileID: 0}
   scaleRoot: {fileID: 0}
+  equipment: {fileID: 0}
 --- !u!1 &1186078123
 GameObject:
   m_ObjectHideFlags: 0
@@ -10258,8 +10261,14 @@ MonoBehaviour:
   - {fileID: 11400000, guid: ede7961d0fc51414482a78174c540e3c, type: 2}
   - {fileID: 11400000, guid: 458a185eaffca23479ab5e11f6fbf5b0, type: 2}
   - {fileID: 11400000, guid: 22e2ef4c9c6faf649964966d508f3c61, type: 2}
+  equipmentPool:
+  - {fileID: 11400000, guid: 657d6ecb04c690b42b784256104e3fd1, type: 2}
+  - {fileID: 11400000, guid: d9e8cabf394e4da4c8c2d374f4bc9e49, type: 2}
+  - {fileID: 11400000, guid: 24eb4d83aab55e14fa51b00936462907, type: 2}
+  - {fileID: 11400000, guid: 9bfeb92a9a949c044aab7a143b72540e, type: 2}
+  - {fileID: 11400000, guid: 0f8364e3c7eb79142b5cd2e1673abda6, type: 2}
+  - {fileID: 11400000, guid: 6e88291a94f65b449bfe368760b18199, type: 2}
   playTime: 0
-  testItemIcon: {fileID: 21300000, guid: dfc5b064c50c49f4b81278502c23eb7d, type: 3}
 --- !u!4 &1186078125
 Transform:
   m_ObjectHideFlags: 0

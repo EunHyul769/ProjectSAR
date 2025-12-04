@@ -21,11 +21,11 @@ public class EquipmentController : MonoBehaviour
 
     private void Start()
     {
-        // 테스트용: 게임 시작 시 아이템 1개 장착
-        if (itemData != null)
-        {
-            EquipItem(itemData);
-        }
+        //// 테스트용: 게임 시작 시 아이템 1개 장착
+        //if (itemData != null)
+        //{
+        //    EquipItem(itemData);
+        //}
     }
 
     // 아이템 획득 시 호출할 메서드
@@ -41,7 +41,10 @@ public class EquipmentController : MonoBehaviour
             ApplyStat(modifier);
         }
 
-        //필요 시에 여기에 UI 갱신 코드 추가
+        if (UIManager.Instance != null)
+        {
+            UIManager.Instance.RefreshEquipmentSlots(equippedItems);
+        }
     }
 
     private void ApplyStat(StatModifier modifier)
