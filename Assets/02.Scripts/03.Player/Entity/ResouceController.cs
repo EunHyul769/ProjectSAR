@@ -10,9 +10,9 @@ public class ResouceController : MonoBehaviour
 
     private float timeSinceLastChange = float.MaxValue;
 
-    public float CurrentHealth {  get; private set; }
-    public float MaxHealth => statHandler.Health;
-    
+    public int CurrentHealth {  get; private set; }
+    public int MaxHealth { get; private set; }
+
     [SerializeField] private GameObject expOrbPrefab;
 
     [SerializeField] private bool isPlayer = true;
@@ -27,6 +27,7 @@ public class ResouceController : MonoBehaviour
     private void Start()
     {
         CurrentHealth = statHandler.Health;
+        MaxHealth = statHandler.MaxHealth;
     }
 
     private void Update()
@@ -41,7 +42,7 @@ public class ResouceController : MonoBehaviour
         }
     }
 
-    public bool ChangeHealth(float change)
+    public bool ChangeHealth(int change)
     {
         if (baseController != null && baseController.IsInvincible)
         {
@@ -53,14 +54,16 @@ public class ResouceController : MonoBehaviour
         {
             return false; //데미지를 받지 않음
         }
-        float defense = statHandler.Defense; // 방어력 수치 가져오기
+        int defense = statHandler.Defense; // 방어력 수치 가져오기
         if (change < 0)
         {
             // 데미지일 경우 방어력 적용
-            float damageAfterDefense = -change - defense;
+            int damageAfterDefense = -change - defense;
             change = damageAfterDefense < 1 ? 1 : -damageAfterDefense; //최소 데미지는 1로 설정
         }
         timeSinceLastChange = 0f;
+
+        MaxHealth = statHandler.MaxHealth; //최대 체력 동기화
         CurrentHealth += change;
         CurrentHealth = CurrentHealth > MaxHealth ? MaxHealth : CurrentHealth;
         CurrentHealth = CurrentHealth < 0 ? 0 : CurrentHealth;

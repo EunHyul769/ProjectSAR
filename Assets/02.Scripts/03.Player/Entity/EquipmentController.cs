@@ -60,7 +60,7 @@ public class EquipmentController : MonoBehaviour
                 break;
 
             case StatType.Defense:
-                statHandler.AddDefense(modifier.value);
+                statHandler.AddDefense((int)modifier.value);
                 break;
 
             case StatType.MoveSpeedPercent:

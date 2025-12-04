@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class EnemyProjectile : MonoBehaviour, IProjectilable
 {
@@ -85,7 +85,7 @@ public class EnemyProjectile : MonoBehaviour, IProjectilable
             ResouceController resouceController = other.GetComponent<ResouceController>();
             if (resouceController != null)
             {
-                resouceController.ChangeHealth(-damage);
+                resouceController.ChangeHealth((int)-damage);
                 Debug.Log($"Player에게 {-damage} 데미지");
                 Debug.Log($"남은 player 체력 :{resouceController.CurrentHealth}");
             }
