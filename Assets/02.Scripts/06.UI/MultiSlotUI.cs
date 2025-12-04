@@ -20,6 +20,7 @@ public class MultiSlotUI : MonoBehaviour
     private float maxTime;
 
     public SkillData currentSkill; // HUD 슬롯에 실제 들어간 스킬
+    public Sprite emptySprite;
 
     public void SetSkill(Sprite iconSprite, float cooldown, string key, SkillData data)
     {
@@ -111,5 +112,16 @@ public class MultiSlotUI : MonoBehaviour
     {
         // 아이콘이 null이거나, 아이콘 이미지가 비활성화되어 있으면 empty 취급
         return icon.sprite == null || icon.enabled == false;
+    }
+    public void SetEmpty()
+    {
+        icon.enabled = true;
+        icon.sprite = emptySprite;
+
+        keyText.text = "";
+        cooldownMask.fillAmount = 0f;
+        cooldownText.gameObject.SetActive(false);
+
+        currentSkill = null;
     }
 }

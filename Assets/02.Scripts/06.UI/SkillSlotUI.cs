@@ -14,19 +14,21 @@ public class SkillSlotUI : MonoBehaviour
     {
         if (data == null)
         {
-            skillIcon.sprite = xMark; 
-            skillIcon.color = Color.white;
+            skillIcon.enabled = true;
+            skillIcon.sprite = xMark;     // 빈 슬롯 이미지
+
             skillName.text = "";
             skillDesc.text = "";
             skillOption.text = "";
             return;
         }
 
+        skillIcon.enabled = true;
         skillIcon.sprite = data.icon;
+
         skillName.text = data.skillName;
         skillDesc.text = data.description;
 
-        // 옵션 표시 (원하면 자유롭게 수정 가능)
         skillOption.text =
             $"Type: {data.type}\n" +
             $"Cooldown: {data.coolTime}\n" +
