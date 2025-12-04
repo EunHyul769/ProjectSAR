@@ -16,8 +16,10 @@ public class CharacterSelectManager : MonoBehaviour
     public TMP_Text characterNameText;
     public TMP_Text paramText;
 
-    [Header("Weapon Name")]
+    [Header("Weapon")]
     public TMP_Text weaponNameText;
+    public Image weaponIcon;
+    public TMP_Text weaponDescText;
 
     [Header("Skill Slots (8개)")]
     public SkillSlotUI[] skillSlots; // 8칸
@@ -54,7 +56,19 @@ public class CharacterSelectManager : MonoBehaviour
             $"ASPD: {data.baseAttackSpeed}";
 
         // 무기 이름
-        weaponNameText.text = data.weaponName;
+        if (data.uniqueWeapon != null)
+            weaponNameText.text = data.uniqueWeapon.weaponName;
+        else
+            weaponNameText.text = data.weaponName;
+        // 무기 아이콘
+        if (data.uniqueWeapon != null)
+        {
+            weaponIcon.sprite = data.uniqueWeapon.icon;
+            weaponIcon.color = Color.white;
+        }
+        // 무기 텍스트
+        if (data.uniqueWeapon != null)
+            weaponDescText.text = data.uniqueWeapon.description;
 
         // 스킬 슬롯 세팅
         ApplySkillSlots(data);

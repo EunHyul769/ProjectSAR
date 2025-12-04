@@ -25,7 +25,7 @@ public class StatHandler : MonoBehaviour
     public int MaxHealth { get; set; }
     public float Speed { get; set; }
     public float Attack { get; set; }
-    public float Defense { get; set; } // 방어력 추가
+    public int Defense { get; set; } // 방어력 추가
     public float AttackSpeed { get; set; } // 공격 속도 (기본 1.0f 기준, 높을수록 빠름 혹은 딜레이 감소)
 
     // 쿨타임 감소율 (0.0f = 0%, 0.1f = 10% 감소)
@@ -38,12 +38,16 @@ public class StatHandler : MonoBehaviour
     public bool HasExplosiveProjectile { get; set; } = false;
     public float ExplosiveChance { get; set; } = 0f;
 
+    private ResouceController resouceController;
+
     private void Awake()
     {
         if (characterData != null)
         {
             InitializeStats();
         }
+
+        resouceController = GetComponent<ResouceController>();
     }
 
     private void InitializeStats()
@@ -60,12 +64,16 @@ public class StatHandler : MonoBehaviour
     // 아이템 습득 시 스탯 업데이트용 메서드
     public void AddMaxHealth(int amount)
     {
+        MaxHealth = resouceController.MaxHealth;
+        CurrentHealth = resouceController.CurrentHealth;
         MaxHealth += amount;
         CurrentHealth += amount; // 최대 체력이 늘어나면 현재 체력도 같이 채워줌 (선택사항)
+
+        UIManager.Instance.UpdateHP(CurrentHealth, MaxHealth);
     }
 
     public void AddAttack(float amount) => Attack += amount;
-    public void AddDefense(float amount) => Defense += amount;
+    public void AddDefense(int amount) => Defense += amount;
 
     // 퍼센트 증가 로직 (기본값에 곱할지, 합연산할지 정책에 따라 다름. 여기선 현재 값에 곱연산 적용)
     public void AddSpeedPercent(float percent) => Speed *= (1f + percent); // 0.1f = 10% 증가

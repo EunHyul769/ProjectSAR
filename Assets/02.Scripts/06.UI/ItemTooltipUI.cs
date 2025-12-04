@@ -78,7 +78,53 @@ public class ItemTooltipUI : MonoBehaviour
         gameObject.SetActive(true);
         UpdatePosition();
     }
+    public void ShowEquipment(EquipmentData data)
+    {
+        if (data == null)
+        {
+            ShowEmpty();
+            return;
+        }
 
+        if (iconImage != null)
+        {
+            iconImage.enabled = data.icon != null;
+            iconImage.sprite = data.icon;
+        }
+
+        if (nameText != null)
+            nameText.text = data.itemName;
+
+        if (descText != null)
+            descText.text = data.description;
+
+        gameObject.SetActive(true);
+        UpdatePosition();
+    }
+
+    public void ShowWeapon(WeaponData data)
+    {
+        if (data == null)
+        {
+            ShowEmpty();
+            return;
+        }
+
+        if (iconImage != null)
+        {
+            iconImage.enabled = data.icon != null;
+            iconImage.sprite = data.icon;
+        }
+
+        if (nameText != null)
+            nameText.text = data.weaponName;
+
+        if (descText != null)
+            descText.text = data.description;
+
+        gameObject.SetActive(true);
+        UpdatePosition();
+    }
     public void Hide()
     {
         gameObject.SetActive(false);

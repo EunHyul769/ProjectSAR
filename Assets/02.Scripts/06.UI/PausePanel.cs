@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using TMPro;
 using UnityEditor.PackageManager.UI;
 using UnityEngine;
@@ -145,8 +146,6 @@ public class PausePanel : MonoBehaviour
             pauseSkillSlots[index].SetEmpty();
         }
     }
-
-
     public void Open()
     {
         if (isOpen) return;
@@ -176,23 +175,56 @@ public class PausePanel : MonoBehaviour
     }
     private void RefreshItemSlots()
     {
-        var items = EquipmentController.Instance.equippedItems;
+        var equips = EquipmentController.Instance.equippedItems; // List<EquipmentData>
+        var weapons = BaseController.Instance.GetActiveWeapons(); // List<WeaponHandler>
+
         var slots = itemSlotParent.GetComponentsInChildren<TItemSlotUI>();
 
-        for (int i = 0; i < slots.Length; i++)
+        int index = 0;
+
+        foreach (var e in equips)
         {
-            if (items != null && i < items.Count && items[i] != null)
-            {
-                slots[i].icon.enabled = true;
-                slots[i].icon.sprite = items[i].icon;
-                slots[i].levelText.text = "Lv -";
-            }
-            else
-            {
-                slots[i].SetEmpty();
-            }
+            if (index >= slots.Length) break;
+
+            slots[index].icon.enabled = true;
+            slots[index].icon.sprite = e.icon;
+            slots[index].levelText.text = "Lv -";
+
+            // 여기서 반드시 data 설정
+            slots[index].equipmentData = e;
+            slots[index].weaponData = null;
+
+            index++;
+        }
+
+        // 2) 무기 채우기
+        foreach (var w in weapons)
+        {
+            if (index >= slots.Length) break;
+
+            // w.weaponData 는 WeaponData
+            var data = w.weaponData;
+
+            slots[index].icon.enabled = true;
+            slots[index].icon.sprite = data.icon;
+            slots[index].levelText.text = "Lv -";
+
+            // 여기서 data 설정
+            slots[index].weaponData = data;
+            slots[index].equipmentData = null;
+
+            index++;
+        }
+
+        // 남는 칸은 비우기
+        for (; index < slots.Length; index++)
+        {
+            slots[index].equipmentData = null;
+            slots[index].weaponData = null;
+            slots[index].SetEmpty();
         }
     }
+
     public void Close()
     {
         window.SetActive(false);

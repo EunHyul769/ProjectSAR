@@ -9,6 +9,8 @@ public class TItemSlotUI : MonoBehaviour,
     public Image icon;
     public TMP_Text levelText;
     public Sprite emptySprite;
+    public EquipmentData equipmentData;  // 장비용
+    public WeaponData weaponData;        // 무기용
 
     public void SetEmpty()
     {
@@ -19,11 +21,24 @@ public class TItemSlotUI : MonoBehaviour,
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        Debug.Log("ENTER SLOT, Instance = " + ItemTooltipUI.Instance);
-
         if (ItemTooltipUI.Instance == null)
             return;
 
+        // 장비가 들어있다면 장비 툴팁
+        if (equipmentData != null)
+        {
+            ItemTooltipUI.Instance.ShowEquipment(equipmentData);
+            return;
+        }
+
+        // 무기가 들어있다면 무기 툴팁
+        if (weaponData != null)
+        {
+            ItemTooltipUI.Instance.ShowWeapon(weaponData);
+            return;
+        }
+
+        // 둘 다 없으면 빈 슬롯
         ItemTooltipUI.Instance.ShowEmpty();
     }
 

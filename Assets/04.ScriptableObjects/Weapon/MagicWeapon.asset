@@ -13,10 +13,6 @@ MonoBehaviour:
   m_Name: MagicWeapon
   m_EditorClassIdentifier: 
   weaponName: "\uB9C8\uBC95 \uD654\uC0B4"
-  icon: {fileID: 21300000, guid: 5c7278698a47bf4479dfbea9662bd98d, type: 3}
+  icon: {fileID: 21300000, guid: e066dc2ea00e44dec9147ba07f34f463, type: 3}
   description: "\uB9C8\uBC95 \uD654\uC0B4\uC785\uB2C8\uB2E4."
   weaponPrefab: {fileID: 8875164933983385359, guid: 6de9967e48642114fa154b15b12a2f3e, type: 3}
-  damage: 0
-  delay: 0
-  range: 0
-  count: 0

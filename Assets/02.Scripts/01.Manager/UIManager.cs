@@ -198,9 +198,9 @@ public class UIManager : MonoBehaviour
         int sec = (int)(time % 60);
         timerText.text = $"{min:00}:{sec:00}";
     }
-    public void OpenLevelUp(EquipmentData[] datas)
+    public void OpenLevelUp(object[] options)
     {
-        LevelUpPanel.Instance.Open(datas);
+        LevelUpPanel.Instance.Open(options);
     }
     public void OpenSkillChoice(SkillData[] datas)
     {
@@ -282,6 +282,25 @@ public class UIManager : MonoBehaviour
             {
                 slots[i].icon.enabled = true;
                 slots[i].icon.sprite = items[i].icon;
+                slots[i].levelText.text = "Lv -";
+            }
+            else
+            {
+                slots[i].SetEmpty();
+            }
+        }
+    }
+    public void RefreshWeaponSlots(List<WeaponHandler> weapons)
+    {
+        var slots = weaponSlotParent.GetComponentsInChildren<ItemSlotController>();
+
+        for (int i = 0; i < slots.Length; i++)
+        {
+            if (weapons != null && i < weapons.Count && weapons[i] != null)
+            {
+                // WeaponData에 아이콘이 있다고 가정
+                slots[i].icon.enabled = true;
+                slots[i].icon.sprite = weapons[i].weaponData.icon;
                 slots[i].levelText.text = "Lv -";
             }
             else
