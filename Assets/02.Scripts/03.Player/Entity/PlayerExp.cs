@@ -23,6 +23,10 @@ public class PlayerExp : MonoBehaviour, IExpReceiver
     {
         resourceController = GetComponent<ResouceController>();
     }
+    private void Start()
+    {
+        UIManager.Instance.UpdateLevel(level);
+    }
 
     public void OnExpPickup(int amount)
     {
@@ -56,6 +60,7 @@ public class PlayerExp : MonoBehaviour, IExpReceiver
             Debug.Log($"<color=yellow>레벨 업! 현재 레벨: {level}</color>");
             // UI 갱신 추가
             UIManager.Instance.UpdateEXP(currentExp, maxExp);
+            UIManager.Instance.UpdateLevel(level);
 
             // 게임매니저와 연결
             GameManager.Instance.OnPlayerLevelUp(level);

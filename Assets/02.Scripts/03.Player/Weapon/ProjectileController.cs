@@ -78,25 +78,29 @@ public class ProjectileController : MonoBehaviour
         {
             DestroyProjectile(collision.ClosestPoint(transform.position) - direction * .2f, fxOnDestroy);
         } //collision.ClosestPoint(transform.position) -> 충돌체랑 가장 가까운 부분
-        else if (rangeWeaponHandler.target.value == (rangeWeaponHandler.target.value | (1 << collision.gameObject.layer))) //타겟 충돌체와 같은지 확인 (웨폰 핸들러에서 지정)
+        else if (rangeWeaponHandler != null)
         {
-            IDamagable damagableObject = collision.gameObject.GetComponent<IDamagable>();
-
-            if (damagableObject != null)
-                damagableObject.TakeDamage(rangeWeaponHandler.power);
-
-            // 패시브 효과: 폭발
-            if (isExplosive)
+            //타겟 충돌체와 같은지 확인 (웨폰 핸들러에서 지정)
+            if (rangeWeaponHandler.target.value == (rangeWeaponHandler.target.value | (1 << collision.gameObject.layer)))
             {
-                // 폭발 이펙트 생성 로직 추가 가능
-                finalDamage = damage * 2; // 데미지 2배
-                Debug.Log("패시브 발동! 으아아 이게 뭐야 (폭발 데미지)");
+                IDamagable damagableObject = collision.gameObject.GetComponent<IDamagable>();
 
                 if (damagableObject != null)
-                    damagableObject.TakeDamage(finalDamage);
-            }
+                    damagableObject.TakeDamage(rangeWeaponHandler.power);
 
-            DestroyProjectile(collision.ClosestPoint(transform.position), fxOnDestroy);
+                // 패시브 효과: 폭발
+                if (isExplosive)
+                {
+                    // 폭발 이펙트 생성 로직 추가 가능
+                    finalDamage = damage * 2; // 데미지 2배
+                    Debug.Log("패시브 발동! 으아아 이게 뭐야 (폭발 데미지)");
+
+                    if (damagableObject != null)
+                        damagableObject.TakeDamage(finalDamage);
+                }
+
+                DestroyProjectile(collision.ClosestPoint(transform.position), fxOnDestroy);
+            }
         }
     }
 

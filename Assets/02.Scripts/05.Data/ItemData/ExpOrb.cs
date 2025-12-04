@@ -113,7 +113,12 @@ public class ExpOrb : MonoBehaviour
         if (sr != null)
         {
             Color c = sr.color;
-            c.a = 0.5f + Mathf.Sin(Time.time * pulseSpeed) * 0.5f; // 0~1 범위로 투명도 변화
+            
+            float minAlpha = 0.5f; // 최소 투명도 
+            float maxAlpha = 1f;   // 최대 투명도
+            
+            float t = (Mathf.Sin(Time.time * pulseSpeed) + 1f) / 2f; // 0~1로 변환
+            c.a = Mathf.Lerp(minAlpha, maxAlpha, t);
             sr.color = c;
         }
     }

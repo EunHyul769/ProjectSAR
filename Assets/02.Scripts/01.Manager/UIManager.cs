@@ -48,6 +48,9 @@ public class UIManager : MonoBehaviour
 
     [Header("Gold")]
     public TMP_Text goldText;
+
+    [Header("Gold")]
+    public TMP_Text LV_Text;
     private void Awake()
     {
         if (Instance != null)
@@ -176,7 +179,6 @@ public class UIManager : MonoBehaviour
         if (playerStatusBar != null)
             playerStatusBar.SetHp(current, max);
     }
-
     public void UpdateEXP(float current, float max)
     {
         if (expBar == null) return;
@@ -271,6 +273,12 @@ public class UIManager : MonoBehaviour
     {
         if (goldText != null)
             goldText.text = $"G: {gold}";
+    }
+    //레벨 업데이트
+    public void UpdateLevel(int level)
+    {
+        if (LV_Text != null)
+            LV_Text.text = $"Lv {level}";
     }
     public void RefreshEquipmentSlots(List<EquipmentData> items)
     {
