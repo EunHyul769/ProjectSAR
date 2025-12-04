@@ -15,6 +15,8 @@ public class ResouceController : MonoBehaviour
     
     [SerializeField] private GameObject expOrbPrefab;
 
+    [SerializeField] private bool isPlayer = true;
+
     private void Awake()
     {
         baseController = GetComponent<BaseController>();
@@ -75,5 +77,15 @@ public class ResouceController : MonoBehaviour
     private void Death()
     {
         Debug.Log("사망");
+
+        if (isPlayer)
+        {
+            // 플레이어면 바로 GameOver 호출
+            GameManager.Instance.GameOver();
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 }
