@@ -1,7 +1,8 @@
+using System.Collections.Generic;
+using TMPro;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
 public class SkillChoicePanel : MonoBehaviour
 {
@@ -70,6 +71,8 @@ public class SkillChoicePanel : MonoBehaviour
         RefreshStats();
         CreateEmptyWeaponSlots();
         CreateEmptyEquipSlots();
+
+        RefreshEquipSlots(EquipmentController.Instance.equippedItems);
     }
 
     // 카드 생성
@@ -175,5 +178,22 @@ public class SkillChoicePanel : MonoBehaviour
             slot.SetEmpty();
         }
     }
+    private void RefreshEquipSlots(List<EquipmentData> items)
+    {
+        var slots = equipSlotParent.GetComponentsInChildren<TItemSlotUI>();
 
+        for (int i = 0; i < slots.Length; i++)
+        {
+            if (items != null && i < items.Count && items[i] != null)
+            {
+                slots[i].icon.enabled = true;
+                slots[i].icon.sprite = items[i].icon;
+                slots[i].levelText.text = "Lv -";
+            }
+            else
+            {
+                slots[i].SetEmpty();
+            }
+        }
+    }
 }

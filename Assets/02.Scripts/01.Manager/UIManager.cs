@@ -1,7 +1,8 @@
-using UnityEngine;
-using TMPro;
-using UnityEngine.UI;
 using System.Collections;
+using System.Collections.Generic;
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
@@ -197,9 +198,9 @@ public class UIManager : MonoBehaviour
         int sec = (int)(time % 60);
         timerText.text = $"{min:00}:{sec:00}";
     }
-    public void OpenLevelUp(LevelUpOptionData[] options)
+    public void OpenLevelUp(EquipmentData[] datas)
     {
-        LevelUpPanel.Instance.Open(options);
+        LevelUpPanel.Instance.Open(datas);
     }
     public void OpenSkillChoice(SkillData[] datas)
     {
@@ -270,6 +271,24 @@ public class UIManager : MonoBehaviour
     {
         if (goldText != null)
             goldText.text = $"G: {gold}";
+    }
+    public void RefreshEquipmentSlots(List<EquipmentData> items)
+    {
+        var slots = equipmentSlotParent.GetComponentsInChildren<ItemSlotController>();
+
+        for (int i = 0; i < slots.Length; i++)
+        {
+            if (items != null && i < items.Count && items[i] != null)
+            {
+                slots[i].icon.enabled = true;
+                slots[i].icon.sprite = items[i].icon;
+                slots[i].levelText.text = "Lv -";
+            }
+            else
+            {
+                slots[i].SetEmpty();
+            }
+        }
     }
     private void OnDestroy()
     {

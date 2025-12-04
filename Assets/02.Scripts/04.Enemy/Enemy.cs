@@ -35,6 +35,11 @@ public class Enemy : MonoBehaviour, IDamagable
     [Header("물리 충돌용 collider")]
     [SerializeField] private Collider2D physicalCollisionCollider;
 
+    public static event Action<Enemy> OnBossSpawnedGlobal;
+    public static event Action<Enemy> OnBossDiedGlobal;
+
+    public event Action<Enemy> OnThisBossDied;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -88,10 +93,13 @@ public class Enemy : MonoBehaviour, IDamagable
 
         if (enemyData.enemyType == EnemyType.Boss)
         {
+            Debug.Log("Initialize에서 보스 스폰");
+            OnBossSpawnedGlobal?.Invoke(this);
             if (enemyData.enemyName == "Metaphysics")
             {
+                Debug.Log($"{enemyData.enemyName} 생성됨");
                 currentBossPattern = new MetaphysicsPatern(5f, physicalCollisionCollider);
-
+                Debug.Log($"{enemyData.enemyName} 패턴 적용됨");
                 if (physicalCollisionCollider != null)
                 {
                     physicalCollisionCollider.enabled = true;
@@ -194,7 +202,7 @@ public class Enemy : MonoBehaviour, IDamagable
     private void ShootProjectile()
     {
         // 원거리 몬스터 공격 사운드 추가
-        SoundManager.Instance.PlaySFX(SoundManager.Instance.enemyLongAttack, 1f);     // 해당 부분 존재시 원거리 유닛이 투사체 발사 안함 확인 필요
+        //SoundManager.Instance.PlaySFX(SoundManager.Instance.enemyLongAttack, 1f);     // 해당 부분 존재시 원거리 유닛이 투사체 발사 안함 확인 필요
 
         if (objectPoolManager == null)
         {
@@ -291,6 +299,8 @@ public class Enemy : MonoBehaviour, IDamagable
             Debug.LogWarning("드랍 아이템 리스트가 비어있거나 오브젝트 풀 매니저가 할당되지 않음");
         }
 
+        OnThisBossDied?.Invoke(this);
+        OnBossDiedGlobal?.Invoke(this);
         OnDeathEvent?.Invoke(this.gameObject, originalPrefab); // 사망 이벤트 발생 시 자신과 원본 프리팹 전달
         isActive = false; // 비활성화 상태
     }

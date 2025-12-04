@@ -1,7 +1,8 @@
+using System.Collections.Generic;
+using TMPro;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
 public class LevelUpPanel : MonoBehaviour
 {
@@ -60,41 +61,53 @@ public class LevelUpPanel : MonoBehaviour
     }
 
     // 패널 열기
-    public void Open(LevelUpOptionData[] options)
+    public void Open(EquipmentData[] datas)
     {
         isOpen = true;
 
         window.SetActive(true);
         Time.timeScale = 0f;
 
-        CreateCards(options);
+        CreateCards(datas);
         RefreshStats();
         CreateEmptyWeaponSlots();
         CreateEmptyEquipSlots();
+
+        // 현재 장착 장비 표시
+        RefreshEquipSlots(EquipmentController.Instance.equippedItems);
     }
 
     // 카드 생성
-    private void CreateCards(LevelUpOptionData[] options)
+    private void CreateCards(EquipmentData[] datas)
     {
         foreach (Transform child in cardParent)
             Destroy(child.gameObject);
 
-        currentOptions = options;
+        if (datas == null) return;
 
-        foreach (var opt in options)
+        foreach (var data in datas)
         {
             var card = Instantiate(cardPrefab, cardParent);
-            card.SetCard(opt);
+            card.SetCard(data);
         }
     }
 
     // 카드 선택
-    public void SelectCard(LevelUpOptionData option)
+    public void SelectCard(EquipmentData equipment)
     {
-        Debug.Log("선택됨: " + option.name);
+        if (equipment != null)
+        {
+            // 1) 장비 장착
+            EquipmentController.Instance.EquipItem(equipment);
 
-        // GameManager가 준비되면 아래 줄 활성화
-        // GameManager.Instance.ApplyLevelUp(option);
+            // 2) HUD 장비 슬롯 갱신
+            UIManager.Instance.RefreshEquipmentSlots(
+                EquipmentController.Instance.equippedItems
+            );
+
+            // 3) 레벨업 패널 오른쪽 장비 슬롯 갱신
+            RefreshEquipSlots(EquipmentController.Instance.equippedItems);
+        }
 
         ClosePanel();
     }
@@ -106,26 +119,6 @@ public class LevelUpPanel : MonoBehaviour
         window.SetActive(false);
         Time.timeScale = 1f;
     }
-
-    // 임시 옵션 생성 (테스트용)
-    private LevelUpOptionData[] CreateDummyOptions()
-    {
-        LevelUpOptionData[] arr = new LevelUpOptionData[3];
-
-        for (int i = 0; i < 3; i++)
-        {
-            arr[i] = new LevelUpOptionData()
-            {
-                name = $"임시 옵션 {i + 1}",
-                metaInfo = "희귀도/타입/보유수",
-                description = "테스트 설명",
-                rarityColor = Color.white
-            };
-        }
-
-        return arr;
-    }
-
     private void RefreshStats()
     {
         var player = GameObject.FindWithTag("Player");
@@ -172,11 +165,23 @@ public class LevelUpPanel : MonoBehaviour
             slot.SetEmpty();
         }
     }
-
-    // 테스트 함수
-    public void TestOpen()
+    // 오른쪽 OwnedEquipGroup 갱신
+    private void RefreshEquipSlots(List<EquipmentData> items)
     {
-        LevelUpOptionData[] dummy = CreateDummyOptions();
-        Open(dummy);
+        var slots = equipSlotParent.GetComponentsInChildren<TItemSlotUI>();
+
+        for (int i = 0; i < slots.Length; i++)
+        {
+            if (items != null && i < items.Count && items[i] != null)
+            {
+                slots[i].icon.enabled = true;
+                slots[i].icon.sprite = items[i].icon;
+                slots[i].levelText.text = "Lv -";
+            }
+            else
+            {
+                slots[i].SetEmpty();
+            }
+        }
     }
 }
