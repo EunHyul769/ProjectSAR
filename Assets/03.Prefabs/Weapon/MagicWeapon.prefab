@@ -148,7 +148,7 @@ GameObject:
   - component: {fileID: 8980069698030865696}
   - component: {fileID: 8875164933983385359}
   m_Layer: 0
-  m_Name: Weapon
+  m_Name: MagicWeapon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -191,18 +191,16 @@ MonoBehaviour:
   target:
     serializedVersion: 2
     m_Bits: 3072
-  isOnKnockback: 1
-  knockbackPower: 0.1
-  knockbackTime: 0.5
   projectileSpawnPosition: {fileID: 5770168618566292698}
   bulletIndex: 0
   bulletSize: 0.7
   duration: 10
   spread: 1
   projectileColor: {r: 1, g: 1, b: 1, a: 1}
-  numberOfPrijectilesPerShot: 3
-  multipleProjectileAngle: 3
+  numberOfPrijectilesPerShot: 5
+  multipleProjectileAngle: 0
   isAutoTargeting: 1
+  isManualTargeting: 0
   enemyLayer:
     serializedVersion: 2
     m_Bits: 3072

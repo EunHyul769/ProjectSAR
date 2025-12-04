@@ -8,24 +8,27 @@ public class SkillSlotUI : MonoBehaviour
     public TMP_Text skillName;
     public TMP_Text skillDesc;
     public TMP_Text skillOption;
+    public Sprite xMark;
 
     public void SetSlot(SkillData data)
     {
         if (data == null)
         {
-            // X 표시 or 비어있는 슬롯
-            skillIcon.color = new Color(1, 1, 1, 0.2f);
+            skillIcon.enabled = true;
+            skillIcon.sprite = xMark;     // 빈 슬롯 이미지
+
             skillName.text = "";
             skillDesc.text = "";
             skillOption.text = "";
             return;
         }
 
+        skillIcon.enabled = true;
         skillIcon.sprite = data.icon;
+
         skillName.text = data.skillName;
         skillDesc.text = data.description;
 
-        // 옵션 표시 (원하면 자유롭게 수정 가능)
         skillOption.text =
             $"Type: {data.type}\n" +
             $"Cooldown: {data.coolTime}\n" +

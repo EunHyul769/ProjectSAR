@@ -8,14 +8,13 @@ public class TItemSlotUI : MonoBehaviour,
 {
     public Image icon;
     public TMP_Text levelText;
+    public Sprite emptySprite;
 
     public void SetEmpty()
     {
-        if (icon != null)
-            icon.enabled = false;
-
-        if (levelText != null)
-            levelText.text = "Lv -";
+        icon.enabled = true;            // ≤Ù¡ˆ æ ¿Ω
+        icon.sprite = emptySprite;      // empty ΩΩ∑‘ ¿ÃπÃ¡ˆ
+        levelText.text = "Lv -";
     }
 
     public void OnPointerEnter(PointerEventData eventData)

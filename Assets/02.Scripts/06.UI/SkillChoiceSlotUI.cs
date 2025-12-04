@@ -10,6 +10,8 @@ public class SkillChoiceSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerEx
 
     public SkillType slotType;                // Normal = Z/X, Ultimate = C
 
+    public Sprite emptySprite;
+
     public bool IsEmpty()
     {
         return currentSkill == null;
@@ -26,7 +28,9 @@ public class SkillChoiceSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerEx
     public void SetEmpty()
     {
         currentSkill = null;
-        icon.enabled = false;
+
+        icon.enabled = true;          // 끄지 않음
+        icon.sprite = emptySprite;    // empty 표시
     }
 
     // 팝업 (TooltipUI 재사용)

@@ -1,4 +1,5 @@
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,6 +11,16 @@ public class ItemSlotController : MonoBehaviour
     //public TMP_Text levelText;
 
     //private ItemData currentItem;    
+    public Image icon;
+    public TMP_Text levelText;
+    public Sprite emptySprite;
+
+    public void SetEmpty()
+    {
+        icon.enabled = true;               // 아이콘은 항상 켬
+        icon.sprite = emptySprite;         // 빈 슬롯 이미지
+        levelText.text = "Lv -";
+    }
 
     //public void SetItem(ItemData item)
     //{

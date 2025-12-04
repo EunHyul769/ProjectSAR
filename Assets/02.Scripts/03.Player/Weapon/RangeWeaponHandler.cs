@@ -31,6 +31,7 @@ public class RangeWeaponHandler : WeaponHandler
 
     [Header("Auto Targeting")]
     [SerializeField] private bool isAutoTargeting = false; // 자동 타겟팅 활성화 여부
+    [SerializeField] private bool isManualTargeting = false; // 수동 타겟팅 활성화 여부
     [SerializeField] private LayerMask enemyLayer; // 적 레이어 마스크
 
     private ProjectileManager projectileManager;
@@ -51,7 +52,7 @@ public class RangeWeaponHandler : WeaponHandler
             HandleAutoTargetingAttack();
         }
         // 기존 수동(마우스/키보드 방향) 공격 모드일 경우
-        else
+        else if(isManualTargeting)
         {
             HandleManualAttack();
         }

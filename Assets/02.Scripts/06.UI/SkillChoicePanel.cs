@@ -1,7 +1,8 @@
+using System.Collections.Generic;
+using TMPro;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
 public class SkillChoicePanel : MonoBehaviour
 {
@@ -67,9 +68,11 @@ public class SkillChoicePanel : MonoBehaviour
         slotX.SetEmpty();
         slotC.SetEmpty();
 
-        RefreshStatsDummy();
+        RefreshStats();
         CreateEmptyWeaponSlots();
         CreateEmptyEquipSlots();
+
+        RefreshEquipSlots(EquipmentController.Instance.equippedItems);
     }
 
     // 카드 생성
@@ -92,18 +95,30 @@ public class SkillChoicePanel : MonoBehaviour
         if (data.type == SkillsType.Ultimate)
         {
             if (slotC.IsEmpty())
+            {
                 slotC.SetSkill(data);
+                UIManager.Instance.SetSkillToHUD(data);
+            }
             else
                 Debug.Log("궁극기 슬롯이 이미 찼습니다!");
 
             ClosePanel();
             return;
         }
+
+        GameManager.Instance.AddOwnedNormalSkill(data);
+
         // 일반 스킬 Z → X
         if (slotZ.IsEmpty())
+        {
             slotZ.SetSkill(data);
+            UIManager.Instance.SetSkillToHUD(data);
+        }
         else if (slotX.IsEmpty())
+        {
             slotX.SetSkill(data);
+            UIManager.Instance.SetSkillToHUD(data);
+        }
         else
             Debug.Log("일반 스킬 슬롯 두 개가 이미 찼습니다!");
 
@@ -117,14 +132,21 @@ public class SkillChoicePanel : MonoBehaviour
         window.SetActive(false);
         Time.timeScale = 1f;
     }
-    private void RefreshStatsDummy()
+    private void RefreshStats()
     {
-        hpText.text = "-";
+        var player = GameObject.FindWithTag("Player");
+        if (player == null) return;
+
+        var stat = player.GetComponent<StatHandler>();
+        var resource = player.GetComponent<ResouceController>();
+
+        hpText.text = $"HP : {(int)resource.CurrentHealth} / {stat.MaxHealth}";
+        spdText.text = $"SPD : {stat.Speed}";
+        atkText.text = $"ATK : {stat.Attack}";
+        atkspdText.text = $"ATK SPD : {stat.AttackSpeed}";
+
         hpgenText.text = "-";
         defText.text = "-";
-        spdText.text = "-";
-        atkText.text = "-";
-        atkspdText.text = "-";
         atkareaText.text = "-";
         cri.text = "-";
         cridmg.text = "-";
@@ -156,5 +178,22 @@ public class SkillChoicePanel : MonoBehaviour
             slot.SetEmpty();
         }
     }
+    private void RefreshEquipSlots(List<EquipmentData> items)
+    {
+        var slots = equipSlotParent.GetComponentsInChildren<TItemSlotUI>();
 
+        for (int i = 0; i < slots.Length; i++)
+        {
+            if (items != null && i < items.Count && items[i] != null)
+            {
+                slots[i].icon.enabled = true;
+                slots[i].icon.sprite = items[i].icon;
+                slots[i].levelText.text = "Lv -";
+            }
+            else
+            {
+                slots[i].SetEmpty();
+            }
+        }
+    }
 }

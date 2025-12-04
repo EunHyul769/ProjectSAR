@@ -1,6 +1,6 @@
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Collections.Generic;
 
 public enum GameState
 {
@@ -14,19 +14,17 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
 
     [Header("Skill Data (ScriptableObjects)")]
-    public SkillData startingSkill1;
-    public SkillData startingSkill2;
+    public SkillData ultimateSkillSO;       // 20레벨 궁극기
+    public SkillData[] normalSkillPool;     // 일반 스킬 Pool
 
-    public SkillData ultimateSkillSO;
+    // 이미 선택된 일반 스킬 리스트 (중복 방지)
+    private List<SkillData> ownedNormalSkills = new List<SkillData>();
 
-    public SkillData normalSkillA;
-    public SkillData normalSkillB;
+    [Header("Equipment Pool")]
+    public EquipmentData[] equipmentPool;   // 레벨업 장비 선택 Pool (SO 폴더에서 연결)
 
     public GameState State { get; private set; }
     public float playTime = 0f;
-
-    // 테스트용 아이콘
-    public Sprite testItemIcon;
 
     private void Awake()
     {
@@ -51,90 +49,105 @@ public class GameManager : MonoBehaviour
             UIManager.Instance.UpdateTimer(playTime);
     }
 
-    // 게임 시작 시 최초 스킬 선택
+    // 게임 시작 시 첫 스킬 선택창 오픈
     public void StartGame()
     {
         State = GameState.Playing;
 
-        SkillData[] startingSkills = new SkillData[2];
-
-        // ★ 여기는 네가 만든 SkillData SO를 넣어야 함
-        startingSkills[0] = startingSkill1;  // ScriptableObject 참조
-        startingSkills[1] = startingSkill2;
-
+        SkillData[] startingSkills = GetRandomNormalSkills(2);
         UIManager.Instance.OpenSkillChoice(startingSkills);
     }
 
-    //레벨업 발생 시 호출됨 (PlayerExp에서 level 넘김)
+    // 스킬 선택 저장
+    public void AddOwnedNormalSkill(SkillData data)
+    {
+        if (data == null) return;
+        if (!ownedNormalSkills.Contains(data))
+            ownedNormalSkills.Add(data);
+    }
+
+    // 일반 스킬 랜덤 추출
+    private SkillData[] GetRandomNormalSkills(int count)
+    {
+        if (normalSkillPool == null || normalSkillPool.Length == 0)
+            return new SkillData[0];
+
+        List<SkillData> available = new List<SkillData>();
+
+        foreach (var s in normalSkillPool)
+        {
+            if (!ownedNormalSkills.Contains(s))
+                available.Add(s);
+        }
+
+        if (available.Count == 0)
+            return new SkillData[0];
+
+        // Shuffle
+        for (int i = 0; i < available.Count; i++)
+        {
+            int rand = Random.Range(0, available.Count);
+            (available[i], available[rand]) = (available[rand], available[i]);
+        }
+
+        int pick = Mathf.Min(count, available.Count);
+        SkillData[] result = new SkillData[pick];
+
+        for (int i = 0; i < pick; i++)
+            result[i] = available[i];
+
+        return result;
+    }
+
+    // 레벨업 트리거
     public void OnPlayerLevelUp(int level)
     {
+        // 20레벨 → 궁극기 선택창
         if (level == 20)
         {
-            var ult = CreateUltimateSkill();
+            SkillData[] ult = { ultimateSkillSO };
             UIManager.Instance.OpenSkillChoice(ult);
             return;
         }
 
+        // 40레벨 → 일반 스킬 2개 선택창
         if (level == 40)
         {
-            var normals = CreateNormalSkills();
+            var normals = GetRandomNormalSkills(2);
             UIManager.Instance.OpenSkillChoice(normals);
             return;
         }
 
-        var items = CreateItemOptions();
-        UIManager.Instance.OpenLevelUp(items);
+        // 이외의 모든 레벨 → 장비 선택창
+        var equipOptions = GetRandomEquipments(3);
+        UIManager.Instance.OpenLevelUp(equipOptions);
     }
 
-    // 궁극기 스킬 1개 (20레벨)
-    private SkillData[] CreateUltimateSkill()
+    // 장비 랜덤 선택
+    private EquipmentData[] GetRandomEquipments(int count)
     {
-        return new SkillData[]
+        if (equipmentPool == null || equipmentPool.Length == 0)
+            return new EquipmentData[0];
+
+        List<EquipmentData> list = new List<EquipmentData>(equipmentPool);
+
+        // Shuffle
+        for (int i = 0; i < list.Count; i++)
         {
-            ultimateSkillSO
-        };
-    }
-    private SkillData[] CreateNormalSkills()
-    {
-        return new SkillData[]
-        {
-        normalSkillA,
-        normalSkillB
-        };
+            int rand = Random.Range(0, list.Count);
+            (list[i], list[rand]) = (list[rand], list[i]);
+        }
+
+        int pick = Mathf.Min(count, list.Count);
+        EquipmentData[] result = new EquipmentData[pick];
+
+        for (int i = 0; i < pick; i++)
+            result[i] = list[i];
+
+        return result;
     }
 
-    // 아이템 / 무기 / 장비 3개 옵션 (기본 레벨업)
-    private LevelUpOptionData[] CreateItemOptions()
-    {
-        return new LevelUpOptionData[]
-        {
-            new LevelUpOptionData()
-            {
-                icon = testItemIcon,
-                name = "단검",
-                metaInfo = "언커먼 / 무기 / 보유 1개",
-                description = "Lv 2 → Lv 3\n공격력 +10%",
-                rarityColor = Color.green
-            },
-            new LevelUpOptionData()
-            {
-                icon = testItemIcon,
-                name = "방패",
-                metaInfo = "레어 / 장비 / 보유 0개",
-                description = "Lv 1 → Lv 2\n방어력 +15",
-                rarityColor = Color.blue
-            },
-            new LevelUpOptionData()
-            {
-                icon = testItemIcon,
-                name = "부츠",
-                metaInfo = "커먼 / 장비 / 보유 1개",
-                description = "Lv 1 → Lv 2\n이동속도 +5%",
-                rarityColor = Color.white
-            }
-        };
-    }
-
+    // 게임 오버
     public void GameOver()
     {
         if (State == GameState.GameOver)
@@ -150,6 +163,7 @@ public class GameManager : MonoBehaviour
 
         Debug.Log("게임 오버!");
     }
+
     public void RestartGame()
     {
         Time.timeScale = 1f;

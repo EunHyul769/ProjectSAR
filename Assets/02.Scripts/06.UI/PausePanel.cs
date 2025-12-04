@@ -7,13 +7,14 @@ public class PausePanel : MonoBehaviour
 {
     [Header("Skill Select Slots")]
     public int skillSlotCount = 15;
-    public Transform skillSlotParent; 
-    public GameObject skillSlotPrefab;  
+    public Transform skillSlotParent;
+    public GameObject skillSlotPrefab;
+    private SkillChoiceSlotUI[] pauseSkillSlots;
 
     [Header("Owned Item Slots")]
     public int itemSlotCount = 48;
     public Transform itemSlotParent;
-    public GameObject itemSlotPrefab; 
+    public GameObject itemSlotPrefab;
 
     [Header("Character Stats")]
     public TMP_Text hpText;
@@ -31,9 +32,9 @@ public class PausePanel : MonoBehaviour
     public TMP_Text projectilenum;
 
     [Header("Buttons")]
-    public Button resumeButton;   // ï¿½Ì¾ï¿½ï¿½Ï±ï¿½
-    public Button retryButton;    // ï¿½ï¿½ï¿½ï¿½ï¿½
-    public Button mainButton;     // ï¿½ï¿½ï¿½ï¿½ È­ï¿½ï¿½
+    public Button resumeButton;   // ÀÌ¾îÇÏ±â
+    public Button retryButton;    // Àç½ÃÀÛ
+    public Button mainButton;     // ¸ÞÀÎ È­¸é
 
     [Header("OpenClose")]
     public GameObject window;
@@ -41,7 +42,6 @@ public class PausePanel : MonoBehaviour
 
     private void Awake()
     {
-        // ï¿½ï¿½Æ° ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         resumeButton.onClick.AddListener(OnResumeClicked);
         retryButton.onClick.AddListener(OnRetryClicked);
         mainButton.onClick.AddListener(OnMainClicked);
@@ -52,20 +52,18 @@ public class PausePanel : MonoBehaviour
         GenerateSkillSlots();
         GenerateItemSlots();
         RefreshStatsDummy();
-        window.SetActive(false);   // PausePanelï¿½ï¿½ ï¿½âº» ï¿½ï¿½È°ï¿½ï¿½È­
+        window.SetActive(false);
+        pauseSkillSlots = skillSlotParent.GetComponentsInChildren<SkillChoiceSlotUI>();
     }
 
-
-    //ï¿½Úµï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+    // ÀÚµ¿ ½½·Ô »ý¼º
     void GenerateSkillSlots()
     {
         foreach (Transform child in skillSlotParent)
             Destroy(child.gameObject);
 
         for (int i = 0; i < skillSlotCount; i++)
-        {
             Instantiate(skillSlotPrefab, skillSlotParent);
-        }
     }
 
     void GenerateItemSlots()
@@ -74,12 +72,10 @@ public class PausePanel : MonoBehaviour
             Destroy(child.gameObject);
 
         for (int i = 0; i < itemSlotCount; i++)
-        {
             Instantiate(itemSlotPrefab, itemSlotParent);
-        }
     }
 
-    //ï¿½ï¿½ï¿½ï¿½ Ç¥ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (LevelUpPanel ï¿½ï¿½ï¿½ï¿½)
+    // ´õ¹Ì ½ºÅÈ (µ¥ÀÌÅÍ ¾øÀ» ¶§)
     public void RefreshStatsDummy()
     {
         hpText.text = "-";
@@ -97,32 +93,59 @@ public class PausePanel : MonoBehaviour
         projectilenum.text = "-";
     }
 
-    //ï¿½ï¿½Æ° ï¿½ï¿½ï¿½
-    void OnResumeClicked()
+
+    // ½ÇÁ¦ ½ºÅÈ Ãâ·Â
+    public void RefreshStats(StatHandler stat, ResouceController resource)
     {
-        Close();
+        // ½ÇÁ¦ Á¸ÀçÇÏ´Â ½ºÅÈ¸¸ Ç¥½Ã
+        hpText.text = $"HP : {resource.CurrentHealth} / {stat.MaxHealth}";
+        spdText.text = $"SPD : {stat.Speed}";
+        atkText.text = $"ATK : {stat.Attack}";
+        atkspdText.text = $"ATK SPD : {stat.AttackSpeed}";
+
+        // StatHandler¿¡ ¾ø´Â °ªÀº "-" Ã³¸®
+        hpgenText.text = "-";
+        defText.text = "-";
+        atkareaText.text = "-";
+        cri.text = "-";
+        cridmg.text = "-";
+        projectilespd.text = "-";
+        dur.text = "-";
+        cd.text = "-";
+        projectilenum.text = "-";
     }
 
-    void OnRetryClicked()
+    public void RefreshSkillSlots()
     {
-        // ï¿½Ð³ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ý±ï¿½
-        window.SetActive(false);
-        isOpen = false;
+        var ui = UIManager.Instance;
 
-        // Å¸ï¿½Ó½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
-        Time.timeScale = 1f;
+        // ÇÃ·¹ÀÌ¾î°¡ ÇöÀç º¸À¯ ÁßÀÎ ½ºÅ³µé
+        SkillData[] ownedSkills = new SkillData[]
+        {
+        ui.slotZ.currentSkill,
+        ui.slotX.currentSkill,
+        ui.slotC.currentSkill
+        };
 
-        // ï¿½ï¿½ï¿½Ó¾ï¿½ ï¿½Ù½ï¿½ ï¿½Îµï¿½
-        SceneLoader.Load(SceneType.GameScene);
+        int index = 0;
+
+        // 1) ½ÇÁ¦ »ç¿ë ½ºÅ³µé ¸ÕÀú Ã¤¿ì±â
+        for (int i = 0; i < ownedSkills.Length; i++)
+        {
+            if (ownedSkills[i] != null)
+            {
+                pauseSkillSlots[index].SetSkill(ownedSkills[i]);
+                index++;
+            }
+        }
+
+        // 2) ³²Àº Ä­Àº ÀüºÎ ºó ½½·Ô
+        for (; index < pauseSkillSlots.Length; index++)
+        {
+            pauseSkillSlots[index].SetEmpty();
+        }
     }
 
-    void OnMainClicked()
-    {
-        // ï¿½ï¿½ï¿½ï¿½ È­ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½
-        SceneLoader.Load(SceneType.MainScene);
-    }
-
-    //ï¿½ÜºÎ¿ï¿½ï¿½ï¿½ ESCï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
     public void Open()
     {
@@ -130,15 +153,68 @@ public class PausePanel : MonoBehaviour
 
         window.SetActive(true);
         Time.timeScale = 0f;
-        RefreshStatsDummy(); // ï¿½ï¿½ï¿½ß¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ò·ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
+
+        // ÇÃ·¹ÀÌ¾î Ã£±â
+        var player = FindObjectOfType<BaseController>();
+        if (player != null)
+        {
+            var stat = player.GetComponent<StatHandler>();
+            var resource = player.GetComponent<ResouceController>();
+
+            if (stat != null && resource != null)
+                RefreshStats(stat, resource);
+            else
+                RefreshStatsDummy();
+        }
+        else
+            RefreshStatsDummy();
 
         isOpen = true;
+
+        RefreshSkillSlots();
+        RefreshItemSlots();
+    }
+    private void RefreshItemSlots()
+    {
+        var items = EquipmentController.Instance.equippedItems;
+        var slots = itemSlotParent.GetComponentsInChildren<TItemSlotUI>();
+
+        for (int i = 0; i < slots.Length; i++)
+        {
+            if (items != null && i < items.Count && items[i] != null)
+            {
+                slots[i].icon.enabled = true;
+                slots[i].icon.sprite = items[i].icon;
+                slots[i].levelText.text = "Lv -";
+            }
+            else
+            {
+                slots[i].SetEmpty();
+            }
+        }
     }
     public void Close()
     {
         window.SetActive(false);
         Time.timeScale = 1f;
-
         isOpen = false;
+    }
+    
+    void OnResumeClicked()
+    {
+        Close();
+    }
+
+    void OnRetryClicked()
+    {
+        window.SetActive(false);
+        isOpen = false;
+        Time.timeScale = 1f;
+        SceneLoader.Load(SceneType.GameScene);
+    }
+
+    void OnMainClicked()
+    {
+        SceneLoader.Load(SceneType.MainScene);
     }
 }

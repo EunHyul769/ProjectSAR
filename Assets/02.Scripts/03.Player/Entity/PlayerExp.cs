@@ -28,7 +28,10 @@ public class PlayerExp : MonoBehaviour, IExpReceiver
     {
         currentExp += amount;
         Debug.Log($"경험치 획득: {amount} | 현재 경험치: {currentExp} / {maxExp}");
-        
+
+        // UI 업데이트 추가
+        UIManager.Instance.UpdateEXP(currentExp, maxExp);
+
         // 경험치 먹는 효과음
         SoundManager.Instance.PlaySFX(SoundManager.Instance.expGain);
 
@@ -51,6 +54,8 @@ public class PlayerExp : MonoBehaviour, IExpReceiver
             maxExp = Mathf.RoundToInt(maxExp * expGrowthFactor);
 
             Debug.Log($"<color=yellow>레벨 업! 현재 레벨: {level}</color>");
+            // UI 갱신 추가
+            UIManager.Instance.UpdateEXP(currentExp, maxExp);
 
             // 게임매니저와 연결
             GameManager.Instance.OnPlayerLevelUp(level);

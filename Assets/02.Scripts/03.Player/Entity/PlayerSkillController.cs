@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class PlayerSkillController : MonoBehaviour
 {
+    public static PlayerSkillController Instance { get; private set; } //UI연결문제로 추가
+
     [Header("Data")]
     [SerializeField] private CharacterData characterData;
     [SerializeField] private GameObject explosionPrefab; // 궁극기용 폭발 이펙트 프리팹
@@ -15,22 +17,27 @@ public class PlayerSkillController : MonoBehaviour
     private float active2CooldownTimer = 0f;
     private float gameTime = 0f; // 게임 시작 후 경과 시간
     private bool isUltimateUsed = false; // 궁극기 사용 여부 (게임 당 1회)
+    private const float ULTIMATE_AVAILABLE_TIME = 30f; // 30초 후 사용 가능
+
+    public float GetActive1Cooldown() => active1CooldownTimer;
+    public float GetActive2Cooldown() => active2CooldownTimer;
 
     private void Awake()
     {
+        Instance = this; //UI연결문제로 추가
         statHandler = GetComponent<StatHandler>();
         baseController = GetComponent<BaseController>();
     }
 
     private void Start()
     {
-        ApplyPassives();
+        ApplyPassives(); // 게임 시작 시 패시브 효과 적용
     }
 
     private void Update()
     {
         HandleCooldowns();
-        HandleInput();
+        //HandleInput();
     }
 
     private void HandleCooldowns()
@@ -40,42 +47,54 @@ public class PlayerSkillController : MonoBehaviour
         gameTime += Time.deltaTime;
     }
 
-    private void HandleInput()
+    private float GetReducedCooldown(float baseCoolTime)
     {
-        // 액티브 1번 (키보드 1)
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            if (active1CooldownTimer <= 0)
-            {
-                StartCoroutine(UseActiveSkill1());
-                active1CooldownTimer = characterData.active1.coolTime; // 10초
-            }
-            else
-            {
-                Debug.Log($"스킬 1 쿨타임: {active1CooldownTimer:F1}초 남음");
-            }
-        }
+        // StatHandler가 없으면 기본값 반환
+        if (statHandler == null) return baseCoolTime;
 
-        // 액티브 2번 (키보드 2)
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            if (active2CooldownTimer <= 0)
-            {
-                StartCoroutine(UseActiveSkill2());
-                active2CooldownTimer = characterData.active2.coolTime; // 10초
-            }
-            else
-            {
-                Debug.Log($"스킬 2 쿨타임: {active2CooldownTimer:F1}초 남음");
-            }
-        }
+        // 예: 쿨감 10%(0.1) -> 1.0 - 0.1 = 0.9 (90% 시간만 적용)
+        float multiplier = 1.0f - statHandler.CooldownReduction;
 
-        // 궁극기 (키보드 3)
-        if (Input.GetKeyDown(KeyCode.Alpha3))
-        {
-            AttemptUltimate();
-        }
+        // 계산된 쿨타임 (최소 0.1초는 보장하도록 설정)
+        return Mathf.Max(0.1f, baseCoolTime * multiplier);
     }
+
+    //private void HandleInput()
+    //{
+    //    // 액티브 1번 (키보드 1)
+    //    if (Input.GetKeyDown(KeyCode.Alpha1))
+    //    {
+    //        if (active1CooldownTimer <= 0)
+    //        {
+    //            StartCoroutine(UseActiveSkill1());
+    //            active1CooldownTimer = GetReducedCooldown(characterData.active1.coolTime);
+    //        }
+    //        else
+    //        {
+    //            Debug.Log($"스킬 1 쿨타임: {active1CooldownTimer:F1}초 남음");
+    //        }
+    //    }
+
+    //    // 액티브 2번 (키보드 2)
+    //    if (Input.GetKeyDown(KeyCode.Alpha2))
+    //    {
+    //        if (active2CooldownTimer <= 0)
+    //        {
+    //            StartCoroutine(UseActiveSkill2());
+    //            active2CooldownTimer = GetReducedCooldown(characterData.active2.coolTime);
+    //        }
+    //        else
+    //        {
+    //            Debug.Log($"스킬 2 쿨타임: {active2CooldownTimer:F1}초 남음");
+    //        }
+    //    }
+
+    //    // 궁극기 (키보드 3)
+    //    if (Input.GetKeyDown(KeyCode.Alpha3))
+    //    {
+    //        AttemptUltimate();
+    //    }
+    //}
 
     // --- 패시브 적용 ---
     private void ApplyPassives()
@@ -145,9 +164,9 @@ public class PlayerSkillController : MonoBehaviour
     // 궁극기: 비장의 마법이야!
     private void AttemptUltimate()
     {
-        if (gameTime < 30f)
+        if (gameTime < ULTIMATE_AVAILABLE_TIME)
         {
-            Debug.Log($"궁극기 준비 중... {30f - gameTime:F1}초 남음");
+            Debug.Log($"궁극기 준비 중... {ULTIMATE_AVAILABLE_TIME - gameTime:F1}초 남음");
             return;
         }
 
@@ -162,6 +181,8 @@ public class PlayerSkillController : MonoBehaviour
 
     private void UseUltimate()
     {
+        UIManager.Instance.PlayUltimateCutIn(); //컷씬 출력 추가(UI)
+
         isUltimateUsed = true;
         Debug.Log($"궁극기 발동! {characterData.ultimate.skillName}");
 
@@ -185,6 +206,61 @@ public class PlayerSkillController : MonoBehaviour
                 hit.GetComponent<Enemy>()?.TakeDamage(damage);
                 Debug.Log($"{hit.name}에게 궁극기 데미지 {damage} 입힘!");
             }
+        } 
+    }
+
+    //UI연결문제로 추가
+        public void SetSkillFromHUD(string key, SkillData data)
+    {
+        switch (key)
+        {
+            case "Z":
+                characterData.active1 = data;
+                break;
+
+            case "X":
+                characterData.active2 = data;
+                break;
+
+            case "C":
+                characterData.ultimate = data;
+                break;
+        }
+
+        Debug.Log($"스킬 등록됨 [{key}] → {data.skillName}");
+    }
+    public void UseSkillFromHUD(SkillData skill)
+    {
+        if (skill == null) return;
+
+        // HUD Z → active1 스킬 실행
+        if (skill == characterData.active1)
+        {
+            if (active1CooldownTimer <= 0)
+            {
+                StartCoroutine(UseActiveSkill1());
+                active1CooldownTimer = GetReducedCooldown(characterData.active1.coolTime);
+            }
+            return;
+        }
+
+        // HUD X → active2 스킬 실행
+        if (skill == characterData.active2)
+        {
+            if (active2CooldownTimer <= 0)
+            {
+                StartCoroutine(UseActiveSkill2());
+                active2CooldownTimer = GetReducedCooldown(characterData.active2.coolTime);
+            }
+            return;
+        }
+
+        // HUD C → 궁극기 실행
+        if (skill == characterData.ultimate)
+        {
+            AttemptUltimate();
+            return;
         }
     }
+
 }
