@@ -26,7 +26,7 @@ public class MetaphysicsPatern : IBossAttackable
 
     private GameObject warningSign;
 
-    public MetaphysicsPatern(float initialPatternInterval, Collider2D physicalCollider, GameObject warningSign, float dashDst = 10f, float dashSpd = 14f, float warnDur = 0.8f, float postDur = 0.5f)
+    public MetaphysicsPatern(float initialPatternInterval, Collider2D physicalCollider, GameObject warningSign, float dashDst = 20f, float dashSpd = 14f, float warnDur = 0.8f, float postDur = 0.5f)
     {
         patternInterval = initialPatternInterval;
         dashDistance = dashDst;
