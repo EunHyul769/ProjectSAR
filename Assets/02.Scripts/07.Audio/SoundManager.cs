@@ -20,13 +20,23 @@ public class SoundManager : MonoBehaviour
     public AudioClip expDrop;
 
     [Header("BGM")]
-    public AudioClip moonlightForest;
+    public AudioClip mainBgm;    // MainScene
+    public AudioClip CrtselectBgm;  // Character Select
+    public AudioClip gameBgm; 
 
+    
+    [Header("Audio Sources")]
     public AudioSource sfxSource;
     public AudioSource bgmSource;
     
+    [Header("Volume Settings")]
+    [Range(0f, 1f)] public float bgmVolume = 1f;  
+    [Range(0f, 1f)] public float sfxVolume = 1f;  
+    
     private Dictionary<AudioClip, float> sfxCooldown = new Dictionary<AudioClip, float>();
 
+    [Header("SFX Cooldown")]
+    [Tooltip("같은 사운드 연속 재생 제한 시간")]
     [SerializeField] private float defaultSfxInterval = 0.2f;
 
     private void Awake()
@@ -34,8 +44,19 @@ public class SoundManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
+            DontDestroyOnLoad(gameObject);
         }
-        else Destroy(gameObject);
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+    
+    private void Update()
+    {
+        //  Inspector에서 바꾸면 자동으로 반영
+        bgmSource.volume = bgmVolume;
+        sfxSource.volume = sfxVolume;
     }
 
     public void PlaySFX(AudioClip clip, float interval = -1f)
@@ -61,11 +82,10 @@ public class SoundManager : MonoBehaviour
 
     public void PlayBGM(AudioClip clip)
     {
-        if (clip != null)
-        {
+        if (bgmSource.clip == clip) return; // 중복 재생 방지
             bgmSource.clip = clip;
             bgmSource.loop = true;
+            bgmSource.volume = bgmVolume; 
             bgmSource.Play();
-        }
     }
 }
