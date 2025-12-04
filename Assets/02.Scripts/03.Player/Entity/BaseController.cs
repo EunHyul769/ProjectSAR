@@ -131,7 +131,14 @@ public class BaseController : MonoBehaviour
 
         Debug.Log($"무기 장착 완료: {data.weaponName}");
 
-        UIManager.Instance.RefreshWeaponSlots(activeWeapons); //UI
+        if (UIManager.Instance != null)
+        {
+            UIManager.Instance.RefreshWeaponSlots(activeWeapons);
+        }
+        else
+        {
+            Debug.LogWarning("UIManager가 아직 준비되지 않아 UI 갱신 건너뜀");
+        }//UI
     }
 
     public void AttemptDash()
