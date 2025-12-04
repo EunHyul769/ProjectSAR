@@ -53,7 +53,13 @@ public class ResouceController : MonoBehaviour
         {
             return false; //데미지를 받지 않음
         }
-
+        float defense = statHandler.Defense; // 방어력 수치 가져오기
+        if (change < 0)
+        {
+            // 데미지일 경우 방어력 적용
+            float damageAfterDefense = -change - defense;
+            change = damageAfterDefense < 1 ? 1 : -damageAfterDefense; //최소 데미지는 1로 설정
+        }
         timeSinceLastChange = 0f;
         CurrentHealth += change;
         CurrentHealth = CurrentHealth > MaxHealth ? MaxHealth : CurrentHealth;

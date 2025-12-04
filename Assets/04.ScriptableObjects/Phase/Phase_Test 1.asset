@@ -17,6 +17,7 @@ MonoBehaviour:
   isBossPhase: 0
   activeAtGameTime: 0
   spawnableEnemies:
+  - {fileID: 11400000, guid: 78cd501b75e5cf34294e2e3ad22c46c6, type: 2}
   - {fileID: 11400000, guid: 2efcc1b2790fb0f4ea78b024771c2124, type: 2}
   spawnInterval: 0.5
   totalEnemiesToSpawnPerCycle: 10

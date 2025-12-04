@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   phaseID: 0
   phaseName: 
-  isBossPhase: 0
-  activeAtGameTime: 179
+  isBossPhase: 1
+  activeAtGameTime: 180
   spawnableEnemies:
   - {fileID: 11400000, guid: 8315661662309ac4d93e152d3450444d, type: 2}
-  spawnInterval: 1
+  spawnInterval: 5
   totalEnemiesToSpawnPerCycle: 1
   healthMultiplier: 1
   damageMultiplier: 1

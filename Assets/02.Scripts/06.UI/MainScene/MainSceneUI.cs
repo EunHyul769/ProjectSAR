@@ -50,12 +50,12 @@ public class MainSceneUI : MonoBehaviour
 
     private void OnClickUpgrade()
     {
-        Debug.Log("¾÷±×·¹ÀÌµå(±¸»ö¿ë) - ½ÇÁ¦ ±â´É ¾øÀ½");
+        Debug.Log("ï¿½ï¿½ï¿½×·ï¿½ï¿½Ìµï¿½(ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½) - ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
     }
 
     private void OnClickBook()
     {
-        Debug.Log("µµ°¨(±¸»ö¿ë) - ½ÇÁ¦ ±â´É ¾øÀ½");
+        Debug.Log("ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½) - ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
     }
 
     private void OnClickSettings()
@@ -66,6 +66,6 @@ public class MainSceneUI : MonoBehaviour
     private void OnClickQuit()
     {
         Application.Quit();
-        Debug.Log("°ÔÀÓ Á¾·á");
+        Debug.Log("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
     }
 }
