@@ -165,6 +165,8 @@ public class PlayerSkillController : MonoBehaviour
 
     private void UseUltimate()
     {
+        UIManager.Instance.PlayUltimateCutIn(); //컷씬 출력 추가(UI)
+
         isUltimateUsed = true;
         Debug.Log($"궁극기 발동! {characterData.ultimate.skillName}");
 
