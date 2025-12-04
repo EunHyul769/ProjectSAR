@@ -34,6 +34,7 @@ public class Enemy : MonoBehaviour, IDamagable
 
     [Header("물리 충돌용 collider")]
     [SerializeField] private Collider2D physicalCollisionCollider;
+    [SerializeField] private GameObject warningSign;
 
     public static event Action<Enemy> OnBossSpawnedGlobal;
     public static event Action<Enemy> OnBossDiedGlobal;
@@ -68,6 +69,10 @@ public class Enemy : MonoBehaviour, IDamagable
             Debug.LogError("DifficultyScaler가 씬에 없음.");
         }
 
+        if(warningSign != null)
+        {
+            warningSign.SetActive(false);
+        }
     }
 
     public void Initialize(EnemyData data, Transform targetPlayer, GameObject prefabOrigin, float healthMult, float damageMult)
@@ -98,7 +103,7 @@ public class Enemy : MonoBehaviour, IDamagable
             if (enemyData.enemyName == "Metaphysics")
             {
                 Debug.Log($"{enemyData.enemyName} 생성됨");
-                currentBossPattern = new MetaphysicsPatern(5f, physicalCollisionCollider);
+                currentBossPattern = new MetaphysicsPatern(5f, physicalCollisionCollider, warningSign);
                 Debug.Log($"{enemyData.enemyName} 패턴 적용됨");
                 if (physicalCollisionCollider != null)
                 {
@@ -301,7 +306,8 @@ public class Enemy : MonoBehaviour, IDamagable
 
         OnThisBossDied?.Invoke(this);
         OnBossDiedGlobal?.Invoke(this);
-        OnDeathEvent?.Invoke(this.gameObject, originalPrefab); // 사망 이벤트 발생 시 자신과 원본 프리팹 전달
+        // 사망 이벤트 발생 시 자신과 원본 프리팹 전달
+        OnDeathEvent?.Invoke(this.gameObject, originalPrefab); 
         isActive = false; // 비활성화 상태
     }
 
