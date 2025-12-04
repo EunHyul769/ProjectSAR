@@ -86,6 +86,8 @@ public class CharacterSelectManager : MonoBehaviour
         {
             skillSlots[i].SetSlot(skills[i]);   // null이면 SkillSlotUI에서 X 처리
         }
+
+        Debug.Log($"0번 = {skills[0]?.skillName}, 4번 = {skills[4]?.skillName}");
     }
 
     private void ApplyCharacterSlots(CharacterData data)
