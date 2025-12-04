@@ -32,7 +32,7 @@ public class BossIndicatorUI : MonoBehaviour
 
         targetBoss.OnThisBossDied += HandleTargetBossDied;
 
-        gameObject.GetComponent<RectTransform>().sizeDelta = size;
+        gameObject.GetComponentInChildren<RectTransform>().sizeDelta = size;
 
         arrowImage.gameObject.SetActive(false);
     }

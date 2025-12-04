@@ -75,7 +75,7 @@ public class BossIndicatorManager : MonoBehaviour
             }
 
             indicatorUI.SetUp(boss, playerTransform);
-            indicatorUI.gameObject.SetActive(false);
+            indicatorUI.gameObject.SetActive(true);
 
             activeIndicators.Add(boss, indicatorUI);
         }

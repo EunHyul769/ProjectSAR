@@ -31,9 +31,9 @@ public class PausePanel : MonoBehaviour
     public TMP_Text projectilenum;
 
     [Header("Buttons")]
-    public Button resumeButton;   // ÀÌ¾îÇÏ±â
-    public Button retryButton;    // Àç½ÃÀÛ
-    public Button mainButton;     // ¸ÞÀÎ È­¸é
+    public Button resumeButton;   // ï¿½Ì¾ï¿½ï¿½Ï±ï¿½
+    public Button retryButton;    // ï¿½ï¿½ï¿½ï¿½ï¿½
+    public Button mainButton;     // ï¿½ï¿½ï¿½ï¿½ È­ï¿½ï¿½
 
     [Header("OpenClose")]
     public GameObject window;
@@ -41,7 +41,7 @@ public class PausePanel : MonoBehaviour
 
     private void Awake()
     {
-        // ¹öÆ° ±â´É ¿¬°á
+        // ï¿½ï¿½Æ° ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         resumeButton.onClick.AddListener(OnResumeClicked);
         retryButton.onClick.AddListener(OnRetryClicked);
         mainButton.onClick.AddListener(OnMainClicked);
@@ -52,11 +52,11 @@ public class PausePanel : MonoBehaviour
         GenerateSkillSlots();
         GenerateItemSlots();
         RefreshStatsDummy();
-        window.SetActive(false);   // PausePanelÀº ±âº» ºñÈ°¼ºÈ­
+        window.SetActive(false);   // PausePanelï¿½ï¿½ ï¿½âº» ï¿½ï¿½È°ï¿½ï¿½È­
     }
 
 
-    //ÀÚµ¿ ½½·Ô »ý¼º
+    //ï¿½Úµï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     void GenerateSkillSlots()
     {
         foreach (Transform child in skillSlotParent)
@@ -79,7 +79,7 @@ public class PausePanel : MonoBehaviour
         }
     }
 
-    //½ºÅÈ Ç¥½Ã ´õ¹Ì (LevelUpPanel Âü°í)
+    //ï¿½ï¿½ï¿½ï¿½ Ç¥ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (LevelUpPanel ï¿½ï¿½ï¿½ï¿½)
     public void RefreshStatsDummy()
     {
         hpText.text = "-";
@@ -97,7 +97,7 @@ public class PausePanel : MonoBehaviour
         projectilenum.text = "-";
     }
 
-    //¹öÆ° ±â´É
+    //ï¿½ï¿½Æ° ï¿½ï¿½ï¿½
     void OnResumeClicked()
     {
         Close();
@@ -105,24 +105,24 @@ public class PausePanel : MonoBehaviour
 
     void OnRetryClicked()
     {
-        // ÆÐ³Î ¸ÕÀú ´Ý±â
+        // ï¿½Ð³ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ý±ï¿½
         window.SetActive(false);
         isOpen = false;
 
-        // Å¸ÀÓ½ºÄÉÀÏ º¹±¸
+        // Å¸ï¿½Ó½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         Time.timeScale = 1f;
 
-        // °ÔÀÓ¾À ´Ù½Ã ·Îµå
+        // ï¿½ï¿½ï¿½Ó¾ï¿½ ï¿½Ù½ï¿½ ï¿½Îµï¿½
         SceneLoader.Load(SceneType.GameScene);
     }
 
     void OnMainClicked()
     {
-        // ¸ÞÀÎ È­¸éÀ¸·Î ÀÌµ¿
+        // ï¿½ï¿½ï¿½ï¿½ È­ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½
         SceneLoader.Load(SceneType.MainScene);
     }
 
-    //¿ÜºÎ¿¡¼­ ESC·Î ¿­±â
+    //ï¿½ÜºÎ¿ï¿½ï¿½ï¿½ ESCï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
     public void Open()
     {
@@ -130,7 +130,7 @@ public class PausePanel : MonoBehaviour
 
         window.SetActive(true);
         Time.timeScale = 0f;
-        RefreshStatsDummy(); // ³ªÁß¿£ ½ÇÁ¦ ÇÃ·¹ÀÌ¾î ½ºÅÈ ºÒ·¯¿À¸é µÊ
+        RefreshStatsDummy(); // ï¿½ï¿½ï¿½ß¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ò·ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
 
         isOpen = true;
     }

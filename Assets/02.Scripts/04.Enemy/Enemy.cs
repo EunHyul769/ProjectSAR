@@ -97,8 +97,9 @@ public class Enemy : MonoBehaviour, IDamagable
             OnBossSpawnedGlobal?.Invoke(this);
             if (enemyData.enemyName == "Metaphysics")
             {
+                Debug.Log($"{enemyData.enemyName} 생성됨");
                 currentBossPattern = new MetaphysicsPatern(5f, physicalCollisionCollider);
-
+                Debug.Log($"{enemyData.enemyName} 패턴 적용됨");
                 if (physicalCollisionCollider != null)
                 {
                     physicalCollisionCollider.enabled = true;
