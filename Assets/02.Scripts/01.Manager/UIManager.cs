@@ -45,7 +45,8 @@ public class UIManager : MonoBehaviour
     public Image ultimateCutInImage;
     public float ultimateCutInDuration = 0.5f;
 
-
+    [Header("Gold")]
+    public TMP_Text goldText;
     private void Awake()
     {
         if (Instance != null)
@@ -264,8 +265,12 @@ public class UIManager : MonoBehaviour
         target.SetSkill(data.icon,data.coolTime,key,data);
         PlayerSkillController.Instance.SetSkillFromHUD(key, data);
     }
-
-
+    //골드 업데이트
+    public void UpdateGold(int gold)
+    {
+        if (goldText != null)
+            goldText.text = $"G: {gold}";
+    }
     private void OnDestroy()
     {
         if (Instance == this)
