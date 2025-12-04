@@ -7,8 +7,14 @@
     <list default="true" id="e88a339b-ddf8-41ba-9e08-ff5b81a4e014" name="변경" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ProjectSAR/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ProjectSAR/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/01.Scenes/GameScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/01.Scenes/GameScene.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/02.Scripts/07.Audio/SoundManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/02.Scripts/07.Audio/SoundManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/03.Prefabs/Grid.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/03.Prefabs/Grid.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/02.Scripts/03.Player/CameraFollow.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/02.Scripts/03.Player/CameraFollow.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/02.Scripts/05.Data/ItemData/ExpOrb.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/02.Scripts/05.Data/ItemData/ExpOrb.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/05.ArtWork/Sprite/Sesily_Idle.png.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/05.ArtWork/Sprite/Sesily_Idle.png.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/05.ArtWork/Sprite/Sesily_Move0.png.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/05.ArtWork/Sprite/Sesily_Move0.png.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/05.ArtWork/Sprite/Sesily_Move1.png.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/05.ArtWork/Sprite/Sesily_Move1.png.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/05.ArtWork/Sprite/Sesily_Move2.png.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/05.ArtWork/Sprite/Sesily_Move2.png.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/05.ArtWork/Sprite/Sesily_Ultimate.png.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/05.ArtWork/Sprite/Sesily_Ultimate.png.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/09.Animations/Player/MainSprite.controller" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/09.Animations/Player/MainSprite.controller" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

@@ -7247,6 +7247,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 907366900}
   m_CullTransparentMesh: 1
+--- !u!1 &911056904 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2910915934681434923, guid: 8369a12149ae14b2aa637cb772c99b60, type: 3}
+  m_PrefabInstance: {fileID: 535480243}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &914811576
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9615,7 +9620,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.29438546, g: 0.4056604, b: 0.29276434, a: 0}
+  m_BackGroundColor: {r: 0.4392157, g: 0.5019608, b: 0.105882354, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -9686,6 +9691,7 @@ MonoBehaviour:
   target: {fileID: 1685053442}
   smoothSpeed: 5
   offset: {x: 0, y: 0, z: -10}
+  mapObject: {fileID: 911056904}
 --- !u!1 &1135168305
 GameObject:
   m_ObjectHideFlags: 0
