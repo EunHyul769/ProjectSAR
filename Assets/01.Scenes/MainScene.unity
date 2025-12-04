@@ -564,6 +564,8 @@ MonoBehaviour:
   btnSettings: {fileID: 1549733564}
   btnQuit: {fileID: 1697704308}
   settingsPopup: {fileID: 1136296380}
+  sliderBGM: {fileID: 990630137}
+  sliderSFX: {fileID: 235804378}
 --- !u!4 &192037182
 Transform:
   m_ObjectHideFlags: 0

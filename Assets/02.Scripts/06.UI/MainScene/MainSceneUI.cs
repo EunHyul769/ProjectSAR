@@ -14,6 +14,10 @@ public class MainSceneUI : MonoBehaviour
     [Header("setting")]
     public GameObject settingsPopup;
 
+    [Header("Setting Sliders")]
+    public Slider sliderBGM;
+    public Slider sliderSFX;
+
     private void Start()
     {
         btnStart.onClick.AddListener(OnClickStart);
@@ -21,6 +25,22 @@ public class MainSceneUI : MonoBehaviour
         btnBook.onClick.AddListener(OnClickBook);
         btnSettings.onClick.AddListener(OnClickSettings);
         btnQuit.onClick.AddListener(OnClickQuit);
+
+        sliderBGM.value = SoundManager.Instance.bgmVolume;
+        sliderSFX.value = SoundManager.Instance.sfxVolume;
+
+        sliderBGM.onValueChanged.AddListener(OnChangeBGM);
+        sliderSFX.onValueChanged.AddListener(OnChangeSFX);
+    }
+
+    private void OnChangeBGM(float value)
+    {
+        SoundManager.Instance.bgmVolume = value;
+    }
+
+    private void OnChangeSFX(float value)
+    {
+        SoundManager.Instance.sfxVolume = value;
     }
 
     private void OnClickStart()
