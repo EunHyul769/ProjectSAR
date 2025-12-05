@@ -73,5 +73,6 @@
 [![My Skills](https://skillicons.dev/icons?i=visualstudio&perline=1)](https://skillicons.dev)
 
 ## 사용에셋 목록
-맵 타일셋 : [topdown-fantasy-forest] (https://aamatniekss.itch.io/topdown-fantasy-forest)
-이 외 모든 에셋은 AI로 제작하였습니다.
+맵 타일셋 : [Free Topdown Fantasy - Forest - Pixelart Tileset] (https://aamatniekss.itch.io/topdown-fantasy-forest)
+
+### 이 외 모든 에셋은 AI로 제작하였습니다.
